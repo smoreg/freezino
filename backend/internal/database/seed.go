@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"freezino/backend/internal/model"
+	"github.com/smoreg/freezino/backend/internal/model"
 )
 
 // Seed populates the database with initial data

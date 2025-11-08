@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/smoreg/freezino/backend/internal/config"
+	"github.com/smoreg/freezino/backend/internal/database"
 	"github.com/smoreg/freezino/backend/internal/middleware"
 	"github.com/smoreg/freezino/backend/internal/router"
 )
@@ -16,6 +17,20 @@ import (
 func main() {
 	// Load configuration
 	cfg := config.Load()
+
+	// Initialize database
+	if err := database.Initialize(database.Config{
+		DBPath: "./data/freezino.db",
+		Debug:  cfg.Environment == "development",
+	}); err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+	defer database.Close()
+
+	// Run migrations
+	if err := database.Migrate(); err != nil {
+		log.Fatalf("Failed to run migrations: %v", err)
+	}
 
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
@@ -30,7 +45,7 @@ func main() {
 	app.Use(middleware.SetupCORS())
 
 	// Setup routes
-	router.Setup(app)
+	router.Setup(app, cfg)
 
 	// Root endpoint
 	app.Get("/", func(c *fiber.Ctx) error {
