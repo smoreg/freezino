@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
 import StatsModal from '../components/StatsModal';
 import api from '../services/api';
 import type { UserStats, WorkSession, GameSession } from '../types';

@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '../../utils/formatters';
-import type { UserItem } from '../../types';
+
 import { useSound } from '../../hooks/useSound';
+import type { UserItem } from '../../types';
+import { formatCurrency } from '../../utils/formatters';
 
 interface SellModalProps {
   isOpen: boolean;

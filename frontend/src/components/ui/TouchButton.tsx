@@ -1,5 +1,5 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface TouchButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;

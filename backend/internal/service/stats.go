@@ -10,21 +10,21 @@ import (
 
 // Country represents a country with wage information
 type Country struct {
-	Code           string  `json:"code"`
-	Name           string  `json:"name"`
-	AvgHourlyWage  float64 `json:"avgHourlyWage"`
-	Currency       string  `json:"currency"`
+	Code          string  `json:"code"`
+	Name          string  `json:"name"`
+	AvgHourlyWage float64 `json:"avgHourlyWage"`
+	Currency      string  `json:"currency"`
 }
 
 // CountryStatsResponse represents country statistics with work time calculation
 type CountryStatsResponse struct {
-	Code              string  `json:"code"`
-	Name              string  `json:"name"`
-	AvgHourlyWage     float64 `json:"avgHourlyWage"`
-	Currency          string  `json:"currency"`
-	HoursToEarn500    float64 `json:"hoursToEarn500"`
-	DaysToEarn500     float64 `json:"daysToEarn500"`
-	ComparisonToGame  float64 `json:"comparisonToGame"` // How many times longer than game work timer (3 min = 0.05 hours)
+	Code             string  `json:"code"`
+	Name             string  `json:"name"`
+	AvgHourlyWage    float64 `json:"avgHourlyWage"`
+	Currency         string  `json:"currency"`
+	HoursToEarn500   float64 `json:"hoursToEarn500"`
+	DaysToEarn500    float64 `json:"daysToEarn500"`
+	ComparisonToGame float64 `json:"comparisonToGame"` // How many times longer than game work timer (3 min = 0.05 hours)
 }
 
 // StatsService provides business logic for statistics operations

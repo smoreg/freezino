@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/smoreg/freezino/backend/internal/database"
@@ -40,17 +41,17 @@ type GameHistoryResponse struct {
 
 // GameStatsResponse represents overall game statistics
 type GameStatsResponse struct {
-	TotalGames      int     `json:"total_games"`
-	TotalWins       int     `json:"total_wins"`
-	TotalLosses     int     `json:"total_losses"`
-	TotalBet        float64 `json:"total_bet"`
-	TotalWon        float64 `json:"total_won"`
-	NetProfit       float64 `json:"net_profit"`
-	FavoriteGame    string  `json:"favorite_game,omitempty"`
-	WinRate         float64 `json:"win_rate"` // percentage
-	BiggestWin      float64 `json:"biggest_win"`
-	BiggestLoss     float64 `json:"biggest_loss"`
-	GameBreakdown   []GameTypeStats `json:"game_breakdown"`
+	TotalGames    int             `json:"total_games"`
+	TotalWins     int             `json:"total_wins"`
+	TotalLosses   int             `json:"total_losses"`
+	TotalBet      float64         `json:"total_bet"`
+	TotalWon      float64         `json:"total_won"`
+	NetProfit     float64         `json:"net_profit"`
+	FavoriteGame  string          `json:"favorite_game,omitempty"`
+	WinRate       float64         `json:"win_rate"` // percentage
+	BiggestWin    float64         `json:"biggest_win"`
+	BiggestLoss   float64         `json:"biggest_loss"`
+	GameBreakdown []GameTypeStats `json:"game_breakdown"`
 }
 
 // GameTypeStats represents statistics for a specific game type
@@ -67,7 +68,7 @@ func (s *GameHistoryService) GetHistory(userID uint, gameType string, limit int,
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
@@ -127,7 +128,7 @@ func (s *GameHistoryService) GetStats(userID uint) (*GameStatsResponse, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)

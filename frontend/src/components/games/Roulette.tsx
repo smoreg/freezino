@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useSound } from '../../hooks/useSound';
 import api from '../../services/api';
 import type { RouletteBet, RouletteResult } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
-import { useSound } from '../../hooks/useSound';
 
 // Roulette wheel numbers in order
 const WHEEL_NUMBERS = [

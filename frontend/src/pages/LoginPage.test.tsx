@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '../test/utils';
 import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import LoginPage from './LoginPage';
 import * as authStore from '../store/authStore';
+import { render, screen, waitFor } from '../test/utils';
 
 // Mock the auth store
 vi.mock('../store/authStore', () => ({
@@ -95,7 +96,7 @@ describe('LoginPage', () => {
       setUser: vi.fn(),
     });
 
-    const { rerender } = render(
+    render(
       <MemoryRouter initialEntries={['/?code=test-code']}>
         <LoginPage />
       </MemoryRouter>

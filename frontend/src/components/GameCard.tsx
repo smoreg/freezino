@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+
 import { formatCurrency } from '../utils/formatters';
 
 interface GameCardProps {

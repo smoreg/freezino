@@ -1,4 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
+
 import showToast from '../utils/toast';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';

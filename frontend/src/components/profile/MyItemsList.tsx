@@ -1,9 +1,10 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import type { UserItem } from '../../types';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import SellModal from '../shop/SellModal';
-import type { UserItem } from '../../types';
 
 interface MyItemsListProps {
   items: UserItem[];

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 // import api from '../services/api';
 import type { WorkSession } from '../types';
 
@@ -136,7 +137,7 @@ export const useWorkStore = create<WorkState>()(
         // set({ stats: response.data });
 
         // For now, stats are persisted locally
-        console.log('Stats loaded from local storage');
+        console.error('Stats loaded from local storage');
       },
     }),
     {

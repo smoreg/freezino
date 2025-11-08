@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/smoreg/freezino/backend/internal/database"
@@ -32,12 +33,12 @@ type SpinRequest struct {
 
 // SpinResponse represents the response from a slot spin
 type SpinResponse struct {
-	Result         *game.SlotResult `json:"result"`
-	Bet            float64          `json:"bet"`
-	Win            float64          `json:"win"`
-	NewBalance     float64          `json:"new_balance"`
-	TransactionID  uint             `json:"transaction_id"`
-	GameSessionID  uint             `json:"game_session_id"`
+	Result        *game.SlotResult `json:"result"`
+	Bet           float64          `json:"bet"`
+	Win           float64          `json:"win"`
+	NewBalance    float64          `json:"new_balance"`
+	TransactionID uint             `json:"transaction_id"`
+	GameSessionID uint             `json:"game_session_id"`
 }
 
 // Spin performs a slot machine spin
@@ -53,7 +54,7 @@ func (s *SlotsService) Spin(req *SpinRequest) (*SpinResponse, error) {
 		// Get user with lock
 		var user model.User
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&user, req.UserID).Error; err != nil {
-			if err == gorm.ErrRecordNotFound {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return fmt.Errorf("user not found")
 			}
 			return fmt.Errorf("failed to find user: %w", err)

@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '../test/utils';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import ProtectedRoute from './ProtectedRoute';
 import * as authStore from '../store/authStore';
+import { render, screen } from '../test/utils';
 
 // Mock the auth store
 vi.mock('../store/authStore', () => ({

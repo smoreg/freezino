@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '../test/utils';
+
 import ErrorBoundary from './ErrorBoundary';
+import { render, screen } from '../test/utils';
 
 // Component that throws an error
 const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
@@ -55,7 +56,7 @@ describe('ErrorBoundary', () => {
   it('handles reset button click', () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const { rerender } = render(
+    render(
       <ErrorBoundary>
         <ThrowError shouldThrow={true} />
       </ErrorBoundary>

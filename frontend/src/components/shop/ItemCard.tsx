@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+
 import type { Item, ItemRarity } from '../../types';
 
 interface ItemCardProps {

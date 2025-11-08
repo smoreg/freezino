@@ -1,6 +1,7 @@
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { buttonHoverVariants } from './variants';
 import { ReactNode } from 'react';
+
+import { buttonHoverVariants } from './variants';
 
 interface AnimatedButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   children: ReactNode;

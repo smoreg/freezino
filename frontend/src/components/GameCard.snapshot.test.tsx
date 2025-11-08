@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '../test/utils';
+
 import GameCard from './GameCard';
+import { render } from '../test/utils';
 
 describe('GameCard Snapshots', () => {
   it('should match snapshot for regular game card', () => {

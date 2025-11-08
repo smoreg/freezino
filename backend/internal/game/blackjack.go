@@ -108,7 +108,9 @@ func getCardValue(rank string) int {
 	default:
 		// Convert string to int (2-10)
 		var value int
-		fmt.Sscanf(rank, "%d", &value)
+		if _, err := fmt.Sscanf(rank, "%d", &value); err != nil {
+			return 0 // Invalid rank
+		}
 		return value
 	}
 }

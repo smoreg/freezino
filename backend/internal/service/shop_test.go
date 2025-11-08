@@ -159,7 +159,7 @@ func TestShopServiceSellItem(t *testing.T) {
 	sellResponse, err := service.SellItem(user.ID, buyResponse.UserItem.ID)
 	require.NoError(t, err)
 	assert.NotNil(t, sellResponse)
-	assert.Equal(t, 50.0, sellResponse.SalePrice) // 50% of 100
+	assert.Equal(t, 50.0, sellResponse.SalePrice)   // 50% of 100
 	assert.Equal(t, 950.0, sellResponse.NewBalance) // 900 + 50
 	assert.Greater(t, sellResponse.TransactionID, uint(0))
 

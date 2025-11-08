@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
 import { PageTransition, AnimatedButton, bounceVariants, scaleFadeVariants } from '../components/animations';
 
 const NotFound = () => {

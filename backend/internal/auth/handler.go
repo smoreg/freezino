@@ -28,7 +28,10 @@ func NewHandler(cfg *config.Config) *Handler {
 // generateState generates a random state string for OAuth
 func generateState() string {
 	b := make([]byte, 32)
-	rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		// Fallback to timestamp-based state if random generation fails
+		return base64.URLEncoding.EncodeToString([]byte(time.Now().String()))
+	}
 	return base64.URLEncoding.EncodeToString(b)
 }
 
@@ -141,7 +144,19 @@ func (h *Handler) GoogleCallback(c *fiber.Ctx) error {
 // GetMe returns the current authenticated user
 func (h *Handler) GetMe(c *fiber.Ctx) error {
 	// Get user from context (set by auth middleware)
-	user := c.Locals("user").(*model.User)
+	userObj := c.Locals("user")
+	if userObj == nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "user not authenticated",
+		})
+	}
+
+	user, ok := userObj.(*model.User)
+	if !ok {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "invalid user object",
+		})
+	}
 
 	return c.JSON(fiber.Map{
 		"user": user,

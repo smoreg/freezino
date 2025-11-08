@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+
 import Avatar from '../components/profile/Avatar';
 import type { UserItem } from '../types';
 

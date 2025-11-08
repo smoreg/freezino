@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import CookieSettings from '../components/CookieSettings';
 
 const Footer = () => {

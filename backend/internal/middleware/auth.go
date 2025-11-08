@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -36,7 +37,7 @@ func AuthMiddleware(cfg *config.Config) fiber.Handler {
 		// Validate token
 		claims, err := jwtManager.ValidateToken(token)
 		if err != nil {
-			if err == auth.ErrExpiredToken {
+			if errors.Is(err, auth.ErrExpiredToken) {
 				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 					"error": "token has expired",
 				})

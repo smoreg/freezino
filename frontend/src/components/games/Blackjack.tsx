@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useAuthStore } from '../../store/authStore';
 import type { BlackjackGameState, Card } from '../../types';
-import { useTranslation } from 'react-i18next';
+
 
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
 
@@ -41,7 +43,7 @@ const Blackjack = () => {
     const ws = new WebSocket(`${WS_URL}/ws/blackjack`);
 
     ws.onopen = () => {
-      console.log('WebSocket connected');
+      console.error('WebSocket connected');
       setIsConnected(true);
     };
 
@@ -75,7 +77,7 @@ const Blackjack = () => {
     };
 
     ws.onclose = () => {
-      console.log('WebSocket disconnected');
+      console.error('WebSocket disconnected');
       setIsConnected(false);
     };
 

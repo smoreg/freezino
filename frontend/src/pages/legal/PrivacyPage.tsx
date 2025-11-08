@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 // Import markdown files as raw strings
 import privacyEnContent from '../../content/legal/privacy.en.md?raw';
 import privacyRuContent from '../../content/legal/privacy.ru.md?raw';

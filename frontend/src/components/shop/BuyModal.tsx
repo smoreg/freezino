@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import Confetti from 'react-confetti';
+
+import { useSound } from '../../hooks/useSound';
 import { useAuthStore } from '../../store/authStore';
 import { useShopStore } from '../../store/shopStore';
 import type { Item } from '../../types';
-import { useSound } from '../../hooks/useSound';
 
 interface BuyModalProps {
   item: Item | null;

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+
 import { pageVariants } from './variants';
 
 interface PageTransitionProps {

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '../test/utils';
+
 import LoadingSpinner from './LoadingSpinner';
+import { render } from '../test/utils';
 
 describe('LoadingSpinner Snapshots', () => {
   it('should match snapshot for small spinner', () => {

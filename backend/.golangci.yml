@@ -1,0 +1,134 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    # Enabled by default
+    - errcheck      # Check for unchecked errors
+    - gosimple      # Simplify code
+    - govet         # Examines Go source code and reports suspicious constructs
+    - ineffassign   # Detect ineffectual assignments
+    - staticcheck   # Go static analysis
+    - unused        # Check for unused constants, variables, functions, and types
+
+    # Additional recommended linters
+    - gofmt         # Check whether code was gofmt-ed
+    - goimports     # Check import statements are formatted
+    - revive        # Fast, configurable, extensible, flexible linter
+    - misspell      # Detect commonly misspelled English words
+    - unconvert     # Remove unnecessary type conversions
+    - unparam       # Report unused function parameters
+    - bodyclose     # Check whether HTTP response body is closed
+    - contextcheck  # Check whether the function uses a non-inherited context
+    - errname       # Check that sentinel errors are prefixed with Err
+    - errorlint     # Find code that will cause problems with error wrapping
+    - exhaustive    # Check exhaustiveness of enum switch statements
+    - copyloopvar   # Check for pointers to enclosing loop variables (replaces exportloopref)
+    - goconst       # Find repeated strings that could be constants
+    - godot         # Check if comments end in a period
+    - gocyclo       # Compute cyclomatic complexity
+    - gosec         # Inspect source code for security problems
+    - noctx         # Find sending HTTP requests without context.Context
+    - prealloc      # Find slice declarations that could be preallocated
+    - predeclared   # Find code that shadows predeclared identifiers
+    - rowserrcheck  # Check whether Err of rows is checked successfully
+    - sqlclosecheck # Check that SQL rows/statements are closed
+    - thelper       # Detect test helpers without t.Helper()
+    - tparallel     # Detect inappropriate usage of t.Parallel()
+    - wastedassign  # Find wasted assignment statements
+    - whitespace    # Detect leading and trailing whitespace
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    enable:
+      - shadow
+
+  gocyclo:
+    min-complexity: 15
+
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+  misspell:
+    locale: US
+
+  revive:
+    confidence: 0.8
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+  gosec:
+    excludes:
+      - G204  # Subprocess launched with variable (needed for some cases)
+      - G404  # Use of weak random number generator (we use math/rand for non-security)
+
+issues:
+  exclude-dirs:
+    - bin
+    - vendor
+    - data
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - gosec
+        - goconst
+
+    # Exclude known linters from partially hard-vendored code
+    - path: internal/database/
+      linters:
+        - errcheck
+        - sqlclosecheck
+
+    # Exclude cosmetic linters (allow comments without periods)
+    - linters:
+        - godot
+      text: "Comment should end in a period"
+
+    # Allow some complexity for game logic
+    - path: internal/game/
+      linters:
+        - gocyclo
+
+    # Allow empty blocks with comments
+    - linters:
+        - revive
+      text: "empty-block"
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true

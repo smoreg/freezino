@@ -1,8 +1,9 @@
 import { Outlet } from 'react-router-dom';
-import Header from '../components/layout/Header';
-import Sidebar from '../components/layout/Sidebar';
-import MobileMenu from '../components/layout/MobileMenu';
+
 import Footer from './Footer';
+import Header from '../components/layout/Header';
+import MobileMenu from '../components/layout/MobileMenu';
+import Sidebar from '../components/layout/Sidebar';
 import { useMobileMenu } from '../hooks/useMobileMenu';
 
 const MainLayout = () => {

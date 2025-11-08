@@ -1,11 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { Toaster } from 'react-hot-toast';
-import ProtectedRoute from './components/ProtectedRoute';
-import ErrorBoundary from './components/ErrorBoundary';
-import OfflineDetector from './components/OfflineDetector';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import CookieConsent from './components/CookieConsent';
+import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
+import OfflineDetector from './components/OfflineDetector';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy load all pages for better performance and code splitting
 const MainLayout = lazy(() => import('./layouts/MainLayout'));

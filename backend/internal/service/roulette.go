@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/smoreg/freezino/backend/internal/database"
@@ -23,19 +24,19 @@ func NewRouletteService() *RouletteService {
 
 // PlaceBetRequest represents a request to place a bet
 type PlaceBetRequest struct {
-	UserID uint                  `json:"user_id"`
-	Bets   []model.RouletteBet   `json:"bets"`
+	UserID uint                `json:"user_id"`
+	Bets   []model.RouletteBet `json:"bets"`
 }
 
 // PlaceBetResponse represents the response after placing a bet
 type PlaceBetResponse struct {
-	Number       int                 `json:"number"`
-	Color        string              `json:"color"`
-	TotalBet     float64             `json:"total_bet"`
-	TotalWin     float64             `json:"total_win"`
-	Profit       float64             `json:"profit"`
-	NewBalance   float64             `json:"new_balance"`
-	Bets         []model.RouletteBet `json:"bets"`
+	Number     int                 `json:"number"`
+	Color      string              `json:"color"`
+	TotalBet   float64             `json:"total_bet"`
+	TotalWin   float64             `json:"total_win"`
+	Profit     float64             `json:"profit"`
+	NewBalance float64             `json:"new_balance"`
+	Bets       []model.RouletteBet `json:"bets"`
 }
 
 // PlaceBet processes a roulette bet
@@ -54,7 +55,7 @@ func (s *RouletteService) PlaceBet(req PlaceBetRequest) (*PlaceBetResponse, erro
 	var user model.User
 	if err := tx.First(&user, req.UserID).Error; err != nil {
 		tx.Rollback()
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to get user: %w", err)

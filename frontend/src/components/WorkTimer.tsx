@@ -1,9 +1,10 @@
-import { useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useSound } from '../hooks/useSound';
 import { useWorkStore } from '../store/workStore';
 import { formatCurrency, formatDuration } from '../utils/formatters';
-import { useSound } from '../hooks/useSound';
 
 interface CountryComparison {
   name: string;

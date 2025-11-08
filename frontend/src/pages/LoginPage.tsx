@@ -1,10 +1,11 @@
+import { motion } from 'framer-motion';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAuthStore } from '../store/authStore';
-import api from '../services/api';
-import type { AuthResponse } from '../types';
+
 import { PageTransition, rotateVariants, scaleFadeVariants } from '../components/animations';
+import api from '../services/api';
+import { useAuthStore } from '../store/authStore';
+import type { AuthResponse } from '../types';
 
 const LoginPage = () => {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -42,36 +43,36 @@ func NewWorkService() *WorkService {
 
 // StartWorkResponse represents the response for starting work
 type StartWorkResponse struct {
-	UserID       uint      `json:"user_id"`
-	StartedAt    time.Time `json:"started_at"`
-	DurationSec  int       `json:"duration_seconds"`
-	Reward       float64   `json:"reward"`
-	CompletesAt  time.Time `json:"completes_at"`
+	UserID      uint      `json:"user_id"`
+	StartedAt   time.Time `json:"started_at"`
+	DurationSec int       `json:"duration_seconds"`
+	Reward      float64   `json:"reward"`
+	CompletesAt time.Time `json:"completes_at"`
 }
 
 // WorkStatusResponse represents the current work status
 type WorkStatusResponse struct {
-	IsWorking      bool      `json:"is_working"`
-	UserID         uint      `json:"user_id"`
-	StartedAt      *time.Time `json:"started_at,omitempty"`
-	DurationSec    int       `json:"duration_seconds"`
-	ElapsedSec     int       `json:"elapsed_seconds,omitempty"`
-	RemainingSec   int       `json:"remaining_seconds,omitempty"`
-	Progress       float64   `json:"progress,omitempty"` // 0.0 to 1.0
-	CanComplete    bool      `json:"can_complete"`
-	Reward         float64   `json:"reward"`
-	CompletesAt    *time.Time `json:"completes_at,omitempty"`
+	IsWorking    bool       `json:"is_working"`
+	UserID       uint       `json:"user_id"`
+	StartedAt    *time.Time `json:"started_at,omitempty"`
+	DurationSec  int        `json:"duration_seconds"`
+	ElapsedSec   int        `json:"elapsed_seconds,omitempty"`
+	RemainingSec int        `json:"remaining_seconds,omitempty"`
+	Progress     float64    `json:"progress,omitempty"` // 0.0 to 1.0
+	CanComplete  bool       `json:"can_complete"`
+	Reward       float64    `json:"reward"`
+	CompletesAt  *time.Time `json:"completes_at,omitempty"`
 }
 
 // CompleteWorkResponse represents the response for completing work
 type CompleteWorkResponse struct {
-	UserID          uint    `json:"user_id"`
-	Earned          float64 `json:"earned"`
-	NewBalance      float64 `json:"new_balance"`
-	DurationSec     int     `json:"duration_seconds"`
-	CompletedAt     time.Time `json:"completed_at"`
-	TransactionID   uint    `json:"transaction_id"`
-	WorkSessionID   uint    `json:"work_session_id"`
+	UserID        uint      `json:"user_id"`
+	Earned        float64   `json:"earned"`
+	NewBalance    float64   `json:"new_balance"`
+	DurationSec   int       `json:"duration_seconds"`
+	CompletedAt   time.Time `json:"completed_at"`
+	TransactionID uint      `json:"transaction_id"`
+	WorkSessionID uint      `json:"work_session_id"`
 }
 
 // WorkHistoryItem represents a work session in history
@@ -95,7 +96,7 @@ func (s *WorkService) StartWork(userID uint) (*StartWorkResponse, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
@@ -127,7 +128,7 @@ func (s *WorkService) GetStatus(userID uint) (*WorkStatusResponse, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
@@ -139,11 +140,11 @@ func (s *WorkService) GetStatus(userID uint) (*WorkStatusResponse, error) {
 
 	if !isWorking {
 		return &WorkStatusResponse{
-			IsWorking:    false,
-			UserID:       userID,
-			DurationSec:  WORK_DURATION,
-			Reward:       WORK_REWARD,
-			CanComplete:  false,
+			IsWorking:   false,
+			UserID:      userID,
+			DurationSec: WORK_DURATION,
+			Reward:      WORK_REWARD,
+			CanComplete: false,
 		}, nil
 	}
 
@@ -206,7 +207,7 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 		// Get user with lock
 		var user model.User
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&user, userID).Error; err != nil {
-			if err == gorm.ErrRecordNotFound {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return fmt.Errorf("user not found")
 			}
 			return fmt.Errorf("failed to find user: %w", err)
@@ -265,7 +266,7 @@ func (s *WorkService) GetHistory(userID uint, limit int, offset int) (*WorkHisto
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)

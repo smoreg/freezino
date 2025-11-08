@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
+
+import { useSoundStore } from '../store/soundStore';
 import { soundManager } from '../utils/sounds';
 import type { SoundEffect } from '../utils/sounds';
-import { useSoundStore } from '../store/soundStore';
 
 export const useSound = () => {
   const { isSfxEnabled, sfxVolume } = useSoundStore();

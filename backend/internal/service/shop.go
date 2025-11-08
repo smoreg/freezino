@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -24,13 +25,13 @@ func NewShopService() *ShopService {
 
 // ItemResponse represents a shop item response
 type ItemResponse struct {
-	ID          uint     `json:"id"`
-	Name        string   `json:"name"`
-	Type        string   `json:"type"`
-	Price       float64  `json:"price"`
-	ImageURL    string   `json:"image_url"`
-	Description string   `json:"description"`
-	CreatedAt   string   `json:"created_at"`
+	ID          uint    `json:"id"`
+	Name        string  `json:"name"`
+	Type        string  `json:"type"`
+	Price       float64 `json:"price"`
+	ImageURL    string  `json:"image_url"`
+	Description string  `json:"description"`
+	CreatedAt   string  `json:"created_at"`
 }
 
 // UserItemResponse represents a user's item with full details
@@ -112,7 +113,7 @@ func (s *ShopService) BuyItem(userID uint, itemID uint) (*BuyItemResponse, error
 	var user model.User
 	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&user, userID).Error; err != nil {
 		tx.Rollback()
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to get user: %w", err)
@@ -122,7 +123,7 @@ func (s *ShopService) BuyItem(userID uint, itemID uint) (*BuyItemResponse, error
 	var item model.Item
 	if err := tx.First(&item, itemID).Error; err != nil {
 		tx.Rollback()
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("item not found")
 		}
 		return nil, fmt.Errorf("failed to get item: %w", err)
@@ -211,7 +212,7 @@ func (s *ShopService) SellItem(userID uint, userItemID uint) (*SellItemResponse,
 	var user model.User
 	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&user, userID).Error; err != nil {
 		tx.Rollback()
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to get user: %w", err)
@@ -221,7 +222,7 @@ func (s *ShopService) SellItem(userID uint, userItemID uint) (*SellItemResponse,
 	var userItem model.UserItem
 	if err := tx.Preload("Item").Where("id = ? AND user_id = ?", userItemID, userID).First(&userItem).Error; err != nil {
 		tx.Rollback()
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user item not found or does not belong to user")
 		}
 		return nil, fmt.Errorf("failed to get user item: %w", err)
@@ -276,7 +277,7 @@ func (s *ShopService) GetMyItems(userID uint) ([]UserItemResponse, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
@@ -326,7 +327,7 @@ func (s *ShopService) EquipItem(userID uint, userItemID uint) (*UserItemResponse
 	var userItem model.UserItem
 	if err := tx.Preload("Item").Where("id = ? AND user_id = ?", userItemID, userID).First(&userItem).Error; err != nil {
 		tx.Rollback()
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user item not found or does not belong to user")
 		}
 		return nil, fmt.Errorf("failed to get user item: %w", err)

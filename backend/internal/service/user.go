@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/smoreg/freezino/backend/internal/database"
@@ -22,14 +23,14 @@ func NewUserService() *UserService {
 
 // ProfileResponse represents user profile data
 type ProfileResponse struct {
-	ID        uint      `json:"id"`
-	GoogleID  string    `json:"google_id"`
-	Email     string    `json:"email"`
-	Name      string    `json:"name"`
-	Avatar    string    `json:"avatar"`
-	Balance   float64   `json:"balance"`
-	CreatedAt string    `json:"created_at"`
-	UpdatedAt string    `json:"updated_at"`
+	ID        uint    `json:"id"`
+	GoogleID  string  `json:"google_id"`
+	Email     string  `json:"email"`
+	Name      string  `json:"name"`
+	Avatar    string  `json:"avatar"`
+	Balance   float64 `json:"balance"`
+	CreatedAt string  `json:"created_at"`
+	UpdatedAt string  `json:"updated_at"`
 }
 
 // UpdateProfileRequest represents profile update request
@@ -46,17 +47,17 @@ type BalanceResponse struct {
 
 // StatsResponse represents user statistics
 type StatsResponse struct {
-	UserID          uint    `json:"user_id"`
-	TotalWorkTime   int     `json:"total_work_time"`   // in seconds
-	TotalEarned     float64 `json:"total_earned"`
-	TotalGameSessions int   `json:"total_game_sessions"`
-	TotalBet        float64 `json:"total_bet"`
-	TotalWon        float64 `json:"total_won"`
-	TotalLost       float64 `json:"total_lost"`
-	NetProfit       float64 `json:"net_profit"` // total won - total bet
-	FavoriteGame    string  `json:"favorite_game,omitempty"`
-	BiggestWin      float64 `json:"biggest_win"`
-	BiggestLoss     float64 `json:"biggest_loss"`
+	UserID            uint    `json:"user_id"`
+	TotalWorkTime     int     `json:"total_work_time"` // in seconds
+	TotalEarned       float64 `json:"total_earned"`
+	TotalGameSessions int     `json:"total_game_sessions"`
+	TotalBet          float64 `json:"total_bet"`
+	TotalWon          float64 `json:"total_won"`
+	TotalLost         float64 `json:"total_lost"`
+	NetProfit         float64 `json:"net_profit"` // total won - total bet
+	FavoriteGame      string  `json:"favorite_game,omitempty"`
+	BiggestWin        float64 `json:"biggest_win"`
+	BiggestLoss       float64 `json:"biggest_loss"`
 }
 
 // GetProfile retrieves user profile by ID
@@ -64,7 +65,7 @@ func (s *UserService) GetProfile(userID uint) (*ProfileResponse, error) {
 	var user model.User
 
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to get user profile: %w", err)
@@ -87,7 +88,7 @@ func (s *UserService) UpdateProfile(userID uint, req UpdateProfileRequest) (*Pro
 	var user model.User
 
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
@@ -130,7 +131,7 @@ func (s *UserService) GetBalance(userID uint) (*BalanceResponse, error) {
 	var user model.User
 
 	if err := s.db.Select("id", "balance").First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to get user balance: %w", err)
@@ -147,7 +148,7 @@ func (s *UserService) GetStats(userID uint) (*StatsResponse, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
@@ -231,7 +232,7 @@ func (s *UserService) GetTransactions(userID uint, limit int, offset int) ([]mod
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, 0, fmt.Errorf("user not found")
 		}
 		return nil, 0, fmt.Errorf("failed to find user: %w", err)
@@ -268,7 +269,7 @@ func (s *UserService) GetUserItems(userID uint) ([]model.UserItem, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+
 import { useAuthStore } from '../store/authStore';
 
 interface ProtectedRouteProps {

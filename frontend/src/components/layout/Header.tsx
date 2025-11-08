@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../LanguageSwitcher';
+import { Link } from 'react-router-dom';
+
 import { useSoundStore } from '../../store/soundStore';
 import { soundManager } from '../../utils/sounds';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 interface User {
   name: string;

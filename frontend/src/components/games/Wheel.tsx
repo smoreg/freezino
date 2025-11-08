@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import api from '../../services/api';
 import { formatCurrency } from '../../utils/formatters';
 

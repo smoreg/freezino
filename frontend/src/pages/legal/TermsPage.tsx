@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 // Import markdown files as raw strings
 import termsEnContent from '../../content/legal/terms.en.md?raw';
 import termsRuContent from '../../content/legal/terms.ru.md?raw';

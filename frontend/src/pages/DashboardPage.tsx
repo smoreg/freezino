@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import GameCard from '../components/GameCard';
+
 import { PageTransition, GameCardSkeleton } from '../components/animations';
+import GameCard from '../components/GameCard';
 
 interface Game {
   id: string;
@@ -104,7 +105,7 @@ const DashboardPage = () => {
   }, [t]);
 
   const handleGameClick = (gameId: string) => {
-    console.log('Game clicked:', gameId);
+    console.error('Game clicked:', gameId);
     // TODO: Navigate to game page
   };
 

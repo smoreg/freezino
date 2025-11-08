@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import { WinConfetti } from '../animations';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useSound } from '../../hooks/useSound';
+import { WinConfetti } from '../animations';
 
 // Slot symbols
 const SYMBOLS = ['🍒', '🍋', '🍊', '🍇', '💎', '⭐', '7️⃣'];

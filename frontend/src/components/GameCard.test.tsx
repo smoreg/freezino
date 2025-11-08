@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '../test/utils';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
+
 import GameCard from './GameCard';
+import { render, screen } from '../test/utils';
 
 describe('GameCard', () => {
   const defaultProps = {

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+
 import { useShopStore } from '../../store/shopStore';
 import type { ItemType, ItemRarity } from '../../types';
 
