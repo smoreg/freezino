@@ -72,9 +72,9 @@ const Crash = () => {
 
       setResult(data);
       setBalance(data.new_balance);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to place bet:', error);
-      alert(error.response?.data?.message || t('games.crash.error', 'Failed to place bet'));
+      alert((error as { response?: { data?: { message?: string } } }).response?.data?.message || t('games.crash.error', 'Failed to place bet'));
       setIsPlaying(false);
     } finally {
       setLoading(false);

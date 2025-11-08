@@ -83,8 +83,8 @@ export default function BuyModal({ item, isOpen, onClose }: BuyModalProps) {
         onClose();
         setShowConfetti(false);
       }, isRareItem ? 3000 : 1000);
-    } catch (err: any) {
-      setError(err.message || 'Failed to purchase item');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to purchase item');
       setIsLoading(false);
     }
   };

@@ -59,9 +59,9 @@ const ContactForm = () => {
           setSubmitSuccess(false);
         }, 5000);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.response?.data?.message ||
+        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
         'Произошла ошибка при отправке сообщения. Попробуйте позже.';
       showToast.error(errorMessage);
     }

@@ -24,7 +24,7 @@ const SUIT_COLORS: { [key: string]: string } = {
 
 interface WebSocketMessage {
   type: string;
-  payload?: any;
+  payload?: Record<string, unknown>;
 }
 
 const Blackjack = () => {
@@ -87,7 +87,7 @@ const Blackjack = () => {
   }, [user, setUser]);
 
   // Send message to WebSocket
-  const sendMessage = (type: string, payload?: any) => {
+  const sendMessage = (type: string, payload?: Record<string, unknown>) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ type, payload }));
     }

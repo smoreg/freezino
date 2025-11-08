@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
 import type { AuthResponse } from '../types';
-import { PageTransition, AnimatedButton, rotateVariants, scaleFadeVariants } from '../components/animations';
+import { PageTransition, rotateVariants, scaleFadeVariants } from '../components/animations';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -15,7 +15,27 @@ const LoginPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Get redirect location from state (for protected route redirects)
-  const from = (location.state as any)?.from?.pathname || '/';
+  const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/';
+
+  const handleOAuthCallback = useCallback(async (code: string) => {
+    setIsProcessing(true);
+    setError(null);
+
+    try {
+      // Exchange code for tokens
+      const response = await api.get<AuthResponse>(`/auth/google/callback?code=${code}`);
+
+      // Save auth data to store
+      login(response.data);
+
+      // Redirect to home or previous location
+      navigate(from, { replace: true });
+    } catch (err: unknown) {
+      console.error('OAuth callback failed:', err);
+      setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Ошибка входа. Попробуйте снова.');
+      setIsProcessing(false);
+    }
+  }, [login, navigate, from]);
 
   useEffect(() => {
     // If already authenticated, redirect to home or previous location
@@ -36,27 +56,7 @@ const LoginPage = () => {
     if (code && !isProcessing) {
       handleOAuthCallback(code);
     }
-  }, [searchParams, isAuthenticated, navigate, from, isProcessing]);
-
-  const handleOAuthCallback = async (code: string) => {
-    setIsProcessing(true);
-    setError(null);
-
-    try {
-      // Exchange code for tokens
-      const response = await api.get<AuthResponse>(`/auth/google/callback?code=${code}`);
-
-      // Save auth data to store
-      login(response.data);
-
-      // Redirect to home or previous location
-      navigate(from, { replace: true });
-    } catch (err: any) {
-      console.error('OAuth callback failed:', err);
-      setError(err.response?.data?.message || 'Ошибка входа. Попробуйте снова.');
-      setIsProcessing(false);
-    }
-  };
+  }, [searchParams, isAuthenticated, navigate, from, isProcessing, handleOAuthCallback]);
 
   const handleGoogleLogin = () => {
     // Redirect to backend OAuth endpoint

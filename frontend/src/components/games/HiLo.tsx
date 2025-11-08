@@ -93,9 +93,9 @@ const HiLo = () => {
         setShowResult(true);
       }, 500);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to place bet:', error);
-      alert(error.response?.data?.message || t('games.hilo.error', 'Failed to place bet'));
+      alert((error as { response?: { data?: { message?: string } } }).response?.data?.message || t('games.hilo.error', 'Failed to place bet'));
       setIsPlaying(false);
     } finally {
       setLoading(false);

@@ -55,9 +55,9 @@ export const useShopStore = create<ShopState>((set, get) => ({
         items: response.data,
         isLoading: false
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       set({
-        error: error.response?.data?.message || 'Failed to fetch items',
+        error: (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to fetch items',
         isLoading: false
       });
     }
@@ -67,7 +67,7 @@ export const useShopStore = create<ShopState>((set, get) => ({
     try {
       const response = await api.get<UserItem[]>('/shop/my-items');
       set({ myItems: response.data });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to fetch my items:', error);
     }
   },
@@ -79,8 +79,8 @@ export const useShopStore = create<ShopState>((set, get) => ({
       // Refresh items and user items
       await get().fetchItems();
       await get().fetchMyItems();
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to buy item');
+    } catch (error: unknown) {
+      throw new Error((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to buy item');
     }
   },
 
@@ -90,8 +90,8 @@ export const useShopStore = create<ShopState>((set, get) => ({
 
       // Refresh my items
       await get().fetchMyItems();
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to sell item');
+    } catch (error: unknown) {
+      throw new Error((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to sell item');
     }
   },
 
@@ -101,8 +101,8 @@ export const useShopStore = create<ShopState>((set, get) => ({
 
       // Refresh my items
       await get().fetchMyItems();
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to equip item');
+    } catch (error: unknown) {
+      throw new Error((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to equip item');
     }
   },
 

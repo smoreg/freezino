@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import type { UserItem } from '../../types';
+import type { UserItem, Item } from '../../types';
 
 interface AvatarProps {
   equippedItems: UserItem[];
@@ -13,7 +13,7 @@ const Avatar = ({ equippedItems, className = '' }: AvatarProps) => {
       acc[userItem.item.type] = userItem.item;
     }
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, Item>);
 
   const house = itemsByType['house'];
   const clothing = itemsByType['clothing'];

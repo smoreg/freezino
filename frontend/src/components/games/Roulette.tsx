@@ -129,9 +129,9 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
           }
         }, 4000);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to place bet:', error);
-      alert(error.response?.data?.message || t('roulette.betFailed'));
+      alert((error as { response?: { data?: { message?: string } } }).response?.data?.message || t('roulette.betFailed'));
       setIsSpinning(false);
     }
   };

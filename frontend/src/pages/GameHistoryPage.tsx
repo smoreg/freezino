@@ -241,7 +241,7 @@ const GameHistoryPage = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  label={(entry: any) => GAME_NAMES[entry.game_type] || entry.game_type}
+                  label={(entry: { game_type: string }) => GAME_NAMES[entry.game_type] || entry.game_type}
                 >
                   {stats.game_breakdown.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

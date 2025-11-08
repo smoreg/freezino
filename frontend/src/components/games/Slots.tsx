@@ -170,10 +170,10 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
           }
         }, (reels.length + 1) * 300);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Spin error:', error);
       setMessage(
-        error.response?.data?.message ||
+        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
           t('slots.error') ||
           'An error occurred'
       );

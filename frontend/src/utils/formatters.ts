@@ -84,7 +84,7 @@ export const formatDateTime = (date: Date | string | number): string => {
  * @param t - Translation function from useTranslation
  * @returns Formatted duration string
  */
-export const formatDuration = (seconds: number, t: (key: string, options?: any) => string): string => {
+export const formatDuration = (seconds: number, t: (key: string, options?: Record<string, unknown>) => string): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 

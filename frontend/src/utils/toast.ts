@@ -28,7 +28,7 @@ export const showToast = {
     toast.dismiss(toastId);
   },
 
-  custom: (message: string, options?: any) => {
+  custom: (message: string, options?: Record<string, unknown>) => {
     toast(message, options);
   },
 };

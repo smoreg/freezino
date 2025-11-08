@@ -6,7 +6,7 @@ import ItemCard from '../components/shop/ItemCard';
 import ShopFilters from '../components/shop/ShopFilters';
 import BuyModal from '../components/shop/BuyModal';
 import type { Item } from '../types';
-import { PageTransition, LoadingSkeleton, rotateVariants } from '../components/animations';
+import { PageTransition, rotateVariants } from '../components/animations';
 
 export default function ShopPage() {
   const { items, myItems, isLoading, fetchItems, fetchMyItems, minPrice, maxPrice } = useShopStore();

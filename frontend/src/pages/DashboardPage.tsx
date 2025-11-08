@@ -101,7 +101,7 @@ const DashboardPage = () => {
     };
 
     fetchGames();
-  }, []);
+  }, [t]);
 
   const handleGameClick = (gameId: string) => {
     console.log('Game clicked:', gameId);

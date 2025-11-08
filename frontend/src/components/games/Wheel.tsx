@@ -92,9 +92,9 @@ const Wheel = () => {
         setIsSpinning(false);
       }, 4000);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to spin wheel:', error);
-      alert(error.response?.data?.message || t('games.wheel.error', 'Failed to spin wheel'));
+      alert((error as { response?: { data?: { message?: string } } }).response?.data?.message || t('games.wheel.error', 'Failed to spin wheel'));
       setIsSpinning(false);
     } finally {
       setLoading(false);
