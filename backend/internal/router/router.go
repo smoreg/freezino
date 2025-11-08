@@ -68,6 +68,15 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	contactHandler := handler.NewContactHandler()
 	api.Post("/contact", contactHandler.SubmitMessage)
 
+	// Shop routes
+	shopHandler := handler.NewShopHandler()
+	shop := api.Group("/shop")
+	shop.Get("/items", shopHandler.GetItems)
+	shop.Post("/buy/:itemId", shopHandler.BuyItem)
+	shop.Post("/sell/:userItemId", shopHandler.SellItem)
+	shop.Get("/my-items", shopHandler.GetMyItems)
+	shop.Post("/equip/:userItemId", shopHandler.EquipItem)
+
 	// Game routes
 	gamesGroup := api.Group("/games")
 
