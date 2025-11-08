@@ -9,7 +9,9 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "loading": "Cargando...",
-    "connecting": "Conectando..."
+    "connecting": "Conectando...",
+    "selling": "Vendiendo...",
+    "tip": "Consejo"
   },
   "nav": {
     "home": "Inicio",
@@ -122,5 +124,35 @@
   "currency": {
     "format": "${{amount, number}}",
     "symbol": "$"
+  },
+  "shop": {
+    "sellItem": "Vender Artículo",
+    "purchasedFor": "Comprado por",
+    "originalPrice": "Precio Original",
+    "sellPrice": "Precio de Venta",
+    "sellWarning": "Recibirás el 50% del precio original. Esta acción no se puede deshacer.",
+    "confirmSell": "Confirmar Venta",
+    "sell": "Vender",
+    "clothing": "Ropa",
+    "car": "Coches",
+    "house": "Casas",
+    "accessories": "Accesorios",
+    "noMoney": "¡Sin Dinero!",
+    "noMoneyDescription": "Te has quedado sin dinero",
+    "currentBalance": "Balance Actual",
+    "noMoneyWithItems": "¡No tienes dinero para seguir jugando. Puedes vender tus artículos para recuperar dinero!",
+    "noMoneyNoItems": "No tienes dinero ni artículos. ¡Necesitas trabajar para ganar dinero!",
+    "sellItems": "Vender tus Artículos",
+    "sellItemsDescription": "Recupera el 50% del precio original",
+    "workToEarn": "Trabajar para Ganar Dinero",
+    "workDescription": "3 minutos = $500",
+    "noMoneyTip": "Esta es una simulación para mostrar qué tan rápido se puede perder dinero en el juego. En la vida real, nunca apuestes dinero que no puedas permitirte perder."
+  },
+  "profile": {
+    "noItems": "Aún no hay Artículos",
+    "noItemsDescription": "¡Visita la tienda para comprar tus primeros artículos!",
+    "equipped": "Equipado",
+    "equip": "Equipar",
+    "purchased": "Comprado"
   }
 }

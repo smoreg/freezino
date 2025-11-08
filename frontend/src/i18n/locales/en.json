@@ -9,7 +9,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "loading": "Loading...",
-    "connecting": "Connecting..."
+    "connecting": "Connecting...",
+    "selling": "Selling...",
+    "tip": "Tip"
   },
   "nav": {
     "home": "Home",
@@ -143,5 +145,35 @@
   "currency": {
     "format": "${{amount, number}}",
     "symbol": "$"
+  },
+  "shop": {
+    "sellItem": "Sell Item",
+    "purchasedFor": "Purchased for",
+    "originalPrice": "Original Price",
+    "sellPrice": "Sell Price",
+    "sellWarning": "You will receive 50% of the original price. This action cannot be undone.",
+    "confirmSell": "Confirm Sell",
+    "sell": "Sell",
+    "clothing": "Clothing",
+    "car": "Cars",
+    "house": "Houses",
+    "accessories": "Accessories",
+    "noMoney": "No Money!",
+    "noMoneyDescription": "You have run out of money",
+    "currentBalance": "Current Balance",
+    "noMoneyWithItems": "You have no money to continue playing. You can sell your items to get money back!",
+    "noMoneyNoItems": "You have no money and no items. You need to work to earn money!",
+    "sellItems": "Sell Your Items",
+    "sellItemsDescription": "Get 50% of the original price back",
+    "workToEarn": "Work to Earn Money",
+    "workDescription": "3 minutes = $500",
+    "noMoneyTip": "This is a simulation to show how quickly money can be lost to gambling. In real life, never gamble money you cannot afford to lose."
+  },
+  "profile": {
+    "noItems": "No Items Yet",
+    "noItemsDescription": "Visit the shop to buy your first items!",
+    "equipped": "Equipped",
+    "equip": "Equip",
+    "purchased": "Purchased"
   }
 }
