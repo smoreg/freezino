@@ -1,0 +1,362 @@
+[
+  {
+    "code": "US",
+    "name": "United States",
+    "avgHourlyWage": 29.81,
+    "currency": "USD"
+  },
+  {
+    "code": "CH",
+    "name": "Switzerland",
+    "avgHourlyWage": 33.75,
+    "currency": "USD"
+  },
+  {
+    "code": "LU",
+    "name": "Luxembourg",
+    "avgHourlyWage": 31.50,
+    "currency": "USD"
+  },
+  {
+    "code": "NO",
+    "name": "Norway",
+    "avgHourlyWage": 28.90,
+    "currency": "USD"
+  },
+  {
+    "code": "DK",
+    "name": "Denmark",
+    "avgHourlyWage": 28.35,
+    "currency": "USD"
+  },
+  {
+    "code": "AU",
+    "name": "Australia",
+    "avgHourlyWage": 27.50,
+    "currency": "USD"
+  },
+  {
+    "code": "NL",
+    "name": "Netherlands",
+    "avgHourlyWage": 26.80,
+    "currency": "USD"
+  },
+  {
+    "code": "DE",
+    "name": "Germany",
+    "avgHourlyWage": 25.90,
+    "currency": "USD"
+  },
+  {
+    "code": "BE",
+    "name": "Belgium",
+    "avgHourlyWage": 25.60,
+    "currency": "USD"
+  },
+  {
+    "code": "SE",
+    "name": "Sweden",
+    "avgHourlyWage": 25.20,
+    "currency": "USD"
+  },
+  {
+    "code": "CA",
+    "name": "Canada",
+    "avgHourlyWage": 24.80,
+    "currency": "USD"
+  },
+  {
+    "code": "AT",
+    "name": "Austria",
+    "avgHourlyWage": 24.50,
+    "currency": "USD"
+  },
+  {
+    "code": "FI",
+    "name": "Finland",
+    "avgHourlyWage": 24.10,
+    "currency": "USD"
+  },
+  {
+    "code": "IE",
+    "name": "Ireland",
+    "avgHourlyWage": 23.80,
+    "currency": "USD"
+  },
+  {
+    "code": "FR",
+    "name": "France",
+    "avgHourlyWage": 23.40,
+    "currency": "USD"
+  },
+  {
+    "code": "GB",
+    "name": "United Kingdom",
+    "avgHourlyWage": 22.90,
+    "currency": "USD"
+  },
+  {
+    "code": "NZ",
+    "name": "New Zealand",
+    "avgHourlyWage": 22.50,
+    "currency": "USD"
+  },
+  {
+    "code": "JP",
+    "name": "Japan",
+    "avgHourlyWage": 21.80,
+    "currency": "USD"
+  },
+  {
+    "code": "IT",
+    "name": "Italy",
+    "avgHourlyWage": 21.30,
+    "currency": "USD"
+  },
+  {
+    "code": "SG",
+    "name": "Singapore",
+    "avgHourlyWage": 21.00,
+    "currency": "USD"
+  },
+  {
+    "code": "ES",
+    "name": "Spain",
+    "avgHourlyWage": 19.70,
+    "currency": "USD"
+  },
+  {
+    "code": "KR",
+    "name": "South Korea",
+    "avgHourlyWage": 19.20,
+    "currency": "USD"
+  },
+  {
+    "code": "IL",
+    "name": "Israel",
+    "avgHourlyWage": 18.90,
+    "currency": "USD"
+  },
+  {
+    "code": "PT",
+    "name": "Portugal",
+    "avgHourlyWage": 15.80,
+    "currency": "USD"
+  },
+  {
+    "code": "CZ",
+    "name": "Czech Republic",
+    "avgHourlyWage": 15.20,
+    "currency": "USD"
+  },
+  {
+    "code": "SI",
+    "name": "Slovenia",
+    "avgHourlyWage": 14.90,
+    "currency": "USD"
+  },
+  {
+    "code": "GR",
+    "name": "Greece",
+    "avgHourlyWage": 13.50,
+    "currency": "USD"
+  },
+  {
+    "code": "EE",
+    "name": "Estonia",
+    "avgHourlyWage": 13.20,
+    "currency": "USD"
+  },
+  {
+    "code": "PL",
+    "name": "Poland",
+    "avgHourlyWage": 12.80,
+    "currency": "USD"
+  },
+  {
+    "code": "SK",
+    "name": "Slovakia",
+    "avgHourlyWage": 12.40,
+    "currency": "USD"
+  },
+  {
+    "code": "HU",
+    "name": "Hungary",
+    "avgHourlyWage": 11.90,
+    "currency": "USD"
+  },
+  {
+    "code": "CL",
+    "name": "Chile",
+    "avgHourlyWage": 11.50,
+    "currency": "USD"
+  },
+  {
+    "code": "LT",
+    "name": "Lithuania",
+    "avgHourlyWage": 11.20,
+    "currency": "USD"
+  },
+  {
+    "code": "LV",
+    "name": "Latvia",
+    "avgHourlyWage": 10.80,
+    "currency": "USD"
+  },
+  {
+    "code": "HR",
+    "name": "Croatia",
+    "avgHourlyWage": 10.50,
+    "currency": "USD"
+  },
+  {
+    "code": "AR",
+    "name": "Argentina",
+    "avgHourlyWage": 9.80,
+    "currency": "USD"
+  },
+  {
+    "code": "TR",
+    "name": "Turkey",
+    "avgHourlyWage": 9.20,
+    "currency": "USD"
+  },
+  {
+    "code": "RO",
+    "name": "Romania",
+    "avgHourlyWage": 8.90,
+    "currency": "USD"
+  },
+  {
+    "code": "BG",
+    "name": "Bulgaria",
+    "avgHourlyWage": 8.40,
+    "currency": "USD"
+  },
+  {
+    "code": "MX",
+    "name": "Mexico",
+    "avgHourlyWage": 7.80,
+    "currency": "USD"
+  },
+  {
+    "code": "RU",
+    "name": "Russia",
+    "avgHourlyWage": 7.50,
+    "currency": "USD"
+  },
+  {
+    "code": "BR",
+    "name": "Brazil",
+    "avgHourlyWage": 7.20,
+    "currency": "USD"
+  },
+  {
+    "code": "CN",
+    "name": "China",
+    "avgHourlyWage": 6.90,
+    "currency": "USD"
+  },
+  {
+    "code": "MY",
+    "name": "Malaysia",
+    "avgHourlyWage": 6.50,
+    "currency": "USD"
+  },
+  {
+    "code": "TH",
+    "name": "Thailand",
+    "avgHourlyWage": 5.80,
+    "currency": "USD"
+  },
+  {
+    "code": "ZA",
+    "name": "South Africa",
+    "avgHourlyWage": 5.50,
+    "currency": "USD"
+  },
+  {
+    "code": "CO",
+    "name": "Colombia",
+    "avgHourlyWage": 5.20,
+    "currency": "USD"
+  },
+  {
+    "code": "PE",
+    "name": "Peru",
+    "avgHourlyWage": 4.90,
+    "currency": "USD"
+  },
+  {
+    "code": "ID",
+    "name": "Indonesia",
+    "avgHourlyWage": 4.50,
+    "currency": "USD"
+  },
+  {
+    "code": "PH",
+    "name": "Philippines",
+    "avgHourlyWage": 4.20,
+    "currency": "USD"
+  },
+  {
+    "code": "EG",
+    "name": "Egypt",
+    "avgHourlyWage": 3.80,
+    "currency": "USD"
+  },
+  {
+    "code": "VN",
+    "name": "Vietnam",
+    "avgHourlyWage": 3.50,
+    "currency": "USD"
+  },
+  {
+    "code": "UA",
+    "name": "Ukraine",
+    "avgHourlyWage": 3.20,
+    "currency": "USD"
+  },
+  {
+    "code": "IN",
+    "name": "India",
+    "avgHourlyWage": 2.80,
+    "currency": "USD"
+  },
+  {
+    "code": "PK",
+    "name": "Pakistan",
+    "avgHourlyWage": 2.50,
+    "currency": "USD"
+  },
+  {
+    "code": "BD",
+    "name": "Bangladesh",
+    "avgHourlyWage": 2.20,
+    "currency": "USD"
+  },
+  {
+    "code": "NG",
+    "name": "Nigeria",
+    "avgHourlyWage": 1.90,
+    "currency": "USD"
+  },
+  {
+    "code": "KE",
+    "name": "Kenya",
+    "avgHourlyWage": 1.60,
+    "currency": "USD"
+  },
+  {
+    "code": "GH",
+    "name": "Ghana",
+    "avgHourlyWage": 1.40,
+    "currency": "USD"
+  },
+  {
+    "code": "ET",
+    "name": "Ethiopia",
+    "avgHourlyWage": 1.20,
+    "currency": "USD"
+  }
+]
