@@ -175,5 +175,11 @@
     "equipped": "Equipped",
     "equip": "Equip",
     "purchased": "Purchased"
+  },
+  "sound": {
+    "musicOn": "Background Music: On",
+    "musicOff": "Background Music: Off",
+    "sfxOn": "Sound Effects: On",
+    "sfxOff": "Sound Effects: Off"
   }
 }

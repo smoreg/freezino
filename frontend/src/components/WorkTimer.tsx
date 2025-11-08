@@ -1,8 +1,9 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useWorkStore } from '../store/workStore';
 import { formatCurrency, formatDuration } from '../utils/formatters';
+import { useSound } from '../hooks/useSound';
 
 interface CountryComparison {
   name: string;
@@ -27,6 +28,9 @@ interface WorkTimerProps {
 
 const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
   const { t } = useTranslation();
+  const { playSound } = useSound();
+  const previousTimeRef = useRef<number>(0);
+
   const {
     isWorking,
     isPaused,
@@ -43,6 +47,29 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
   } = useWorkStore();
 
   const countryComparisons = getCountryComparisons(t);
+
+  // Play tick sound
+  useEffect(() => {
+    if (isWorking && !isPaused && timeRemaining > 0 && previousTimeRef.current !== timeRemaining) {
+      // Play tick sound every second
+      playSound('timer-tick', 0.3);
+      previousTimeRef.current = timeRemaining;
+    }
+  }, [timeRemaining, isWorking, isPaused, playSound]);
+
+  // Play completion sound when work is done
+  useEffect(() => {
+    if (timeRemaining === 0 && previousTimeRef.current > 0) {
+      playSound('timer-complete', 0.6);
+    }
+  }, [timeRemaining, playSound]);
+
+  // Play sound when stats modal opens
+  useEffect(() => {
+    if (showStatsModal) {
+      playSound('coin', 0.5);
+    }
+  }, [showStatsModal, playSound]);
 
   // Timer tick effect
   useEffect(() => {
@@ -96,7 +123,10 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={startWork}
+          onClick={() => {
+            playSound('click');
+            startWork();
+          }}
           className="fixed bottom-8 right-8 bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-300 z-50 flex items-center space-x-3"
         >
           <span className="text-2xl">💼</span>
@@ -193,7 +223,10 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={pauseWork}
+                    onClick={() => {
+                      playSound('click');
+                      pauseWork();
+                    }}
                     className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors"
                   >
                     {t('work.pause')}
@@ -202,7 +235,10 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={resumeWork}
+                    onClick={() => {
+                      playSound('click');
+                      resumeWork();
+                    }}
                     className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
                   >
                     {t('work.resume')}
@@ -212,7 +248,12 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={cancelWork}
+                  onClick={() => {
+                    if (isPaused) {
+                      playSound('click');
+                      cancelWork();
+                    }
+                  }}
                   disabled={!isPaused}
                   className={`flex-1 font-semibold py-3 rounded-lg transition-colors ${
                     isPaused
@@ -342,6 +383,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
+                  playSound('click');
                   closeStatsModal();
                   if (onWorkComplete) {
                     onWorkComplete(lastCompletedSession.earned);

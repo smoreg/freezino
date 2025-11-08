@@ -154,5 +154,11 @@
     "equipped": "Equipado",
     "equip": "Equipar",
     "purchased": "Comprado"
+  },
+  "sound": {
+    "musicOn": "Música de Fondo: Encendida",
+    "musicOff": "Música de Fondo: Apagada",
+    "sfxOn": "Efectos de Sonido: Encendidos",
+    "sfxOff": "Efectos de Sonido: Apagados"
   }
 }
