@@ -1,6 +1,8 @@
 package router
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/smoreg/freezino/backend/internal/auth"
 	"github.com/smoreg/freezino/backend/internal/config"
@@ -41,6 +43,15 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	user.Get("/stats", userHandler.GetStats)
 	user.Get("/transactions", userHandler.GetTransactions)
 	user.Get("/items", userHandler.GetUserItems)
+
+	// Stats routes
+	statsHandler, err := handler.NewStatsHandler()
+	if err != nil {
+		panic(fmt.Sprintf("Failed to initialize stats handler: %v", err))
+	}
+	stats := api.Group("/stats")
+	stats.Get("/countries", statsHandler.GetCountries)
+	stats.Get("/countries/:code", statsHandler.GetCountryByCode)
 
 	// Future routes will be added here
 }
