@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
@@ -15,10 +16,12 @@ import CookieConsent from './components/CookieConsent';
 import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage';
 
-function App() {
+function AnimatedRoutes() {
+  const location = useLocation();
+
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<LoginPage />} />
 
         {/* Public pages */}
@@ -42,7 +45,14 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+    </AnimatePresence>
+  );
+}
 
+function App() {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
       {/* Cookie Consent Banner - shown on first visit */}
       <CookieConsent />
     </BrowserRouter>

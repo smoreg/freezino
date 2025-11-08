@@ -6,6 +6,7 @@ import ItemCard from '../components/shop/ItemCard';
 import ShopFilters from '../components/shop/ShopFilters';
 import BuyModal from '../components/shop/BuyModal';
 import type { Item } from '../types';
+import { PageTransition, LoadingSkeleton, rotateVariants } from '../components/animations';
 
 export default function ShopPage() {
   const { items, myItems, isLoading, fetchItems, fetchMyItems, minPrice, maxPrice } = useShopStore();
@@ -41,8 +42,9 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8 px-4">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -84,7 +86,12 @@ export default function ShopPage() {
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
-                <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-yellow-500 mb-4"></div>
+                <motion.div
+                  className="inline-block rounded-full h-16 w-16 border-t-4 border-b-4 border-yellow-500 mb-4"
+                  variants={rotateVariants}
+                  initial="initial"
+                  animate="animate"
+                />
                 <p className="text-gray-400 text-lg">Loading items...</p>
               </div>
             </div>
@@ -123,10 +130,11 @@ export default function ShopPage() {
             </>
           )}
         </motion.div>
-      </div>
 
-      {/* Buy Modal */}
-      <BuyModal item={selectedItem} isOpen={isModalOpen} onClose={handleCloseModal} />
-    </div>
+        {/* Buy Modal */}
+        <BuyModal item={selectedItem} isOpen={isModalOpen} onClose={handleCloseModal} />
+      </div>
+      </div>
+    </PageTransition>
   );
 }

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
 import type { AuthResponse } from '../types';
+import { PageTransition, AnimatedButton, rotateVariants, scaleFadeVariants } from '../components/animations';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -66,33 +68,52 @@ const LoginPage = () => {
   if (isProcessing) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-          <p className="mt-4 text-gray-400">Вход в систему...</p>
-        </div>
+        <PageTransition>
+          <div className="text-center">
+            <motion.div
+              className="inline-block rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"
+              variants={rotateVariants}
+              initial="initial"
+              animate="animate"
+            />
+            <p className="mt-4 text-gray-400">Вход в систему...</p>
+          </div>
+        </PageTransition>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-dark">
-      <div className="bg-gray-800 p-8 rounded-lg border border-gray-700 max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">🎰 FREEZINO</h1>
-          <p className="text-gray-400">Казино-симулятор против игровой зависимости</p>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm">
-            {error}
-          </div>
-        )}
-
-        <button
-          onClick={handleGoogleLogin}
-          disabled={isProcessing}
-          className="w-full bg-white text-gray-800 font-semibold py-3 px-6 rounded-lg flex items-center justify-center space-x-3 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      <PageTransition>
+        <motion.div
+          variants={scaleFadeVariants}
+          initial="initial"
+          animate="animate"
+          className="bg-gray-800 p-8 rounded-lg border border-gray-700 max-w-md w-full"
         >
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-primary mb-2">🎰 FREEZINO</h1>
+            <p className="text-gray-400">Казино-симулятор против игровой зависимости</p>
+          </div>
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200 text-sm"
+            >
+              {error}
+            </motion.div>
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleGoogleLogin}
+            disabled={isProcessing}
+            className="w-full bg-white text-gray-800 font-semibold py-3 px-6 rounded-lg flex items-center justify-center space-x-3 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
           <svg className="w-6 h-6" viewBox="0 0 24 24">
             <path
               fill="currentColor"
@@ -112,7 +133,7 @@ const LoginPage = () => {
             />
           </svg>
           <span>Войти через Google</span>
-        </button>
+        </motion.button>
 
         <div className="mt-6 text-center text-gray-400 text-sm">
           <p>Входя, вы соглашаетесь с тем, что:</p>
@@ -122,7 +143,8 @@ const LoginPage = () => {
             <li>🎓 Цель - образовательная</li>
           </ul>
         </div>
-      </div>
+      </motion.div>
+      </PageTransition>
     </div>
   );
 };

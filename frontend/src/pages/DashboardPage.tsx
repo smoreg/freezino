@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import GameCard from '../components/GameCard';
+import { PageTransition, GameCardSkeleton } from '../components/animations';
 
 interface Game {
   id: string;
@@ -108,7 +109,8 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <PageTransition>
+      <div className="min-h-screen">
       {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -173,19 +175,7 @@ const DashboardPage = () => {
         {loading ? (
           // Loading Skeleton
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, index) => (
-              <div
-                key={index}
-                className="bg-gray-800 border border-gray-700 rounded-xl p-6 animate-pulse"
-              >
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-24 h-24 bg-gray-700 rounded-full"></div>
-                </div>
-                <div className="h-6 bg-gray-700 rounded mb-2"></div>
-                <div className="h-4 bg-gray-700 rounded mb-4"></div>
-                <div className="h-8 bg-gray-700 rounded"></div>
-              </div>
-            ))}
+            <GameCardSkeleton count={8} />
           </div>
         ) : (
           // Games Grid
@@ -230,7 +220,8 @@ const DashboardPage = () => {
           {t('dashboard.educationalBanner.description')}
         </p>
       </motion.div>
-    </div>
+      </div>
+    </PageTransition>
   );
 };
 

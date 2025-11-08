@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { WinConfetti } from '../animations';
 
 // Slot symbols
 const SYMBOLS = ['🍒', '🍋', '🍊', '🍇', '💎', '⭐', '7️⃣'];
@@ -57,6 +58,7 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
   const [showPaytable, setShowPaytable] = useState(false);
   const [balance, setBalance] = useState(userBalance);
   const [message, setMessage] = useState('');
+  const [showConfetti, setShowConfetti] = useState(false);
   const spinTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
@@ -151,6 +153,7 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
               t('slots.youWon', { amount: result.total_win.toFixed(2) }) ||
                 `You won $${result.total_win.toFixed(2)}!`
             );
+            setShowConfetti(true);
           } else {
             setMessage(t('slots.tryAgain') || 'Try again!');
           }
@@ -366,6 +369,9 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
           <p>{t('slots.info') || '10 paylines • Match 3+ symbols to win • Higher bets = higher wins'}</p>
         </motion.div>
       </div>
+
+      {/* Win Confetti */}
+      <WinConfetti active={showConfetti} onComplete={() => setShowConfetti(false)} />
     </div>
   );
 };
