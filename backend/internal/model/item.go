@@ -16,11 +16,22 @@ const (
 	ItemTypeAccessories ItemType = "accessories"
 )
 
+// ItemRarity represents the rarity level of an item
+type ItemRarity string
+
+const (
+	ItemRarityCommon    ItemRarity = "common"
+	ItemRarityRare      ItemRarity = "rare"
+	ItemRarityEpic      ItemRarity = "epic"
+	ItemRarityLegendary ItemRarity = "legendary"
+)
+
 // Item represents a purchasable item in the shop
 type Item struct {
 	ID          uint           `gorm:"primarykey" json:"id"`
 	Name        string         `gorm:"size:255;not null" json:"name"`
 	Type        ItemType       `gorm:"size:50;not null;index" json:"type"`
+	Rarity      ItemRarity     `gorm:"size:50;not null;index;default:'common'" json:"rarity"`
 	Price       float64        `gorm:"type:decimal(15,2);not null" json:"price"`
 	ImageURL    string         `gorm:"size:512" json:"image_url"`
 	Description string         `gorm:"type:text" json:"description"`
