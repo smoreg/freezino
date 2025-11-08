@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"freezino/backend/internal/model"
+	"github.com/smoreg/freezino/backend/internal/model"
 )
 
 // Migrate runs auto-migration for all models
