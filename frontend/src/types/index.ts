@@ -27,11 +27,15 @@ export interface Transaction {
 }
 
 // Item types
+export type ItemType = 'clothing' | 'car' | 'house' | 'accessory';
+export type ItemRarity = 'common' | 'rare' | 'epic' | 'legendary';
+
 export interface Item {
   id: string;
   name: string;
-  type: 'clothing' | 'car' | 'house' | 'accessories';
+  type: ItemType;
   price: number;
+  rarity: ItemRarity;
   image_url: string;
   description: string;
 }
