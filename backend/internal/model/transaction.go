@@ -20,12 +20,12 @@ const (
 // Transaction represents a financial transaction
 type Transaction struct {
 	ID           uint            `gorm:"primarykey" json:"id"`
-	UserID       uint            `gorm:"not null;index" json:"user_id"`
-	Type         TransactionType `gorm:"size:50;not null;index" json:"type"`
+	UserID       uint            `gorm:"not null;index:idx_user_type;index:idx_user_created" json:"user_id"`
+	Type         TransactionType `gorm:"size:50;not null;index;index:idx_user_type" json:"type"`
 	Amount       float64         `gorm:"type:decimal(15,2);not null" json:"amount"`
 	BalanceAfter float64         `gorm:"type:decimal(15,2);default:0.00" json:"balance_after"`
 	Description  string          `gorm:"size:512" json:"description"`
-	CreatedAt    time.Time       `json:"created_at"`
+	CreatedAt    time.Time       `gorm:"index:idx_user_created" json:"created_at"`
 
 	// Relations
 	User User `gorm:"foreignKey:UserID" json:"user,omitempty"`

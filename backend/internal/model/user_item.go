@@ -7,10 +7,10 @@ import (
 // UserItem represents a user's purchased item
 type UserItem struct {
 	ID          uint      `gorm:"primarykey" json:"id"`
-	UserID      uint      `gorm:"not null;index" json:"user_id"`
+	UserID      uint      `gorm:"not null;index:idx_user_purchased;index:idx_user_equipped" json:"user_id"`
 	ItemID      uint      `gorm:"not null;index" json:"item_id"`
-	PurchasedAt time.Time `gorm:"not null" json:"purchased_at"`
-	IsEquipped  bool      `gorm:"default:false" json:"is_equipped"`
+	PurchasedAt time.Time `gorm:"not null;index:idx_user_purchased" json:"purchased_at"`
+	IsEquipped  bool      `gorm:"default:false;index:idx_user_equipped" json:"is_equipped"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 

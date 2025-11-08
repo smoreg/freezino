@@ -1,56 +1,62 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import { Toaster } from 'react-hot-toast';
-import MainLayout from './layouts/MainLayout';
-import Home from './pages/Home';
-import LoginPage from './pages/LoginPage';
-import NotFound from './pages/NotFound';
-import ErrorPage from './pages/ErrorPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineDetector from './components/OfflineDetector';
-import DashboardPage from './pages/DashboardPage';
-import GameHistoryPage from './pages/GameHistoryPage';
-import ShopPage from './pages/ShopPage';
-import ProfilePage from './pages/ProfilePage';
-import TermsPage from './pages/legal/TermsPage';
-import PrivacyPage from './pages/legal/PrivacyPage';
-import CookiesPage from './pages/legal/CookiesPage';
 import CookieConsent from './components/CookieConsent';
-import ContactPage from './pages/ContactPage';
-import AboutPage from './pages/AboutPage';
+import LoadingSpinner from './components/LoadingSpinner';
+
+// Lazy load all pages for better performance and code splitting
+const MainLayout = lazy(() => import('./layouts/MainLayout'));
+const Home = lazy(() => import('./pages/Home'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const ErrorPage = lazy(() => import('./pages/ErrorPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const GameHistoryPage = lazy(() => import('./pages/GameHistoryPage'));
+const ShopPage = lazy(() => import('./pages/ShopPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const TermsPage = lazy(() => import('./pages/legal/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/legal/PrivacyPage'));
+const CookiesPage = lazy(() => import('./pages/legal/CookiesPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 
 function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
 
-          {/* Public pages */}
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/about" element={<AboutPage />} />
+            {/* Public pages */}
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/about" element={<AboutPage />} />
 
-          {/* Error pages */}
-          <Route path="/error" element={<ErrorPage />} />
-          <Route path="/error/:statusCode" element={<ErrorPage />} />
+            {/* Error pages */}
+            <Route path="/error" element={<ErrorPage />} />
+            <Route path="/error/:statusCode" element={<ErrorPage />} />
 
-          {/* Legal Pages - Public */}
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/cookies" element={<CookiesPage />} />
+            {/* Legal Pages - Public */}
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/cookies" element={<CookiesPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/history" element={<GameHistoryPage />} />
-              <Route path="/shop" element={<ShopPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/history" element={<GameHistoryPage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
 
         {/* Cookie Consent Banner - shown on first visit */}
         <CookieConsent />

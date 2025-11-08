@@ -25,11 +25,11 @@ const (
 // GameSession represents a game session played by a user
 type GameSession struct {
 	ID        uint      `gorm:"primarykey" json:"id"`
-	UserID    uint      `gorm:"not null;index" json:"user_id"`
-	GameType  GameType  `gorm:"size:50;not null;index" json:"game_type"`
+	UserID    uint      `gorm:"not null;index:idx_user_game_type;index:idx_user_created" json:"user_id"`
+	GameType  GameType  `gorm:"size:50;not null;index;index:idx_user_game_type" json:"game_type"`
 	Bet       float64   `gorm:"type:decimal(15,2);not null" json:"bet"`
-	Win       float64   `gorm:"type:decimal(15,2);default:0.00" json:"win"`
-	CreatedAt time.Time `json:"created_at"`
+	Win       float64   `gorm:"type:decimal(15,2);default:0.00;index:idx_user_win" json:"win"`
+	CreatedAt time.Time `gorm:"index:idx_user_created" json:"created_at"`
 
 	// Relations
 	User User `gorm:"foreignKey:UserID" json:"user,omitempty"`
