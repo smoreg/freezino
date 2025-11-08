@@ -61,5 +61,9 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	stats.Get("/countries", statsHandler.GetCountries)
 	stats.Get("/countries/:code", statsHandler.GetCountryByCode)
 
+	// Contact routes
+	contactHandler := handler.NewContactHandler()
+	api.Post("/contact", contactHandler.SubmitMessage)
+
 	// Future routes will be added here
 }
