@@ -65,5 +65,11 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	contactHandler := handler.NewContactHandler()
 	api.Post("/contact", contactHandler.SubmitMessage)
 
+	// Game history routes
+	gameHistoryHandler := handler.NewGameHistoryHandler()
+	games := api.Group("/games")
+	games.Get("/history", gameHistoryHandler.GetHistory)
+	games.Get("/stats", gameHistoryHandler.GetStats)
+
 	// Future routes will be added here
 }

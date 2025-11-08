@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardPage from './pages/DashboardPage';
+import GameHistoryPage from './pages/GameHistoryPage';
 import TermsPage from './pages/legal/TermsPage';
 import PrivacyPage from './pages/legal/PrivacyPage';
 import CookiesPage from './pages/legal/CookiesPage';
@@ -31,6 +32,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/history" element={<GameHistoryPage />} />
           </Route>
         </Route>
 
