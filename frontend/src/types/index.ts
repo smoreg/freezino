@@ -81,34 +81,27 @@ export interface UserStats {
   favorite_game: string;
 }
 
-// Roulette types
-export type RouletteBetType =
-  | 'straight'
-  | 'red'
-  | 'black'
-  | 'odd'
-  | 'even'
-  | 'dozen1'
-  | 'dozen2'
-  | 'dozen3'
-  | 'low'
-  | 'high'
-  | 'column1'
-  | 'column2'
-  | 'column3';
-
-export interface RouletteBet {
-  type: RouletteBetType;
-  amount: number;
-  value?: number; // For straight bets (0-36)
+// Blackjack types
+export interface Card {
+  suit: string;
+  rank: string;
+  value: number;
 }
 
-export interface RouletteResult {
-  number: number;
-  color: string;
-  total_bet: number;
-  total_win: number;
-  profit: number;
-  new_balance: number;
-  bets: RouletteBet[];
+export interface Hand {
+  cards: Card[];
+  value: number;
+  soft: boolean;
+}
+
+export interface BlackjackGameState {
+  player_hand: Hand;
+  dealer_visible_card?: Card;
+  dealer_hand?: Hand;
+  bet: number;
+  game_over: boolean;
+  result: string;
+  payout: number;
+  can_double: boolean;
+  can_split: boolean;
 }

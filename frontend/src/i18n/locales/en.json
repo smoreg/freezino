@@ -8,7 +8,8 @@
     "continue": "Continue",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "connecting": "Connecting..."
   },
   "nav": {
     "home": "Home",
@@ -31,14 +32,59 @@
     }
   },
   "games": {
-    "roulette": "Roulette",
-    "slots": "Slots",
-    "blackjack": "Blackjack",
-    "craps": "Craps",
-    "crash": "Crash",
-    "hilo": "Hi-Lo",
-    "wheel": "Wheel of Fortune",
-    "poker": "Poker",
+    "roulette": {
+      "title": "Roulette",
+      "description": "Classic European roulette"
+    },
+    "slots": {
+      "title": "Slots",
+      "description": "One-armed bandit with 5 reels"
+    },
+    "blackjack": {
+      "title": "Blackjack",
+      "description": "Card game against the dealer",
+      "place_bet": "Place Your Bet",
+      "deal": "Deal",
+      "dealer": "Dealer",
+      "player": "Player",
+      "hit": "Hit",
+      "stand": "Stand",
+      "double": "Double",
+      "split": "Split",
+      "new_game": "New Game",
+      "current_bet": "Current Bet",
+      "payout": "Payout",
+      "blackjack": "Blackjack!",
+      "you_win": "You Win!",
+      "dealer_wins": "Dealer Wins",
+      "push": "Push (Tie)",
+      "rules": "Rules",
+      "rule1": "Get as close to 21 without going over",
+      "rule2": "Face cards are worth 10, Aces are 1 or 11",
+      "rule3": "Dealer must hit on 16 or less, stand on 17 or more",
+      "rule4": "Blackjack (21 with first 2 cards) pays 3:2",
+      "rule5": "Double: Double your bet and get one more card"
+    },
+    "craps": {
+      "title": "Craps",
+      "description": "Classic dice game"
+    },
+    "crash": {
+      "title": "Crash",
+      "description": "Graph with growing multiplier"
+    },
+    "hilo": {
+      "title": "Hi-Lo",
+      "description": "Guess higher or lower"
+    },
+    "wheel": {
+      "title": "Wheel of Fortune",
+      "description": "Spin the wheel and win a prize"
+    },
+    "poker": {
+      "title": "Poker",
+      "description": "Video Poker - 5 cards"
+    },
     "comingSoon": "Coming Soon",
     "minBet": "Minimum Bet:"
   },

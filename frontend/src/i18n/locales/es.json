@@ -8,7 +8,8 @@
     "continue": "Continuar",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "connecting": "Conectando..."
   },
   "nav": {
     "home": "Inicio",
@@ -31,37 +32,61 @@
     }
   },
   "games": {
-    "roulette": "Ruleta",
-    "slots": "Tragamonedas",
-    "blackjack": "Blackjack",
-    "craps": "Dados",
-    "crash": "Crash",
-    "hilo": "Hi-Lo",
-    "wheel": "Rueda de la Fortuna",
-    "poker": "Póker",
+    "roulette": {
+      "title": "Ruleta",
+      "description": "Ruleta europea clásica"
+    },
+    "slots": {
+      "title": "Tragamonedas",
+      "description": "Máquina tragamonedas de 5 carretes"
+    },
+    "blackjack": {
+      "title": "Blackjack",
+      "description": "Juego de cartas contra el crupier",
+      "place_bet": "Haz tu Apuesta",
+      "deal": "Repartir",
+      "dealer": "Crupier",
+      "player": "Jugador",
+      "hit": "Pedir",
+      "stand": "Plantarse",
+      "double": "Doblar",
+      "split": "Dividir",
+      "new_game": "Nuevo Juego",
+      "current_bet": "Apuesta Actual",
+      "payout": "Pago",
+      "blackjack": "¡Blackjack!",
+      "you_win": "¡Ganaste!",
+      "dealer_wins": "Crupier Gana",
+      "push": "Empate",
+      "rules": "Reglas",
+      "rule1": "Acércate lo más posible a 21 sin pasarte",
+      "rule2": "Las figuras valen 10, los Ases valen 1 u 11",
+      "rule3": "El crupier debe pedir con 16 o menos, plantarse con 17 o más",
+      "rule4": "Blackjack (21 con las primeras 2 cartas) paga 3:2",
+      "rule5": "Doblar: Duplica tu apuesta y recibe una carta más"
+    },
+    "craps": {
+      "title": "Dados",
+      "description": "Juego de dados clásico"
+    },
+    "crash": {
+      "title": "Crash",
+      "description": "Gráfico con multiplicador creciente"
+    },
+    "hilo": {
+      "title": "Hi-Lo",
+      "description": "Adivina más alto o más bajo"
+    },
+    "wheel": {
+      "title": "Rueda de la Fortuna",
+      "description": "Gira la rueda y gana un premio"
+    },
+    "poker": {
+      "title": "Póker",
+      "description": "Video Póker - 5 cartas"
+    },
     "comingSoon": "Próximamente",
     "minBet": "Apuesta Mínima:"
-  },
-  "roulette": {
-    "wheel": "Rueda de Ruleta",
-    "recentNumbers": "Números Recientes",
-    "bettingBoard": "Mesa de Apuestas",
-    "activeBets": "Apuestas Activas",
-    "totalBet": "Apuesta Total",
-    "totalWin": "Ganancia Total",
-    "profit": "Beneficio",
-    "clear": "Limpiar",
-    "spin": "GIRAR",
-    "spinning": "Girando...",
-    "win": "🎉 ¡Ganaste!",
-    "lose": "❌ Perdiste",
-    "noBets": "¡Haz al menos una apuesta!",
-    "insufficientBalance": "¡Saldo insuficiente!",
-    "betFailed": "Error al hacer la apuesta",
-    "red": "Rojo",
-    "black": "Negro",
-    "odd": "Impar",
-    "even": "Par"
   },
   "work": {
     "button": "Trabajar",
