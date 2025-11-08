@@ -214,6 +214,112 @@ git merge claude/phase2-stats-modal
 
 ---
 
+## 📋 ШАГ 4.5: ФАЗА 2.5 - Legal & i18n (4 КЛОДА)
+
+### Клод 13:
+```
+Проект Freezino. Прочитай PLAN.md и PHASES.md.
+
+Реализуй Cookie Consent Banner:
+- Установи react-cookie-consent
+- Создай CookieConsent компонент
+- Показывать при первом посещении (bottom banner)
+- Кнопки: "Принять все", "Только необходимые", "Отклонить все"
+- Ссылка на /cookies (Cookie Policy)
+- Сохранение выбора в localStorage
+- Если отказ → НЕ использовать analytics cookies
+- Добавь ссылку "Cookie Settings" в Footer
+
+Файлы: frontend/src/components/{CookieConsent,CookieSettings}.tsx, frontend/src/components/layout/Footer.tsx
+
+Работай в ветке: claude/phase25-cookie-consent
+Коммит: "feat(legal): add GDPR-compliant cookie consent banner"
+```
+
+### Клод 14:
+```
+Проект Freezino. Прочитай PLAN.md и PHASES.md.
+
+Реализуй i18n (мультиязычность):
+- Установи react-i18next, i18next
+- Настрой i18n config
+- Создай переводы для en, ru, es (минимум en + ru)
+- Переключатель языка в Header (флаги или dropdown)
+- Сохранение в localStorage
+- Перевод всех существующих UI элементов
+- Форматирование валюты по локали ($500 → 500₽ для ru)
+- Форматирование дат/времени
+
+Файлы: frontend/src/i18n/{config.ts,locales/{en,ru,es}.json}, frontend/src/components/LanguageSwitcher.tsx
+
+Работай в ветке: claude/phase25-i18n
+Коммит: "feat(i18n): add multi-language support (en, ru, es)"
+```
+
+### Клод 15:
+```
+Проект Freezino. Прочитай PLAN.md и PHASES.md.
+
+Реализуй Legal Pages:
+- Создай страницы: /terms, /privacy, /cookies
+- Напиши контент для каждой (Terms of Service, Privacy Policy, Cookie Policy)
+- Контент на всех языках (en, ru минимум)
+- Responsive дизайн
+- Ссылки в Footer
+- Используй Markdown или HTML
+- Дата последнего обновления
+
+Содержание:
+Terms: описание сервиса, 18+, правила, disclaimer (NO REAL MONEY)
+Privacy: какие данные (email/имя от Google), GDPR права
+Cookies: какие используем, зачем, как управлять
+
+Файлы: frontend/src/pages/legal/{TermsPage,PrivacyPage,CookiesPage}.tsx, frontend/src/content/legal/*.md
+
+Работай в ветке: claude/phase25-legal-pages
+Коммит: "feat(legal): add Terms, Privacy and Cookie Policy pages"
+```
+
+### Клод 16:
+```
+Проект Freezino. Прочитай PLAN.md и PHASES.md.
+
+Реализуй Contact и About страницы:
+
+Страница /contact:
+- Email для связи
+- Форма обратной связи (имя, email, сообщение)
+- Валидация (react-hook-form + zod)
+- POST /api/contact endpoint (backend)
+
+Страница /about:
+- Цель проекта (борьба с игровой зависимостью)
+- Как работает (описание механики)
+- Образовательная миссия
+- FAQ (опционально)
+
+Backend:
+- POST /api/contact handler
+- ContactMessage модель (для сохранения в БД)
+
+Файлы:
+Frontend: frontend/src/pages/{ContactPage,AboutPage}.tsx, frontend/src/components/ContactForm.tsx
+Backend: backend/internal/handler/contact.go, backend/internal/model/contact_message.go
+
+Работай в ветке: claude/phase25-contact-about
+Коммит: "feat(pages): add Contact and About pages"
+```
+
+**После завершения Фазы 2.5**:
+```bash
+git merge claude/phase25-cookie-consent
+git merge claude/phase25-i18n
+git merge claude/phase25-legal-pages
+git merge claude/phase25-contact-about
+```
+
+---
+
 ## 📋 ШАГ 5: ФАЗА 3 - Games (6 КЛОДОВ)
 
 ### Клод 13:
