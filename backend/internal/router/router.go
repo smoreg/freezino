@@ -75,5 +75,11 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	roulette.Get("/history", rouletteHandler.GetHistory)
 	roulette.Get("/recent", rouletteHandler.GetRecentNumbers)
 
+	// Slots routes
+	slotsHandler := handler.NewSlotsHandler()
+	slots := games.Group("/slots")
+	slots.Post("/spin", slotsHandler.Spin)
+	slots.Get("/payouts", slotsHandler.GetPayoutTable)
+
 	// Future routes will be added here
 }

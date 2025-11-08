@@ -331,6 +331,7 @@ git merge claude/phase25-contact-about
 - Базовые функции: проверка баланса, создание GameSession, обновление баланса
 - Crypto/rand для честных случайных чисел
 - Transaction для ставок и выигрышей
+- Все игры должны быть чуть подкручены в сторону казино чтобы казино в среднем выигрывало
 
 Файлы: backend/internal/game/engine.go, backend/internal/game/game.go
 
