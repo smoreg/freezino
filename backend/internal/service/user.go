@@ -71,9 +71,14 @@ func (s *UserService) GetProfile(userID uint) (*ProfileResponse, error) {
 		return nil, fmt.Errorf("failed to get user profile: %w", err)
 	}
 
+	googleID := ""
+	if user.GoogleID != nil {
+		googleID = *user.GoogleID
+	}
+
 	return &ProfileResponse{
 		ID:        user.ID,
-		GoogleID:  user.GoogleID,
+		GoogleID:  googleID,
 		Email:     user.Email,
 		Name:      user.Name,
 		Avatar:    user.Avatar,
@@ -114,9 +119,14 @@ func (s *UserService) UpdateProfile(userID uint, req UpdateProfileRequest) (*Pro
 		return nil, fmt.Errorf("failed to reload user: %w", err)
 	}
 
+	googleID := ""
+	if user.GoogleID != nil {
+		googleID = *user.GoogleID
+	}
+
 	return &ProfileResponse{
 		ID:        user.ID,
-		GoogleID:  user.GoogleID,
+		GoogleID:  googleID,
 		Email:     user.Email,
 		Name:      user.Name,
 		Avatar:    user.Avatar,

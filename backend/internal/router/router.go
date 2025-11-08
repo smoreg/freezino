@@ -11,6 +11,7 @@ import (
 	"github.com/smoreg/freezino/backend/internal/handler"
 	games "github.com/smoreg/freezino/backend/internal/handler/games"
 	"github.com/smoreg/freezino/backend/internal/middleware"
+	"github.com/smoreg/freezino/backend/internal/service"
 )
 
 // Setup configures all application routes
@@ -23,8 +24,18 @@ func Setup(app *fiber.App, cfg *config.Config) {
 
 	// Auth routes
 	authHandler := auth.NewHandler(cfg)
+
+	// Local auth (username/password)
+	db := database.GetDB()
+	authService := service.NewAuthService(db)
+	localAuthHandler := handler.NewAuthHandler(authService, cfg)
+
 	authGroup := api.Group("/auth")
 	{
+		// Local auth routes (username/password)
+		authGroup.Post("/register", localAuthHandler.Register)
+		authGroup.Post("/login", localAuthHandler.Login)
+
 		// OAuth routes
 		authGroup.Get("/google", authHandler.GoogleLogin)
 		authGroup.Get("/google/callback", authHandler.GoogleCallback)
@@ -114,7 +125,6 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	gamesGroup.Get("/stats", gameHistoryHandler.GetStats)
 
 	// Game WebSocket routes
-	db := database.GetDB()
 	gameHandler := handler.NewGameHandler(db)
 
 	// WebSocket upgrade middleware and routes

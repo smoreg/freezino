@@ -1,5 +1,5 @@
 import { cleanup } from '@testing-library/react';
-import { expect, afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Cleanup after each test
@@ -23,7 +23,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
+globalThis.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
   observe() {}
@@ -41,7 +41,7 @@ window.HTMLMediaElement.prototype.pause = vi.fn();
 Element.prototype.scrollIntoView = vi.fn();
 
 // Suppress console errors in tests
-global.console = {
+globalThis.console = {
   ...console,
   error: vi.fn(),
   warn: vi.fn(),

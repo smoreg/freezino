@@ -34,8 +34,9 @@ func setupTestDB(t *testing.T) *gorm.DB {
 }
 
 func createTestUser(t *testing.T, db *gorm.DB, balance float64) *model.User {
+	googleID := "test-google-id-" + time.Now().Format("20060102150405.000000")
 	user := &model.User{
-		GoogleID: "test-google-id-" + time.Now().Format("20060102150405.000000"),
+		GoogleID: &googleID,
 		Email:    "test@example.com",
 		Name:     "Test User",
 		Balance:  balance,

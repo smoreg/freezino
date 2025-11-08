@@ -41,8 +41,9 @@ func seedTestUser() error {
 		return nil
 	}
 
+	googleID := "test-google-id-123"
 	testUser := model.User{
-		GoogleID:  "test-google-id-123",
+		GoogleID:  &googleID,
 		Email:     "test@freezino.com",
 		Name:      "Test User",
 		Avatar:    "https://via.placeholder.com/150",

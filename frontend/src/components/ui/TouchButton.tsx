@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface TouchButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -15,7 +15,8 @@ const TouchButton = ({
   fullWidth = false,
   className = '',
   disabled,
-  ...props
+  onClick,
+  type,
 }: TouchButtonProps) => {
   const baseClasses = 'touch-manipulation rounded-lg font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed';
 
@@ -39,7 +40,8 @@ const TouchButton = ({
       whileTap={{ scale: 0.95 }}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${widthClass} ${className}`}
       disabled={disabled}
-      {...props}
+      onClick={onClick}
+      type={type}
     >
       {children}
     </motion.button>

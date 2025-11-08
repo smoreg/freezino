@@ -1,4 +1,4 @@
-import { Variants } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 
 /**
  * Animation variants for Freezino
@@ -16,7 +16,6 @@ export const pageVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: 'easeOut',
     },
   },
   exit: {
@@ -24,7 +23,6 @@ export const pageVariants: Variants = {
     y: -20,
     transition: {
       duration: 0.3,
-      ease: 'easeIn',
     },
   },
 };
@@ -40,7 +38,6 @@ export const fadeInUpVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
     },
   },
 };
@@ -56,7 +53,6 @@ export const fadeInDownVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
     },
   },
 };
@@ -72,7 +68,6 @@ export const scaleFadeVariants: Variants = {
     scale: 1,
     transition: {
       duration: 0.4,
-      ease: 'easeOut',
     },
   },
 };
@@ -88,7 +83,6 @@ export const slideInLeftVariants: Variants = {
     x: 0,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
     },
   },
 };
@@ -104,7 +98,6 @@ export const slideInRightVariants: Variants = {
     x: 0,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
     },
   },
 };
@@ -135,7 +128,7 @@ export const staggerItemVariants: Variants = {
 };
 
 // Button hover animations
-export const buttonHoverVariants = {
+export const buttonHoverVariants: Variants = {
   rest: {
     scale: 1,
   },
@@ -143,7 +136,6 @@ export const buttonHoverVariants = {
     scale: 1.05,
     transition: {
       duration: 0.2,
-      ease: 'easeInOut',
     },
   },
   tap: {
@@ -152,7 +144,7 @@ export const buttonHoverVariants = {
 };
 
 // Card hover animations
-export const cardHoverVariants = {
+export const cardHoverVariants: Variants = {
   rest: {
     y: 0,
     transition: {
@@ -163,7 +155,6 @@ export const cardHoverVariants = {
     y: -8,
     transition: {
       duration: 0.3,
-      ease: 'easeOut',
     },
   },
 };
@@ -181,7 +172,6 @@ export const modalVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.3,
-      ease: 'easeOut',
     },
   },
   exit: {
@@ -190,7 +180,6 @@ export const modalVariants: Variants = {
     y: 50,
     transition: {
       duration: 0.2,
-      ease: 'easeIn',
     },
   },
 };
@@ -224,7 +213,6 @@ export const pulseVariants: Variants = {
     transition: {
       duration: 1,
       repeat: Infinity,
-      ease: 'easeInOut',
     },
   },
 };
@@ -252,7 +240,6 @@ export const bounceVariants: Variants = {
     transition: {
       duration: 0.6,
       repeat: Infinity,
-      ease: 'easeInOut',
     },
   },
 };

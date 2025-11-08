@@ -102,8 +102,9 @@ func (h *Handler) GoogleCallback(c *fiber.Ctx) error {
 	result := db.Where("google_id = ?", userInfo.ID).First(&user)
 	if result.Error != nil {
 		// User doesn't exist, create new one
+		googleID := userInfo.ID
 		user = model.User{
-			GoogleID: userInfo.ID,
+			GoogleID: &googleID,
 			Email:    userInfo.Email,
 			Name:     userInfo.Name,
 			Avatar:   userInfo.Picture,

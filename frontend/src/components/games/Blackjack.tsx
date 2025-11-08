@@ -6,7 +6,13 @@ import { useAuthStore } from '../../store/authStore';
 import type { BlackjackGameState, Card } from '../../types';
 
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8080';
+// Determine WebSocket URL based on current location
+const getWsUrl = () => {
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  return import.meta.env.VITE_WS_URL || `${protocol}//${host}`;
+};
+const WS_URL = getWsUrl();
 
 // Card suits symbols
 const SUIT_SYMBOLS: { [key: string]: string } = {
@@ -53,17 +59,17 @@ const Blackjack = () => {
 
         switch (message.type) {
           case 'game_state':
-            setGameState(message.payload);
+            setGameState((message.payload as unknown as BlackjackGameState) || null);
             setError('');
             break;
           case 'balance_update':
             // Update user balance
             if (user && message.payload?.balance !== undefined) {
-              setUser({ ...user, balance: message.payload.balance });
+              setUser({ ...user, balance: message.payload.balance as number });
             }
             break;
           case 'error':
-            setError(message.payload?.message || 'An error occurred');
+            setError((message.payload?.message as string) || 'An error occurred');
             break;
         }
       } catch (err) {

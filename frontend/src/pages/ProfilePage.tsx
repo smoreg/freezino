@@ -48,9 +48,9 @@ const ProfilePage = () => {
 
       // Fetch profile, stats, and items in parallel
       const [profileRes, statsRes, itemsRes] = await Promise.all([
-        fetch(`http://localhost:3000/api/user/profile?user_id=${userId}`),
-        fetch(`http://localhost:3000/api/user/stats?user_id=${userId}`),
-        fetch(`http://localhost:3000/api/user/items?user_id=${userId}`),
+        fetch(`/api/user/profile?user_id=${userId}`),
+        fetch(`/api/user/stats?user_id=${userId}`),
+        fetch(`/api/user/items?user_id=${userId}`),
       ]);
 
       if (!profileRes.ok || !statsRes.ok || !itemsRes.ok) {
