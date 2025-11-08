@@ -32,5 +32,15 @@ func Setup(app *fiber.App, cfg *config.Config) {
 		authGroup.Post("/logout", middleware.AuthMiddleware(cfg), authHandler.Logout)
 	}
 
+	// User routes
+	userHandler := handler.NewUserHandler()
+	user := api.Group("/user")
+	user.Get("/profile", userHandler.GetProfile)
+	user.Patch("/profile", userHandler.UpdateProfile)
+	user.Get("/balance", userHandler.GetBalance)
+	user.Get("/stats", userHandler.GetStats)
+	user.Get("/transactions", userHandler.GetTransactions)
+	user.Get("/items", userHandler.GetUserItems)
+
 	// Future routes will be added here
 }

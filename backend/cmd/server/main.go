@@ -19,15 +19,16 @@ func main() {
 	cfg := config.Load()
 
 	// Initialize database
-	if err := database.Initialize(database.Config{
+	dbConfig := database.Config{
 		DBPath: "./data/freezino.db",
 		Debug:  cfg.Environment == "development",
-	}); err != nil {
+	}
+	if err := database.Initialize(dbConfig); err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 	defer database.Close()
 
-	// Run migrations
+	// Run database migrations
 	if err := database.Migrate(); err != nil {
 		log.Fatalf("Failed to run migrations: %v", err)
 	}
