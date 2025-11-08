@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { UserItem } from '../../types';
+import type { UserItem } from '../../types';
 
 interface AvatarProps {
   equippedItems: UserItem[];

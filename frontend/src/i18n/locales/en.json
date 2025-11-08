@@ -175,5 +175,20 @@
     "equipped": "Equipped",
     "equip": "Equip",
     "purchased": "Purchased"
+  },
+  "error": {
+    "500": {
+      "title": "Internal Server Error",
+      "description": "Something went wrong on our end. Please try again later."
+    },
+    "503": {
+      "title": "Service Unavailable",
+      "description": "The service is temporarily unavailable. Please try again in a few moments."
+    },
+    "retry": "Try Again",
+    "goHome": "Go Home"
+  },
+  "offline": {
+    "message": "You are currently offline. Some features may not be available."
   }
 }

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import Avatar from '../components/profile/Avatar';
-import { UserItem } from '../types';
+import type { UserItem } from '../types';
 
 interface ProfileStats {
   user_id: number;
@@ -28,7 +27,6 @@ interface UserProfile {
 }
 
 const ProfilePage = () => {
-  const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [items, setItems] = useState<UserItem[]>([]);
@@ -330,7 +328,7 @@ const ProfilePage = () => {
                         {userItem.item.type === 'house' && '🏠'}
                         {userItem.item.type === 'clothing' && '👕'}
                         {userItem.item.type === 'car' && '🚗'}
-                        {userItem.item.type === 'accessories' && '💎'}
+                        {userItem.item.type === 'accessory' && '💎'}
                       </div>
                     )}
                   </div>
