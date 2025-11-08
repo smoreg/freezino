@@ -8,6 +8,7 @@ import (
 	"github.com/smoreg/freezino/backend/internal/database"
 	"github.com/smoreg/freezino/backend/internal/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 const (
@@ -204,7 +205,7 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 	err := s.db.Transaction(func(tx *gorm.DB) error {
 		// Get user with lock
 		var user model.User
-		if err := tx.Clauses(gorm.Locking{Strength: "UPDATE"}).First(&user, userID).Error; err != nil {
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&user, userID).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return fmt.Errorf("user not found")
 			}
