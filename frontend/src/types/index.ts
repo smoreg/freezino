@@ -81,6 +81,20 @@ export interface UserStats {
   favorite_game: string;
 }
 
+// Roulette types
+export interface RouletteBet {
+  type: 'straight' | 'split' | 'street' | 'corner' | 'line' | 'column' | 'dozen' | 'red' | 'black' | 'odd' | 'even' | 'low' | 'high';
+  value?: number;
+  amount: number;
+}
+
+export interface RouletteResult {
+  number: number;
+  color: string;
+  win: number;
+  winningBets: RouletteBet[];
+}
+
 // Blackjack types
 export interface Card {
   suit: string;
