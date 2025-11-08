@@ -4,6 +4,7 @@ import Confetti from 'react-confetti';
 import { useAuthStore } from '../../store/authStore';
 import { useShopStore } from '../../store/shopStore';
 import type { Item } from '../../types';
+import { useSound } from '../../hooks/useSound';
 
 interface BuyModalProps {
   item: Item | null;
@@ -19,6 +20,7 @@ const rarityColors: Record<string, string> = {
 };
 
 export default function BuyModal({ item, isOpen, onClose }: BuyModalProps) {
+  const { playSound } = useSound();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -64,6 +66,9 @@ export default function BuyModal({ item, isOpen, onClose }: BuyModalProps) {
 
     try {
       await buyItem(item.id);
+
+      // Play purchase sound
+      playSound('purchase', 0.6);
 
       // Show confetti for rare items
       if (isRareItem) {

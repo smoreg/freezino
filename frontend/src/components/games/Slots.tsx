@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useSound } from '../../hooks/useSound';
 
 // Slot symbols
 const SYMBOLS = ['🍒', '🍋', '🍊', '🍇', '💎', '⭐', '7️⃣'];
@@ -43,6 +44,7 @@ interface SlotsProps {
 
 const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
   const { t } = useTranslation();
+  const { playSound } = useSound();
   const [reels, setReels] = useState<string[][]>([
     ['🍒', '🍋', '🍊'],
     ['🍇', '💎', '⭐'],
@@ -77,6 +79,9 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
     setWinningLines([]);
     setMessage('');
 
+    // Play spin sound
+    playSound('slot-spin', 0.5);
+
     // Clear any existing timeouts
     spinTimeouts.current.forEach(timeout => clearTimeout(timeout));
     spinTimeouts.current = [];
@@ -102,6 +107,9 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
             newReels[index] = finalReels[index];
             return newReels;
           });
+
+          // Play stop sound for each reel
+          playSound('slot-stop', 0.4);
 
           // If this is the last reel, stop spinning
           if (index === reels.length - 1) {
@@ -146,12 +154,15 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
             onBalanceChange(newBalance);
           }
 
+          // Play win or lose sound
           if (result.total_win > 0) {
+            playSound('win', 0.6);
             setMessage(
               t('slots.youWon', { amount: result.total_win.toFixed(2) }) ||
                 `You won $${result.total_win.toFixed(2)}!`
             );
           } else {
+            playSound('lose', 0.4);
             setMessage(t('slots.tryAgain') || 'Try again!');
           }
         }, (reels.length + 1) * 300);

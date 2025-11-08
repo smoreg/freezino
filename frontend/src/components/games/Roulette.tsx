@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../../services/api';
 import type { RouletteBet, RouletteResult } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
+import { useSound } from '../../hooks/useSound';
 
 // Roulette wheel numbers in order
 const WHEEL_NUMBERS = [
@@ -28,6 +29,7 @@ interface RouletteProps {
 
 const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
   const { t } = useTranslation();
+  const { playSound } = useSound();
   const [bets, setBets] = useState<RouletteBet[]>([]);
   const [currentChip, setCurrentChip] = useState(10);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -70,10 +72,12 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
       ...(value !== undefined && { value }),
     };
 
+    playSound('click', 0.4);
     setBets([...bets, newBet]);
   };
 
   const clearBets = () => {
+    playSound('click', 0.4);
     setBets([]);
     setResult(null);
   };
@@ -91,6 +95,7 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
 
     setIsSpinning(true);
     setResult(null);
+    playSound('roulette-spin', 0.5);
 
     try {
       const response = await api.post(`/games/roulette/bet?user_id=${userId}`, {
@@ -115,6 +120,13 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
           onBalanceUpdate(gameResult.new_balance);
           fetchRecentNumbers();
           setBets([]);
+
+          // Play win or lose sound
+          if (gameResult.total_win > 0) {
+            playSound('win', 0.6);
+          } else {
+            playSound('lose', 0.4);
+          }
         }, 4000);
       }
     } catch (error: any) {

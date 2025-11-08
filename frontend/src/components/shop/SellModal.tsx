@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/formatters';
 import type { UserItem } from '../../types';
+import { useSound } from '../../hooks/useSound';
 
 interface SellModalProps {
   isOpen: boolean;
@@ -13,12 +14,14 @@ interface SellModalProps {
 
 const SellModal = ({ isOpen, onClose, item, onConfirm, isLoading = false }: SellModalProps) => {
   const { t } = useTranslation();
+  const { playSound } = useSound();
 
   if (!item) return null;
 
   const sellPrice = item.item.price * 0.5; // 50% of original price
 
   const handleConfirm = async () => {
+    playSound('sell', 0.5);
     await onConfirm(item.id);
     onClose();
   };

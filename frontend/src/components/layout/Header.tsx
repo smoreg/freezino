@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../LanguageSwitcher';
+import { useSoundStore } from '../../store/soundStore';
+import { soundManager } from '../../utils/sounds';
 
 interface User {
   name: string;
@@ -13,6 +15,7 @@ const Header = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { isMusicEnabled, isSfxEnabled, musicVolume, toggleMusic, toggleSfx } = useSoundStore();
 
   useEffect(() => {
     // Simulate API call to fetch user data
@@ -36,6 +39,32 @@ const Header = () => {
     fetchUser();
   }, []);
 
+  // Initialize sound manager
+  useEffect(() => {
+    soundManager.init();
+  }, []);
+
+  // Control background music
+  useEffect(() => {
+    if (isMusicEnabled) {
+      soundManager.playMusic(musicVolume);
+    } else {
+      soundManager.stopMusic();
+    }
+  }, [isMusicEnabled, musicVolume]);
+
+  const handleMusicToggle = () => {
+    toggleMusic();
+    if (isSfxEnabled) {
+      soundManager.play('click', 0.3);
+    }
+  };
+
+  const handleSfxToggle = () => {
+    soundManager.play('click', 0.3);
+    toggleSfx();
+  };
+
   return (
     <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -47,6 +76,24 @@ const Header = () => {
 
           {/* User Info */}
           <div className="flex items-center space-x-4">
+            {/* Sound Controls */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleMusicToggle}
+                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                title={isMusicEnabled ? t('sound.musicOn') || 'Music On' : t('sound.musicOff') || 'Music Off'}
+              >
+                <span className="text-xl">{isMusicEnabled ? '🎵' : '🔇'}</span>
+              </button>
+              <button
+                onClick={handleSfxToggle}
+                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                title={isSfxEnabled ? t('sound.sfxOn') || 'Sound Effects On' : t('sound.sfxOff') || 'Sound Effects Off'}
+              >
+                <span className="text-xl">{isSfxEnabled ? '🔊' : '🔈'}</span>
+              </button>
+            </div>
+
             {/* Language Switcher */}
             <LanguageSwitcher />
             {/* Balance */}
