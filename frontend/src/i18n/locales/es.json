@@ -31,40 +31,37 @@
     }
   },
   "games": {
-    "roulette": {
-      "title": "Ruleta",
-      "description": "Ruleta europea clásica"
-    },
-    "slots": {
-      "title": "Tragamonedas",
-      "description": "Máquina tragamonedas de 5 carretes"
-    },
-    "blackjack": {
-      "title": "Blackjack",
-      "description": "Juego de cartas contra el crupier"
-    },
-    "craps": {
-      "title": "Dados",
-      "description": "Juego de dados clásico"
-    },
-    "crash": {
-      "title": "Crash",
-      "description": "Gráfico con multiplicador creciente"
-    },
-    "hilo": {
-      "title": "Hi-Lo",
-      "description": "Adivina más alto o más bajo"
-    },
-    "wheel": {
-      "title": "Rueda de la Fortuna",
-      "description": "Gira la rueda y gana un premio"
-    },
-    "poker": {
-      "title": "Póker",
-      "description": "Video Póker - 5 cartas"
-    },
+    "roulette": "Ruleta",
+    "slots": "Tragamonedas",
+    "blackjack": "Blackjack",
+    "craps": "Dados",
+    "crash": "Crash",
+    "hilo": "Hi-Lo",
+    "wheel": "Rueda de la Fortuna",
+    "poker": "Póker",
     "comingSoon": "Próximamente",
     "minBet": "Apuesta Mínima:"
+  },
+  "roulette": {
+    "wheel": "Rueda de Ruleta",
+    "recentNumbers": "Números Recientes",
+    "bettingBoard": "Mesa de Apuestas",
+    "activeBets": "Apuestas Activas",
+    "totalBet": "Apuesta Total",
+    "totalWin": "Ganancia Total",
+    "profit": "Beneficio",
+    "clear": "Limpiar",
+    "spin": "GIRAR",
+    "spinning": "Girando...",
+    "win": "🎉 ¡Ganaste!",
+    "lose": "❌ Perdiste",
+    "noBets": "¡Haz al menos una apuesta!",
+    "insufficientBalance": "¡Saldo insuficiente!",
+    "betFailed": "Error al hacer la apuesta",
+    "red": "Rojo",
+    "black": "Negro",
+    "odd": "Impar",
+    "even": "Par"
   },
   "work": {
     "button": "Trabajar",

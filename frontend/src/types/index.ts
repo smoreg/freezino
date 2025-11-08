@@ -80,3 +80,35 @@ export interface UserStats {
   games_played: number;
   favorite_game: string;
 }
+
+// Roulette types
+export type RouletteBetType =
+  | 'straight'
+  | 'red'
+  | 'black'
+  | 'odd'
+  | 'even'
+  | 'dozen1'
+  | 'dozen2'
+  | 'dozen3'
+  | 'low'
+  | 'high'
+  | 'column1'
+  | 'column2'
+  | 'column3';
+
+export interface RouletteBet {
+  type: RouletteBetType;
+  amount: number;
+  value?: number; // For straight bets (0-36)
+}
+
+export interface RouletteResult {
+  number: number;
+  color: string;
+  total_bet: number;
+  total_win: number;
+  profit: number;
+  new_balance: number;
+  bets: RouletteBet[];
+}

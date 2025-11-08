@@ -31,40 +31,37 @@
     }
   },
   "games": {
-    "roulette": {
-      "title": "Roulette",
-      "description": "Classic European roulette"
-    },
-    "slots": {
-      "title": "Slots",
-      "description": "One-armed bandit with 5 reels"
-    },
-    "blackjack": {
-      "title": "Blackjack",
-      "description": "Card game against the dealer"
-    },
-    "craps": {
-      "title": "Craps",
-      "description": "Classic dice game"
-    },
-    "crash": {
-      "title": "Crash",
-      "description": "Graph with growing multiplier"
-    },
-    "hilo": {
-      "title": "Hi-Lo",
-      "description": "Guess higher or lower"
-    },
-    "wheel": {
-      "title": "Wheel of Fortune",
-      "description": "Spin the wheel and win a prize"
-    },
-    "poker": {
-      "title": "Poker",
-      "description": "Video Poker - 5 cards"
-    },
+    "roulette": "Roulette",
+    "slots": "Slots",
+    "blackjack": "Blackjack",
+    "craps": "Craps",
+    "crash": "Crash",
+    "hilo": "Hi-Lo",
+    "wheel": "Wheel of Fortune",
+    "poker": "Poker",
     "comingSoon": "Coming Soon",
     "minBet": "Minimum Bet:"
+  },
+  "roulette": {
+    "wheel": "Roulette Wheel",
+    "recentNumbers": "Recent Numbers",
+    "bettingBoard": "Betting Board",
+    "activeBets": "Active Bets",
+    "totalBet": "Total Bet",
+    "totalWin": "Total Win",
+    "profit": "Profit",
+    "clear": "Clear Bets",
+    "spin": "SPIN",
+    "spinning": "Spinning...",
+    "win": "🎉 You Won!",
+    "lose": "❌ You Lost",
+    "noBets": "Please place at least one bet!",
+    "insufficientBalance": "Insufficient balance!",
+    "betFailed": "Failed to place bet",
+    "red": "Red",
+    "black": "Black",
+    "odd": "Odd",
+    "even": "Even"
   },
   "work": {
     "button": "Work",
