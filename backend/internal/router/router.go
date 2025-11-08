@@ -2,20 +2,35 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/smoreg/freezino/backend/internal/auth"
+	"github.com/smoreg/freezino/backend/internal/config"
 	"github.com/smoreg/freezino/backend/internal/handler"
+	"github.com/smoreg/freezino/backend/internal/middleware"
 )
 
 // Setup configures all application routes
-func Setup(app *fiber.App) {
+func Setup(app *fiber.App, cfg *config.Config) {
 	// API group
 	api := app.Group("/api")
 
 	// Health check endpoint
 	api.Get("/health", handler.HealthCheck)
 
+	// Auth routes
+	authHandler := auth.NewHandler(cfg)
+	authGroup := api.Group("/auth")
+	{
+		// OAuth routes
+		authGroup.Get("/google", authHandler.GoogleLogin)
+		authGroup.Get("/google/callback", authHandler.GoogleCallback)
+
+		// Token refresh
+		authGroup.Post("/refresh", authHandler.RefreshToken)
+
+		// Protected routes (require authentication)
+		authGroup.Get("/me", middleware.AuthMiddleware(cfg), authHandler.GetMe)
+		authGroup.Post("/logout", middleware.AuthMiddleware(cfg), authHandler.Logout)
+	}
+
 	// Future routes will be added here
-	// Example:
-	// auth := api.Group("/auth")
-	// auth.Get("/google", handler.GoogleAuth)
-	// auth.Get("/google/callback", handler.GoogleAuthCallback)
 }

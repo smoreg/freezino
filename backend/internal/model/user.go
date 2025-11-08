@@ -19,10 +19,10 @@ type User struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 
 	// Relations
-	Transactions []Transaction  `gorm:"foreignKey:UserID" json:"transactions,omitempty"`
-	UserItems    []UserItem     `gorm:"foreignKey:UserID" json:"user_items,omitempty"`
-	WorkSessions []WorkSession  `gorm:"foreignKey:UserID" json:"work_sessions,omitempty"`
-	GameSessions []GameSession  `gorm:"foreignKey:UserID" json:"game_sessions,omitempty"`
+	Transactions []Transaction `gorm:"foreignKey:UserID" json:"transactions,omitempty"`
+	UserItems    []UserItem    `gorm:"foreignKey:UserID" json:"user_items,omitempty"`
+	WorkSessions []WorkSession `gorm:"foreignKey:UserID" json:"work_sessions,omitempty"`
+	GameSessions []GameSession `gorm:"foreignKey:UserID" json:"game_sessions,omitempty"`
 }
 
 // TableName specifies the table name for User model
