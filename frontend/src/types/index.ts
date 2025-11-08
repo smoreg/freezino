@@ -91,8 +91,11 @@ export interface RouletteBet {
 export interface RouletteResult {
   number: number;
   color: string;
-  win: number;
-  winningBets: RouletteBet[];
+  total_bet: number;
+  total_win: number;
+  profit: number;
+  new_balance: number;
+  bets: RouletteBet[];
 }
 
 // Blackjack types

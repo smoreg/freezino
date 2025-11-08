@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import api from '../../services/api';
-import { RouletteBet, RouletteResult } from '../../types';
+import type { RouletteBet, RouletteResult } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
 
 // Roulette wheel numbers in order
@@ -373,21 +373,21 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
                 {/* Dozens */}
                 <div className="grid grid-cols-3 gap-2">
                   <button
-                    onClick={() => addBet('dozen1')}
+                    onClick={() => addBet('dozen', 1)}
                     disabled={isSpinning}
                     className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded disabled:opacity-50"
                   >
                     1st 12
                   </button>
                   <button
-                    onClick={() => addBet('dozen2')}
+                    onClick={() => addBet('dozen', 2)}
                     disabled={isSpinning}
                     className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded disabled:opacity-50"
                   >
                     2nd 12
                   </button>
                   <button
-                    onClick={() => addBet('dozen3')}
+                    onClick={() => addBet('dozen', 3)}
                     disabled={isSpinning}
                     className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded disabled:opacity-50"
                   >

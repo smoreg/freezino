@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import {
   BarChart,
   Bar,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
@@ -68,10 +66,7 @@ const GameHistoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedGame, setSelectedGame] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  // Mock user ID - в реальном приложении получить из auth контекста
-  const userId = 1;
+  // const itemsPerPage = 10; // для будущей пагинации
 
   useEffect(() => {
     fetchHistory();
@@ -81,10 +76,11 @@ const GameHistoryPage = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const offset = (currentPage - 1) * itemsPerPage;
-      const gameParam = selectedGame ? `&game=${selectedGame}` : '';
 
       // В реальном приложении использовать axios или fetch
+      // const userId = 1; // получить из auth контекста
+      // const offset = (currentPage - 1) * itemsPerPage;
+      // const gameParam = selectedGame ? `&game=${selectedGame}` : '';
       // const response = await fetch(`/api/games/history?user_id=${userId}&limit=${itemsPerPage}&offset=${offset}${gameParam}`);
       // const data = await response.json();
       // setHistory(data.data.games);
@@ -245,7 +241,7 @@ const GameHistoryPage = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  label={(entry) => GAME_NAMES[entry.game_type] || entry.game_type}
+                  label={(entry: any) => GAME_NAMES[entry.game_type] || entry.game_type}
                 >
                   {stats.game_breakdown.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

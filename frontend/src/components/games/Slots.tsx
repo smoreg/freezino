@@ -20,10 +20,6 @@ const PAYOUTS = {
 // Bet options
 const BET_OPTIONS = [10, 25, 50, 100, 250, 500];
 
-interface SlotReel {
-  symbols: string[];
-}
-
 interface WinningLine {
   line_number: number;
   symbol: string;
@@ -61,7 +57,7 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
   const [showPaytable, setShowPaytable] = useState(false);
   const [balance, setBalance] = useState(userBalance);
   const [message, setMessage] = useState('');
-  const spinTimeouts = useRef<NodeJS.Timeout[]>([]);
+  const spinTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     setBalance(userBalance);
