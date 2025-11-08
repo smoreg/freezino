@@ -7,6 +7,7 @@ import (
 	"github.com/smoreg/freezino/backend/internal/auth"
 	"github.com/smoreg/freezino/backend/internal/config"
 	"github.com/smoreg/freezino/backend/internal/handler"
+	games "github.com/smoreg/freezino/backend/internal/handler/games"
 	"github.com/smoreg/freezino/backend/internal/middleware"
 )
 
@@ -64,6 +65,25 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	// Contact routes
 	contactHandler := handler.NewContactHandler()
 	api.Post("/contact", contactHandler.SubmitMessage)
+
+	// Game routes
+	gamesGroup := api.Group("/games")
+	{
+		// Crash game
+		crashHandler := games.NewCrashHandler()
+		crash := gamesGroup.Group("/crash")
+		crash.Post("/bet", crashHandler.PlaceBet)
+
+		// Hi-Lo game
+		hiloHandler := games.NewHiLoHandler()
+		hilo := gamesGroup.Group("/hilo")
+		hilo.Post("/bet", hiloHandler.PlaceBet)
+
+		// Wheel game
+		wheelHandler := games.NewWheelHandler()
+		wheel := gamesGroup.Group("/wheel")
+		wheel.Post("/spin", wheelHandler.Spin)
+	}
 
 	// Future routes will be added here
 }
