@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 interface User {
   name: string;
@@ -8,6 +10,7 @@ interface User {
 }
 
 const Header = () => {
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +47,8 @@ const Header = () => {
 
           {/* User Info */}
           <div className="flex items-center space-x-4">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
             {/* Balance */}
             <div className="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
               <span className="text-secondary text-xl font-bold">💰</span>
@@ -51,7 +56,7 @@ const Header = () => {
                 <div className="w-16 h-5 bg-gray-600 animate-pulse rounded"></div>
               ) : (
                 <span className="text-white font-semibold">
-                  ${user?.balance.toLocaleString() || '0'}
+                  {t('common.currency', { amount: user?.balance || 0 })}
                 </span>
               )}
             </div>

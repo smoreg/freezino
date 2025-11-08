@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import StatsModal from '../components/StatsModal';
-import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
 import type { UserStats, WorkSession, GameSession } from '../types';
 
 const StatsPage = () => {
-  const { user } = useAuthStore();
   const [stats, setStats] = useState<UserStats | null>(null);
-  const [workSessions, setWorkSessions] = useState<WorkSession[]>([]);
-  const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [showStatsModal, setShowStatsModal] = useState(false);
 
@@ -26,12 +22,10 @@ const StatsPage = () => {
       setStats(statsResponse.data);
 
       // Fetch work sessions (last 10)
-      const workResponse = await api.get<WorkSession[]>('/work/sessions?limit=10');
-      setWorkSessions(workResponse.data);
+      await api.get<WorkSession[]>('/work/sessions?limit=10');
 
       // Fetch game sessions (last 10)
-      const gamesResponse = await api.get<GameSession[]>('/games/sessions?limit=10');
-      setGameSessions(gamesResponse.data);
+      await api.get<GameSession[]>('/games/sessions?limit=10');
 
     } catch (error) {
       console.error('Failed to fetch stats:', error);

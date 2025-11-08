@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../utils/formatters';
 
 interface GameCardProps {
   title: string;
@@ -17,6 +19,8 @@ const GameCard = ({
   isComingSoon = false,
   onClick,
 }: GameCardProps) => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       whileHover={{ scale: isComingSoon ? 1 : 1.05, y: isComingSoon ? 0 : -5 }}
@@ -36,7 +40,7 @@ const GameCard = ({
       {/* Coming Soon Badge */}
       {isComingSoon && (
         <div className="absolute top-2 right-2 bg-secondary text-gray-900 text-xs font-bold px-2 py-1 rounded-full z-10">
-          Скоро
+          {t('games.comingSoon')}
         </div>
       )}
 
@@ -66,8 +70,8 @@ const GameCard = ({
         {/* Min Bet */}
         {!isComingSoon && (
           <div className="flex items-center justify-center space-x-2 bg-gray-700 rounded-lg py-2">
-            <span className="text-gray-400 text-sm">Минимальная ставка:</span>
-            <span className="text-secondary font-bold">${minBet}</span>
+            <span className="text-gray-400 text-sm">{t('games.minBet')}</span>
+            <span className="text-secondary font-bold">{formatCurrency(minBet)}</span>
           </div>
         )}
       </div>

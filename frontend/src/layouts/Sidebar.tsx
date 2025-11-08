@@ -1,15 +1,17 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = () => {
+  const { t } = useTranslation();
   const location = useLocation();
 
   const menuItems = [
-    { path: '/', label: 'Главная', icon: '🏠' },
-    { path: '/games', label: 'Игры', icon: '🎮' },
-    { path: '/work', label: 'Работать', icon: '⏰' },
-    { path: '/shop', label: 'Магазин', icon: '🛍️' },
-    { path: '/profile', label: 'Профиль', icon: '👤' },
-    { path: '/stats', label: 'Статистика', icon: '📊' },
+    { path: '/', label: t('nav.home'), icon: '🏠' },
+    { path: '/games', label: t('nav.games'), icon: '🎮' },
+    { path: '/work', label: t('nav.work'), icon: '⏰' },
+    { path: '/shop', label: t('nav.shop'), icon: '🛍️' },
+    { path: '/profile', label: t('nav.profile'), icon: '👤' },
+    { path: '/stats', label: t('nav.stats'), icon: '📊' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

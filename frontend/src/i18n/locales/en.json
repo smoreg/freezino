@@ -1,0 +1,104 @@
+{
+  "common": {
+    "login": "Login",
+    "logout": "Logout",
+    "balance": "Balance",
+    "currency": "${{amount}}",
+    "close": "Close",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "loading": "Loading..."
+  },
+  "nav": {
+    "home": "Home",
+    "games": "Games",
+    "work": "Work",
+    "shop": "Shop",
+    "profile": "Profile",
+    "stats": "Statistics"
+  },
+  "dashboard": {
+    "welcome": "Welcome to <1>Freezino</1>",
+    "subtitle": "Choose a game and test your luck! Play with virtual money safely.",
+    "availableGames": "Available Games",
+    "timePlayed": "Time Played",
+    "totalWon": "Total Won",
+    "casinoGames": "Casino Games",
+    "educationalBanner": {
+      "title": "💡 Remember: this is an educational project",
+      "description": "You are playing with virtual money. The goal is to show how quickly you can lose money in a casino."
+    }
+  },
+  "games": {
+    "roulette": {
+      "title": "Roulette",
+      "description": "Classic European roulette"
+    },
+    "slots": {
+      "title": "Slots",
+      "description": "One-armed bandit with 5 reels"
+    },
+    "blackjack": {
+      "title": "Blackjack",
+      "description": "Card game against the dealer"
+    },
+    "craps": {
+      "title": "Craps",
+      "description": "Classic dice game"
+    },
+    "crash": {
+      "title": "Crash",
+      "description": "Graph with growing multiplier"
+    },
+    "hilo": {
+      "title": "Hi-Lo",
+      "description": "Guess higher or lower"
+    },
+    "wheel": {
+      "title": "Wheel of Fortune",
+      "description": "Spin the wheel and win a prize"
+    },
+    "poker": {
+      "title": "Poker",
+      "description": "Video Poker - 5 cards"
+    },
+    "comingSoon": "Coming Soon",
+    "minBet": "Minimum Bet:"
+  },
+  "work": {
+    "button": "Work",
+    "modalTitle": "Work Process",
+    "modalSubtitle": "Complete work to earn money",
+    "timeRemaining": "until completion",
+    "reward": "Reward:",
+    "pause": "⏸ Pause",
+    "resume": "▶️ Resume",
+    "cancelButton": "❌ Cancel",
+    "warning": "⚠️ Pause to cancel",
+    "statsTitle": "Work Completed!",
+    "statsSubtitle": "You earned <1>${{amount}}</1>",
+    "totalSessions": "Total Sessions",
+    "totalEarned": "Total Earned",
+    "totalWorkTime": "Total Work Time",
+    "comparisonTitle": "📊 Comparison with Real Wages",
+    "timeToEarn": "Time to earn $500:",
+    "inGame": "In game: 3 minutes ({{times}}x faster!)",
+    "hourlyWage": "${{amount}}/hour",
+    "educationalMessage": "⚠️ Remember: In real life, earning money requires much more time and effort. Gambling is entertainment with a high risk of losses.",
+    "hours": "{{count}} h",
+    "minutes": "{{count}} min",
+    "hoursAndMinutes": "{{hours}} h {{minutes}} min"
+  },
+  "countries": {
+    "usa": "USA",
+    "germany": "Germany",
+    "russia": "Russia",
+    "india": "India",
+    "china": "China"
+  },
+  "currency": {
+    "format": "${{amount, number}}",
+    "symbol": "$"
+  }
+}

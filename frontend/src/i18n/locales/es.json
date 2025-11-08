@@ -1,0 +1,104 @@
+{
+  "common": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "balance": "Balance",
+    "currency": "${{amount}}",
+    "close": "Cerrar",
+    "continue": "Continuar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "loading": "Cargando..."
+  },
+  "nav": {
+    "home": "Inicio",
+    "games": "Juegos",
+    "work": "Trabajar",
+    "shop": "Tienda",
+    "profile": "Perfil",
+    "stats": "Estadísticas"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido a <1>Freezino</1>",
+    "subtitle": "¡Elige un juego y prueba tu suerte! Juega con dinero virtual de forma segura.",
+    "availableGames": "Juegos Disponibles",
+    "timePlayed": "Tiempo Jugado",
+    "totalWon": "Total Ganado",
+    "casinoGames": "Juegos de Casino",
+    "educationalBanner": {
+      "title": "💡 Recuerda: este es un proyecto educativo",
+      "description": "Estás jugando con dinero virtual. El objetivo es mostrar qué tan rápido puedes perder dinero en un casino."
+    }
+  },
+  "games": {
+    "roulette": {
+      "title": "Ruleta",
+      "description": "Ruleta europea clásica"
+    },
+    "slots": {
+      "title": "Tragamonedas",
+      "description": "Máquina tragamonedas de 5 carretes"
+    },
+    "blackjack": {
+      "title": "Blackjack",
+      "description": "Juego de cartas contra el crupier"
+    },
+    "craps": {
+      "title": "Dados",
+      "description": "Juego de dados clásico"
+    },
+    "crash": {
+      "title": "Crash",
+      "description": "Gráfico con multiplicador creciente"
+    },
+    "hilo": {
+      "title": "Hi-Lo",
+      "description": "Adivina más alto o más bajo"
+    },
+    "wheel": {
+      "title": "Rueda de la Fortuna",
+      "description": "Gira la rueda y gana un premio"
+    },
+    "poker": {
+      "title": "Póker",
+      "description": "Video Póker - 5 cartas"
+    },
+    "comingSoon": "Próximamente",
+    "minBet": "Apuesta Mínima:"
+  },
+  "work": {
+    "button": "Trabajar",
+    "modalTitle": "Proceso de Trabajo",
+    "modalSubtitle": "Completa el trabajo para ganar dinero",
+    "timeRemaining": "hasta completar",
+    "reward": "Recompensa:",
+    "pause": "⏸ Pausa",
+    "resume": "▶️ Reanudar",
+    "cancelButton": "❌ Cancelar",
+    "warning": "⚠️ Pausa para cancelar",
+    "statsTitle": "¡Trabajo Completado!",
+    "statsSubtitle": "Has ganado <1>${{amount}}</1>",
+    "totalSessions": "Total de Sesiones",
+    "totalEarned": "Total Ganado",
+    "totalWorkTime": "Tiempo Total de Trabajo",
+    "comparisonTitle": "📊 Comparación con Salarios Reales",
+    "timeToEarn": "Tiempo para ganar $500:",
+    "inGame": "En el juego: 3 minutos (¡{{times}}x más rápido!)",
+    "hourlyWage": "${{amount}}/hora",
+    "educationalMessage": "⚠️ Recuerda: En la vida real, ganar dinero requiere mucho más tiempo y esfuerzo. El juego es entretenimiento con alto riesgo de pérdidas.",
+    "hours": "{{count}} h",
+    "minutes": "{{count}} min",
+    "hoursAndMinutes": "{{hours}} h {{minutes}} min"
+  },
+  "countries": {
+    "usa": "EE.UU.",
+    "germany": "Alemania",
+    "russia": "Rusia",
+    "india": "India",
+    "china": "China"
+  },
+  "currency": {
+    "format": "${{amount, number}}",
+    "symbol": "$"
+  }
+}

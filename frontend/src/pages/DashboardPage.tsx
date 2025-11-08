@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import GameCard from '../components/GameCard';
 
 interface Game {
@@ -12,6 +13,7 @@ interface Game {
 }
 
 const DashboardPage = () => {
+  const { t } = useTranslation();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,65 +27,65 @@ const DashboardPage = () => {
         const gamesData: Game[] = [
           {
             id: '1',
-            title: 'Рулетка',
+            title: t('games.roulette.title'),
             icon: '🎡',
-            description: 'Классическая европейская рулетка',
+            description: t('games.roulette.description'),
             minBet: 10,
             isComingSoon: false,
           },
           {
             id: '2',
-            title: 'Слоты',
+            title: t('games.slots.title'),
             icon: '🎰',
-            description: 'Однорукий бандит с 5 барабанами',
+            description: t('games.slots.description'),
             minBet: 5,
             isComingSoon: false,
           },
           {
             id: '3',
-            title: 'Блэкджек',
+            title: t('games.blackjack.title'),
             icon: '🃏',
-            description: 'Карточная игра против дилера',
+            description: t('games.blackjack.description'),
             minBet: 20,
             isComingSoon: true,
           },
           {
             id: '4',
-            title: 'Кости',
+            title: t('games.craps.title'),
             icon: '🎲',
-            description: 'Классическая игра Craps',
+            description: t('games.craps.description'),
             minBet: 15,
             isComingSoon: true,
           },
           {
             id: '5',
-            title: 'Crash',
+            title: t('games.crash.title'),
             icon: '📈',
-            description: 'График с растущим множителем',
+            description: t('games.crash.description'),
             minBet: 10,
             isComingSoon: true,
           },
           {
             id: '6',
-            title: 'Hi-Lo',
+            title: t('games.hilo.title'),
             icon: '🔼',
-            description: 'Угадай выше или ниже',
+            description: t('games.hilo.description'),
             minBet: 5,
             isComingSoon: true,
           },
           {
             id: '7',
-            title: 'Колесо Фортуны',
+            title: t('games.wheel.title'),
             icon: '🎪',
-            description: 'Крути колесо и выиграй приз',
+            description: t('games.wheel.description'),
             minBet: 10,
             isComingSoon: true,
           },
           {
             id: '8',
-            title: 'Покер',
+            title: t('games.poker.title'),
             icon: '♠️',
-            description: 'Video Poker - 5 карт',
+            description: t('games.poker.description'),
             minBet: 25,
             isComingSoon: true,
           },
@@ -115,10 +117,12 @@ const DashboardPage = () => {
         className="mb-8"
       >
         <h1 className="text-4xl font-bold text-white mb-2">
-          Добро пожаловать в <span className="text-primary">Freezino</span>
+          {t('dashboard.welcome').split('<1>')[0]}
+          <span className="text-primary">Freezino</span>
+          {t('dashboard.welcome').split('</1>')[1]}
         </h1>
         <p className="text-gray-400">
-          Выберите игру и испытайте удачу! Играйте на виртуальные деньги безопасно.
+          {t('dashboard.subtitle')}
         </p>
       </motion.div>
 
@@ -133,7 +137,7 @@ const DashboardPage = () => {
           <div className="flex items-center space-x-3">
             <span className="text-4xl">🎮</span>
             <div>
-              <p className="text-gray-400 text-sm">Доступно игр</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.availableGames')}</p>
               <p className="text-2xl font-bold text-white">
                 {loading ? '...' : games.filter(g => !g.isComingSoon).length}
               </p>
@@ -145,8 +149,8 @@ const DashboardPage = () => {
           <div className="flex items-center space-x-3">
             <span className="text-4xl">⏰</span>
             <div>
-              <p className="text-gray-400 text-sm">Времени играно</p>
-              <p className="text-2xl font-bold text-white">0 ч</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.timePlayed')}</p>
+              <p className="text-2xl font-bold text-white">0 {t('work.hours', { count: 0 })}</p>
             </div>
           </div>
         </div>
@@ -155,8 +159,8 @@ const DashboardPage = () => {
           <div className="flex items-center space-x-3">
             <span className="text-4xl">🏆</span>
             <div>
-              <p className="text-gray-400 text-sm">Всего выиграно</p>
-              <p className="text-2xl font-bold text-secondary">$0</p>
+              <p className="text-gray-400 text-sm">{t('dashboard.totalWon')}</p>
+              <p className="text-2xl font-bold text-secondary">{t('common.currency', { amount: 0 })}</p>
             </div>
           </div>
         </div>
@@ -164,7 +168,7 @@ const DashboardPage = () => {
 
       {/* Games Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-4">Казино Игры</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">{t('dashboard.casinoGames')}</h2>
 
         {loading ? (
           // Loading Skeleton
@@ -220,10 +224,10 @@ const DashboardPage = () => {
         className="bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/30 rounded-xl p-6 text-center"
       >
         <p className="text-white font-semibold mb-2">
-          💡 Помните: это образовательный проект
+          {t('dashboard.educationalBanner.title')}
         </p>
         <p className="text-gray-300 text-sm">
-          Вы играете на виртуальные деньги. Цель - показать, как быстро можно потерять деньги в казино.
+          {t('dashboard.educationalBanner.description')}
         </p>
       </motion.div>
     </div>

@@ -1,6 +1,8 @@
 import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useWorkStore } from '../store/workStore';
+import { formatCurrency, formatDuration } from '../utils/formatters';
 
 interface CountryComparison {
   name: string;
@@ -10,12 +12,12 @@ interface CountryComparison {
 }
 
 // Country wage data for comparison
-const countryComparisons: CountryComparison[] = [
-  { name: 'США', flag: '🇺🇸', avgHourlyWage: 28.16, minutesToEarn500: 1065 }, // ~17.75 hours
-  { name: 'Германия', flag: '🇩🇪', avgHourlyWage: 24.5, minutesToEarn500: 1224 }, // ~20.4 hours
-  { name: 'Россия', flag: '🇷🇺', avgHourlyWage: 6.5, minutesToEarn500: 4615 }, // ~76.9 hours
-  { name: 'Индия', flag: '🇮🇳', avgHourlyWage: 2.8, minutesToEarn500: 10714 }, // ~178.6 hours
-  { name: 'Китай', flag: '🇨🇳', avgHourlyWage: 5.2, minutesToEarn500: 5769 }, // ~96.15 hours
+const getCountryComparisons = (t: (key: string) => string): CountryComparison[] => [
+  { name: t('countries.usa'), flag: '🇺🇸', avgHourlyWage: 28.16, minutesToEarn500: 1065 }, // ~17.75 hours
+  { name: t('countries.germany'), flag: '🇩🇪', avgHourlyWage: 24.5, minutesToEarn500: 1224 }, // ~20.4 hours
+  { name: t('countries.russia'), flag: '🇷🇺', avgHourlyWage: 6.5, minutesToEarn500: 4615 }, // ~76.9 hours
+  { name: t('countries.india'), flag: '🇮🇳', avgHourlyWage: 2.8, minutesToEarn500: 10714 }, // ~178.6 hours
+  { name: t('countries.china'), flag: '🇨🇳', avgHourlyWage: 5.2, minutesToEarn500: 5769 }, // ~96.15 hours
 ];
 
 interface WorkTimerProps {
@@ -24,6 +26,7 @@ interface WorkTimerProps {
 }
 
 const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
+  const { t } = useTranslation();
   const {
     isWorking,
     isPaused,
@@ -34,11 +37,12 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
     startWork,
     pauseWork,
     resumeWork,
-    completeWork,
     cancelWork,
     tick,
     closeStatsModal,
   } = useWorkStore();
+
+  const countryComparisons = getCountryComparisons(t);
 
   // Timer tick effect
   useEffect(() => {
@@ -60,17 +64,6 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
 
   // Calculate progress percentage
   const progressPercentage = ((180 - timeRemaining) / 180) * 100;
-
-  // Format duration for display
-  const formatDuration = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-
-    if (hours > 0) {
-      return `${hours} ч ${minutes} мин`;
-    }
-    return `${minutes} мин`;
-  };
 
   // Handle modal close attempt
   const handleCloseAttempt = useCallback(() => {
@@ -107,7 +100,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
           className="fixed bottom-8 right-8 bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-300 z-50 flex items-center space-x-3"
         >
           <span className="text-2xl">💼</span>
-          <span className="text-lg">Работать</span>
+          <span className="text-lg">{t('work.button')}</span>
         </motion.button>
       )}
 
@@ -136,10 +129,10 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
               <div className="text-center mb-6">
                 <div className="text-6xl mb-4">💼</div>
                 <h2 className="text-3xl font-bold text-white mb-2">
-                  Рабочий процесс
+                  {t('work.modalTitle')}
                 </h2>
                 <p className="text-gray-400">
-                  Завершите работу, чтобы заработать
+                  {t('work.modalSubtitle')}
                 </p>
               </div>
 
@@ -150,7 +143,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                     {formatTime(timeRemaining)}
                   </div>
                   <p className="text-gray-400 mt-2">
-                    до завершения
+                    {t('work.timeRemaining')}
                   </p>
                 </div>
 
@@ -187,9 +180,9 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
               {/* Reward Info */}
               <div className="bg-gray-700/50 rounded-xl p-4 mb-6 border border-gray-600">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Награда:</span>
+                  <span className="text-gray-300">{t('work.reward')}</span>
                   <span className="text-secondary font-bold text-xl">
-                    +$500
+                    +{formatCurrency(500)}
                   </span>
                 </div>
               </div>
@@ -203,7 +196,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                     onClick={pauseWork}
                     className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-lg transition-colors"
                   >
-                    ⏸ Пауза
+                    {t('work.pause')}
                   </motion.button>
                 ) : (
                   <motion.button
@@ -212,7 +205,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                     onClick={resumeWork}
                     className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
                   >
-                    ▶️ Продолжить
+                    {t('work.resume')}
                   </motion.button>
                 )}
 
@@ -227,14 +220,14 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                       : 'bg-gray-800 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  ❌ Отменить
+                  {t('work.cancelButton')}
                 </motion.button>
               </div>
 
               {/* Warning */}
               {!isPaused && (
                 <p className="text-center text-gray-500 text-sm mt-4">
-                  ⚠️ Поставьте на паузу, чтобы отменить
+                  {t('work.warning')}
                 </p>
               )}
             </motion.div>
@@ -270,31 +263,33 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                   ✅
                 </motion.div>
                 <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
-                  Работа завершена!
+                  {t('work.statsTitle')}
                 </h2>
                 <p className="text-gray-400">
-                  Вы заработали <span className="text-secondary font-bold">${lastCompletedSession.earned}</span>
+                  {t('work.statsSubtitle').split('<1>')[0]}
+                  <span className="text-secondary font-bold">{formatCurrency(lastCompletedSession.earned)}</span>
+                  {t('work.statsSubtitle').split('</1>')[1]}
                 </p>
               </div>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-700/50 rounded-xl p-4 border border-gray-600">
-                  <div className="text-gray-400 text-sm mb-1">Всего сессий</div>
+                  <div className="text-gray-400 text-sm mb-1">{t('work.totalSessions')}</div>
                   <div className="text-2xl font-bold text-white">
                     {stats.sessions_count}
                   </div>
                 </div>
                 <div className="bg-gray-700/50 rounded-xl p-4 border border-gray-600">
-                  <div className="text-gray-400 text-sm mb-1">Всего заработано</div>
+                  <div className="text-gray-400 text-sm mb-1">{t('work.totalEarned')}</div>
                   <div className="text-2xl font-bold text-secondary">
-                    ${stats.total_earned.toLocaleString()}
+                    {formatCurrency(stats.total_earned)}
                   </div>
                 </div>
                 <div className="bg-gray-700/50 rounded-xl p-4 border border-gray-600 col-span-2">
-                  <div className="text-gray-400 text-sm mb-1">Общее время работы</div>
+                  <div className="text-gray-400 text-sm mb-1">{t('work.totalWorkTime')}</div>
                   <div className="text-2xl font-bold text-white">
-                    {formatDuration(stats.total_work_time)}
+                    {formatDuration(stats.total_work_time, t)}
                   </div>
                 </div>
               </div>
@@ -302,7 +297,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
               {/* Country Comparison */}
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-white mb-4">
-                  📊 Сравнение с реальными зарплатами
+                  {t('work.comparisonTitle')}
                 </h3>
                 <div className="space-y-3">
                   {countryComparisons.map((country) => (
@@ -318,17 +313,17 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                           </span>
                         </div>
                         <span className="text-gray-400 text-sm">
-                          ${country.avgHourlyWage}/час
+                          {t('work.hourlyWage', { amount: country.avgHourlyWage })}
                         </span>
                       </div>
                       <div className="text-gray-300 text-sm">
-                        Время для заработка $500:{' '}
+                        {t('work.timeToEarn')}{' '}
                         <span className="text-secondary font-semibold">
-                          {formatDuration(country.minutesToEarn500 * 60)}
+                          {formatDuration(country.minutesToEarn500 * 60, t)}
                         </span>
                       </div>
                       <div className="mt-2 text-primary text-sm font-semibold">
-                        В игре: 3 минуты (в {Math.floor(country.minutesToEarn500 / 3)}x быстрее!)
+                        {t('work.inGame', { times: Math.floor(country.minutesToEarn500 / 3) })}
                       </div>
                     </div>
                   ))}
@@ -338,9 +333,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
               {/* Educational Message */}
               <div className="bg-primary/10 border border-primary/50 rounded-xl p-4 mb-6">
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  <span className="font-bold text-primary">⚠️ Помните:</span>{' '}
-                  В реальной жизни заработок требует намного больше времени и усилий.
-                  Азартные игры — это развлечение с высоким риском потерь.
+                  {t('work.educationalMessage')}
                 </p>
               </div>
 
@@ -356,7 +349,7 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
                 }}
                 className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-primary/50 transition-all"
               >
-                Продолжить
+                {t('common.continue')}
               </motion.button>
             </motion.div>
           </motion.div>
