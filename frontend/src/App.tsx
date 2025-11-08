@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
 
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
