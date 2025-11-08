@@ -11,8 +11,7 @@ interface CookieSettingsProps {
 }
 
 const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
-  const [preference, setPreference] = useState<CookiePreference>('essential');
-  const [essentialEnabled] = useState(true); // Always enabled
+  const [, setPreference] = useState<CookiePreference>('essential');
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
 
   useEffect(() => {
