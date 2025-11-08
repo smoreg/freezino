@@ -9,6 +9,7 @@ type TransactionType string
 
 const (
 	TransactionTypeWork     TransactionType = "work"
+	TransactionTypeGame     TransactionType = "game"
 	TransactionTypeGameWin  TransactionType = "game_win"
 	TransactionTypeGameLoss TransactionType = "game_loss"
 	TransactionTypePurchase TransactionType = "purchase"
@@ -18,12 +19,13 @@ const (
 
 // Transaction represents a financial transaction
 type Transaction struct {
-	ID          uint            `gorm:"primarykey" json:"id"`
-	UserID      uint            `gorm:"not null;index" json:"user_id"`
-	Type        TransactionType `gorm:"size:50;not null;index" json:"type"`
-	Amount      float64         `gorm:"type:decimal(15,2);not null" json:"amount"`
-	Description string          `gorm:"size:512" json:"description"`
-	CreatedAt   time.Time       `json:"created_at"`
+	ID           uint            `gorm:"primarykey" json:"id"`
+	UserID       uint            `gorm:"not null;index" json:"user_id"`
+	Type         TransactionType `gorm:"size:50;not null;index" json:"type"`
+	Amount       float64         `gorm:"type:decimal(15,2);not null" json:"amount"`
+	BalanceAfter float64         `gorm:"type:decimal(15,2);default:0.00" json:"balance_after"`
+	Description  string          `gorm:"size:512" json:"description"`
+	CreatedAt    time.Time       `json:"created_at"`
 
 	// Relations
 	User User `gorm:"foreignKey:UserID" json:"user,omitempty"`

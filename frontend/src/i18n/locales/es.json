@@ -8,7 +8,8 @@
     "continue": "Continuar",
     "cancel": "Cancelar",
     "confirm": "Confirmar",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "connecting": "Conectando..."
   },
   "nav": {
     "home": "Inicio",
@@ -41,7 +42,28 @@
     },
     "blackjack": {
       "title": "Blackjack",
-      "description": "Juego de cartas contra el crupier"
+      "description": "Juego de cartas contra el crupier",
+      "place_bet": "Haz tu Apuesta",
+      "deal": "Repartir",
+      "dealer": "Crupier",
+      "player": "Jugador",
+      "hit": "Pedir",
+      "stand": "Plantarse",
+      "double": "Doblar",
+      "split": "Dividir",
+      "new_game": "Nuevo Juego",
+      "current_bet": "Apuesta Actual",
+      "payout": "Pago",
+      "blackjack": "¡Blackjack!",
+      "you_win": "¡Ganaste!",
+      "dealer_wins": "Crupier Gana",
+      "push": "Empate",
+      "rules": "Reglas",
+      "rule1": "Acércate lo más posible a 21 sin pasarte",
+      "rule2": "Las figuras valen 10, los Ases valen 1 u 11",
+      "rule3": "El crupier debe pedir con 16 o menos, plantarse con 17 o más",
+      "rule4": "Blackjack (21 con las primeras 2 cartas) paga 3:2",
+      "rule5": "Doblar: Duplica tu apuesta y recibe una carta más"
     },
     "craps": {
       "title": "Dados",

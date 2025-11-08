@@ -3,9 +3,11 @@ package router
 import (
 	"fmt"
 
+	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/smoreg/freezino/backend/internal/auth"
 	"github.com/smoreg/freezino/backend/internal/config"
+	"github.com/smoreg/freezino/backend/internal/database"
 	"github.com/smoreg/freezino/backend/internal/handler"
 	"github.com/smoreg/freezino/backend/internal/middleware"
 )
@@ -64,6 +66,20 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	// Contact routes
 	contactHandler := handler.NewContactHandler()
 	api.Post("/contact", contactHandler.SubmitMessage)
+
+	// Game WebSocket routes
+	db := database.GetDB()
+	gameHandler := handler.NewGameHandler(db)
+
+	// WebSocket upgrade middleware and routes
+	app.Use("/ws", func(c *fiber.Ctx) error {
+		if websocket.IsWebSocketUpgrade(c) {
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	})
+
+	app.Get("/ws/blackjack", websocket.New(gameHandler.BlackjackWebSocket))
 
 	// Future routes will be added here
 }

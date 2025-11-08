@@ -3,6 +3,7 @@ module github.com/smoreg/freezino/backend
 go 1.24.0
 
 require (
+	github.com/gofiber/contrib/websocket v1.3.4
 	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/joho/godotenv v1.5.1
 	gorm.io/driver/sqlite v1.6.0

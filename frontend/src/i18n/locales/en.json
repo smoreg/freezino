@@ -8,7 +8,8 @@
     "continue": "Continue",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "connecting": "Connecting..."
   },
   "nav": {
     "home": "Home",
@@ -41,7 +42,28 @@
     },
     "blackjack": {
       "title": "Blackjack",
-      "description": "Card game against the dealer"
+      "description": "Card game against the dealer",
+      "place_bet": "Place Your Bet",
+      "deal": "Deal",
+      "dealer": "Dealer",
+      "player": "Player",
+      "hit": "Hit",
+      "stand": "Stand",
+      "double": "Double",
+      "split": "Split",
+      "new_game": "New Game",
+      "current_bet": "Current Bet",
+      "payout": "Payout",
+      "blackjack": "Blackjack!",
+      "you_win": "You Win!",
+      "dealer_wins": "Dealer Wins",
+      "push": "Push (Tie)",
+      "rules": "Rules",
+      "rule1": "Get as close to 21 without going over",
+      "rule2": "Face cards are worth 10, Aces are 1 or 11",
+      "rule3": "Dealer must hit on 16 or less, stand on 17 or more",
+      "rule4": "Blackjack (21 with first 2 cards) pays 3:2",
+      "rule5": "Double: Double your bet and get one more card"
     },
     "craps": {
       "title": "Craps",
