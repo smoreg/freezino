@@ -1,0 +1,79 @@
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+interface User {
+  name: string;
+  avatar: string;
+  balance: number;
+}
+
+const Header = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call to fetch user data
+    const fetchUser = async () => {
+      try {
+        // TODO: Replace with actual API call
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setUser({
+          name: 'Player',
+          avatar: '👤',
+          balance: 1000,
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  return (
+    <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/dashboard" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <span className="text-2xl font-bold text-primary">🎰 FREEZINO</span>
+          </Link>
+
+          {/* User Info */}
+          <div className="flex items-center space-x-4">
+            {/* Balance */}
+            <div className="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+              <span className="text-secondary text-xl font-bold">💰</span>
+              {loading ? (
+                <div className="w-16 h-5 bg-gray-600 animate-pulse rounded"></div>
+              ) : (
+                <span className="text-white font-semibold">
+                  ${user?.balance.toLocaleString() || '0'}
+                </span>
+              )}
+            </div>
+
+            {/* Avatar */}
+            <Link to="/profile" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+              {loading ? (
+                <div className="w-10 h-10 bg-gray-600 animate-pulse rounded-full"></div>
+              ) : (
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center border-2 border-gray-600 hover:border-secondary transition-colors">
+                  <span className="text-xl">{user?.avatar || '👤'}</span>
+                </div>
+              )}
+              {!loading && (
+                <span className="hidden md:block text-white font-medium">{user?.name}</span>
+              )}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
