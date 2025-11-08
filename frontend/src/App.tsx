@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardPage from './pages/DashboardPage';
+import CookieConsent from './components/CookieConsent';
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Cookie Consent Banner - shown on first visit */}
+      <CookieConsent />
     </BrowserRouter>
   );
 }
