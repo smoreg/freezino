@@ -24,6 +24,7 @@ func Migrate() error {
 		&model.WorkSession{},
 		&model.GameSession{},
 		&model.ContactMessage{},
+		&model.RouletteResult{},
 	)
 
 	if err != nil {
@@ -43,6 +44,7 @@ func DropAllTables() error {
 	log.Println("Dropping all tables...")
 
 	err := DB.Migrator().DropTable(
+		&model.RouletteResult{},
 		&model.ContactMessage{},
 		&model.GameSession{},
 		&model.WorkSession{},
