@@ -42,5 +42,13 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	user.Get("/transactions", userHandler.GetTransactions)
 	user.Get("/items", userHandler.GetUserItems)
 
+	// Work routes
+	workHandler := handler.NewWorkHandler()
+	work := api.Group("/work")
+	work.Post("/start", workHandler.StartWork)
+	work.Get("/status", workHandler.GetStatus)
+	work.Post("/complete", workHandler.CompleteWork)
+	work.Get("/history", workHandler.GetHistory)
+
 	// Future routes will be added here
 }
