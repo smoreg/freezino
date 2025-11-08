@@ -10,10 +10,10 @@ const AboutPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-4">
             ℹ️ О проекте Freezino
           </h1>
-          <p className="text-gray-400 text-xl">
+          <p className="text-gray-400 text-base md:text-lg lg:text-xl">
             Образовательный симулятор для борьбы с игровой зависимостью
           </p>
         </motion.div>

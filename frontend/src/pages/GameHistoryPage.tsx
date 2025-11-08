@@ -168,11 +168,11 @@ const GameHistoryPage = () => {
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
-          <span className="text-5xl">🎮</span>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-2 md:gap-3">
+          <span className="text-4xl md:text-5xl">🎮</span>
           История игр
         </h1>
-        <p className="text-gray-400">
+        <p className="text-sm md:text-base text-gray-400">
           Подробная статистика и история всех ваших игр
         </p>
       </motion.div>
@@ -355,11 +355,11 @@ const GameHistoryPage = () => {
           <table className="w-full">
             <thead className="bg-gray-900">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Дата</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Игра</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-300">Ставка</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-300">Выигрыш</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-300">Прибыль</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-300">Дата</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-300">Игра</th>
+                <th className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">Ставка</th>
+                <th className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">Выигрыш</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">Прибыль</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700">
@@ -372,14 +372,17 @@ const GameHistoryPage = () => {
               ) : (
                 history.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-700/50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-300">{formatDate(item.created_at)}</td>
-                    <td className="px-6 py-4 text-sm text-white font-medium">
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-gray-300">
+                      <div className="sm:hidden">{new Date(item.created_at).toLocaleDateString()}</div>
+                      <div className="hidden sm:block">{formatDate(item.created_at)}</div>
+                    </td>
+                    <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-white font-medium">
                       {GAME_NAMES[item.game_type] || item.game_type}
                     </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-300">${item.bet.toFixed(2)}</td>
-                    <td className="px-6 py-4 text-sm text-right text-secondary">${item.win.toFixed(2)}</td>
+                    <td className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-right text-gray-300">${item.bet.toFixed(2)}</td>
+                    <td className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-right text-secondary">${item.win.toFixed(2)}</td>
                     <td
-                      className={`px-6 py-4 text-sm text-right font-semibold ${
+                      className={`px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-right font-semibold ${
                         item.profit >= 0 ? 'text-green-400' : 'text-red-400'
                       }`}
                     >
@@ -394,20 +397,22 @@ const GameHistoryPage = () => {
 
         {/* Pagination */}
         {history.length > 0 && (
-          <div className="bg-gray-900 px-6 py-4 flex items-center justify-between">
+          <div className="bg-gray-900 px-3 md:px-6 py-4 flex items-center justify-between gap-2">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 md:px-4 py-2.5 md:py-2 text-sm md:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation min-h-[44px]"
             >
-              Предыдущая
+              <span className="hidden sm:inline">Предыдущая</span>
+              <span className="sm:hidden">←</span>
             </button>
-            <span className="text-gray-400">Страница {currentPage}</span>
+            <span className="text-xs md:text-sm text-gray-400">Стр. {currentPage}</span>
             <button
               onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              className="px-3 md:px-4 py-2.5 md:py-2 text-sm md:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors touch-manipulation min-h-[44px]"
             >
-              Следующая
+              <span className="hidden sm:inline">Следующая</span>
+              <span className="sm:hidden">→</span>
             </button>
           </div>
         )}
