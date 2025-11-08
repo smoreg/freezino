@@ -1,4 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import showToast from '../utils/toast';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
@@ -8,6 +9,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true,
+  timeout: 30000, // 30 second timeout
 });
 
 // Request interceptor
@@ -38,8 +40,20 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
+    // Handle network errors (offline)
+    if (!error.response) {
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        showToast.error('Request timeout. Please try again.');
+      } else if (error.message === 'Network Error') {
+        showToast.error('Network error. Please check your connection.');
+      }
+      return Promise.reject(error);
+    }
+
+    const status = error.response?.status;
+
     // If error is 401 (Unauthorized) and we haven't retried yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -67,9 +81,23 @@ api.interceptors.response.use(
         // If refresh fails, redirect to login
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        showToast.error('Session expired. Please login again.');
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }
+    }
+
+    // Handle other HTTP errors
+    if (status === 403) {
+      showToast.error('Access denied. You do not have permission.');
+    } else if (status === 404) {
+      showToast.error('Resource not found.');
+    } else if (status === 429) {
+      showToast.error('Too many requests. Please slow down.');
+    } else if (status === 500) {
+      showToast.error('Server error. Please try again later.');
+    } else if (status === 503) {
+      showToast.error('Service unavailable. Please try again later.');
     }
 
     return Promise.reject(error);

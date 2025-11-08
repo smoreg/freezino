@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import Avatar from '../components/profile/Avatar';
-import { UserItem } from '../types';
-import { PageTransition, ProfileSkeleton, AnimatedButton, shakeVariants } from '../components/animations';
+import type { UserItem } from '../types';
 
 interface ProfileStats {
   user_id: number;
@@ -29,7 +27,6 @@ interface UserProfile {
 }
 
 const ProfilePage = () => {
-  const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [items, setItems] = useState<UserItem[]>([]);
@@ -93,50 +90,48 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <PageTransition>
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
-          <div className="container mx-auto max-w-6xl">
-            <ProfileSkeleton />
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="animate-pulse space-y-8">
+            <div className="h-12 bg-gray-800 rounded w-1/3"></div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-gray-800 rounded-2xl h-96"></div>
+              <div className="space-y-4">
+                <div className="h-32 bg-gray-800 rounded-xl"></div>
+                <div className="h-32 bg-gray-800 rounded-xl"></div>
+              </div>
+            </div>
           </div>
         </div>
-      </PageTransition>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <PageTransition>
-        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
-          <div className="container mx-auto max-w-6xl">
-            <motion.div
-              variants={shakeVariants}
-              initial="initial"
-              animate="animate"
-              className="bg-red-900/20 border border-red-500 rounded-xl p-8 text-center"
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="bg-red-900/20 border border-red-500 rounded-xl p-8 text-center">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-red-400 mb-2">Error</h2>
+            <p className="text-gray-300">{error}</p>
+            <button
+              onClick={fetchProfileData}
+              className="mt-4 px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
             >
-              <div className="text-6xl mb-4">⚠️</div>
-              <h2 className="text-2xl font-bold text-red-400 mb-2">Error</h2>
-              <p className="text-gray-300">{error}</p>
-              <AnimatedButton
-                variant="danger"
-                onClick={fetchProfileData}
-                className="mt-4"
-              >
-                Retry
-              </AnimatedButton>
-            </motion.div>
+              Retry
+            </button>
           </div>
         </div>
-      </PageTransition>
+      </div>
     );
   }
 
   const equippedItems = items.filter(item => item.is_equipped);
 
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
-        <div className="container mx-auto max-w-6xl">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
+      <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -290,14 +285,12 @@ const ProfilePage = () => {
                   </p>
                 </div>
               </div>
-              <AnimatedButton
-                variant="secondary"
-                fullWidth
-                onClick={() => window.location.href = '/shop'}
-                className="mt-4"
+              <a
+                href="/shop"
+                className="mt-4 block w-full text-center py-2 bg-secondary hover:bg-secondary/80 rounded-lg transition-colors font-semibold"
               >
                 Visit Shop
-              </AnimatedButton>
+              </a>
             </motion.div>
           </div>
         </div>
@@ -335,7 +328,7 @@ const ProfilePage = () => {
                         {userItem.item.type === 'house' && '🏠'}
                         {userItem.item.type === 'clothing' && '👕'}
                         {userItem.item.type === 'car' && '🚗'}
-                        {userItem.item.type === 'accessories' && '💎'}
+                        {userItem.item.type === 'accessory' && '💎'}
                       </div>
                     )}
                   </div>
@@ -358,9 +351,8 @@ const ProfilePage = () => {
             </div>
           </motion.div>
         )}
-        </div>
       </div>
-    </PageTransition>
+    </div>
   );
 };
 

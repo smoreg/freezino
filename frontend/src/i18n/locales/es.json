@@ -155,10 +155,19 @@
     "equip": "Equipar",
     "purchased": "Comprado"
   },
-  "sound": {
-    "musicOn": "Música de Fondo: Encendida",
-    "musicOff": "Música de Fondo: Apagada",
-    "sfxOn": "Efectos de Sonido: Encendidos",
-    "sfxOff": "Efectos de Sonido: Apagados"
+  "error": {
+    "500": {
+      "title": "Error Interno del Servidor",
+      "description": "Algo salió mal de nuestra parte. Por favor, inténtalo más tarde."
+    },
+    "503": {
+      "title": "Servicio No Disponible",
+      "description": "El servicio no está disponible temporalmente. Por favor, inténtalo en unos momentos."
+    },
+    "retry": "Intentar de Nuevo",
+    "goHome": "Ir al Inicio"
+  },
+  "offline": {
+    "message": "Actualmente estás sin conexión. Algunas funciones pueden no estar disponibles."
   }
 }

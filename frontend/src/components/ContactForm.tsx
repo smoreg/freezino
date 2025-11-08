@@ -1,86 +1,58 @@
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import axios from 'axios';
+import showToast from '../utils/toast';
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  message: string;
-}
+// Zod validation schema
+const contactFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Имя должно быть не менее 2 символов')
+    .max(255, 'Имя не должно превышать 255 символов')
+    .trim(),
+  email: z
+    .string()
+    .email('Введите корректный email')
+    .max(255, 'Email не должен превышать 255 символов'),
+  message: z
+    .string()
+    .min(10, 'Сообщение должно быть не менее 10 символов')
+    .max(2000, 'Сообщение не должно превышать 2000 символов')
+    .trim(),
+});
 
-interface FormErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    message: '',
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+    reset,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    mode: 'onBlur',
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  // Validate form fields
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = 'Имя обязательно';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Имя должно быть не менее 2 символов';
-    } else if (formData.name.trim().length > 255) {
-      newErrors.name = 'Имя не должно превышать 255 символов';
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email обязателен';
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Введите корректный email';
-    } else if (formData.email.length > 255) {
-      newErrors.email = 'Email не должен превышать 255 символов';
-    }
-
-    // Message validation
-    if (!formData.message.trim()) {
-      newErrors.message = 'Сообщение обязательно';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Сообщение должно быть не менее 10 символов';
-    } else if (formData.message.length > 2000) {
-      newErrors.message = 'Сообщение не должно превышать 2000 символов';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const messageValue = watch('message', '');
 
   // Handle form submission
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: ContactFormData) => {
     setSubmitSuccess(false);
-    setSubmitError(null);
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
 
     try {
-      const response = await axios.post('/api/contact', formData);
+      const response = await axios.post('/api/contact', data);
 
       if (response.data.success) {
         setSubmitSuccess(true);
-        setFormData({ name: '', email: '', message: '' });
-        setErrors({});
+        showToast.success('Спасибо! Ваше сообщение отправлено.');
+        reset();
 
         // Hide success message after 5 seconds
         setTimeout(() => {
@@ -88,29 +60,10 @@ const ContactForm = () => {
         }, 5000);
       }
     } catch (error: any) {
-      setSubmitError(
-        error.response?.data?.message || 'Произошла ошибка при отправке сообщения. Попробуйте позже.'
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Handle input changes
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // Clear error for this field
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
+      const errorMessage =
+        error.response?.data?.message ||
+        'Произошла ошибка при отправке сообщения. Попробуйте позже.';
+      showToast.error(errorMessage);
     }
   };
 
@@ -120,7 +73,7 @@ const ContactForm = () => {
       animate={{ opacity: 1, y: 0 }}
       className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border-2 border-gray-700 shadow-2xl"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Name Field */}
         <div>
           <label
@@ -132,9 +85,7 @@ const ContactForm = () => {
           <input
             type="text"
             id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            {...register('name')}
             className={`w-full px-4 py-3 bg-gray-700 border ${
               errors.name ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors`}
@@ -142,7 +93,7 @@ const ContactForm = () => {
             disabled={isSubmitting}
           />
           {errors.name && (
-            <p className="mt-2 text-sm text-red-500">{errors.name}</p>
+            <p className="mt-2 text-sm text-red-500">{errors.name.message}</p>
           )}
         </div>
 
@@ -157,9 +108,7 @@ const ContactForm = () => {
           <input
             type="email"
             id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            {...register('email')}
             className={`w-full px-4 py-3 bg-gray-700 border ${
               errors.email ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors`}
@@ -167,7 +116,7 @@ const ContactForm = () => {
             disabled={isSubmitting}
           />
           {errors.email && (
-            <p className="mt-2 text-sm text-red-500">{errors.email}</p>
+            <p className="mt-2 text-sm text-red-500">{errors.email.message}</p>
           )}
         </div>
 
@@ -181,9 +130,7 @@ const ContactForm = () => {
           </label>
           <textarea
             id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
+            {...register('message')}
             rows={6}
             className={`w-full px-4 py-3 bg-gray-700 border ${
               errors.message ? 'border-red-500' : 'border-gray-600'
@@ -193,16 +140,14 @@ const ContactForm = () => {
           />
           <div className="flex justify-between items-center mt-2">
             {errors.message && (
-              <p className="text-sm text-red-500">{errors.message}</p>
+              <p className="text-sm text-red-500">{errors.message.message}</p>
             )}
             <p
               className={`text-sm ${
-                formData.message.length > 2000
-                  ? 'text-red-500'
-                  : 'text-gray-400'
+                messageValue.length > 2000 ? 'text-red-500' : 'text-gray-400'
               } ml-auto`}
             >
-              {formData.message.length}/2000
+              {messageValue.length}/2000
             </p>
           </div>
         </div>
@@ -217,20 +162,6 @@ const ContactForm = () => {
             <p className="text-green-400 flex items-center">
               <span className="text-2xl mr-2">✅</span>
               Спасибо! Ваше сообщение отправлено. Мы свяжемся с вами в ближайшее время.
-            </p>
-          </motion.div>
-        )}
-
-        {/* Error Message */}
-        {submitError && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-red-600/20 border border-red-500 rounded-lg p-4"
-          >
-            <p className="text-red-400 flex items-center">
-              <span className="text-2xl mr-2">❌</span>
-              {submitError}
             </p>
           </motion.div>
         )}
