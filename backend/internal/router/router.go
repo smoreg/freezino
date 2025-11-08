@@ -9,6 +9,7 @@ import (
 	"github.com/smoreg/freezino/backend/internal/config"
 	"github.com/smoreg/freezino/backend/internal/database"
 	"github.com/smoreg/freezino/backend/internal/handler"
+	games "github.com/smoreg/freezino/backend/internal/handler/games"
 	"github.com/smoreg/freezino/backend/internal/middleware"
 )
 
@@ -68,20 +69,35 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	api.Post("/contact", contactHandler.SubmitMessage)
 
 	// Game routes
-	games := api.Group("/games")
+	gamesGroup := api.Group("/games")
 
 	// Roulette routes
 	rouletteHandler := handler.NewRouletteHandler()
-	roulette := games.Group("/roulette")
+	roulette := gamesGroup.Group("/roulette")
 	roulette.Post("/bet", rouletteHandler.PlaceBet)
 	roulette.Get("/history", rouletteHandler.GetHistory)
 	roulette.Get("/recent", rouletteHandler.GetRecentNumbers)
 
 	// Slots routes
 	slotsHandler := handler.NewSlotsHandler()
-	slots := games.Group("/slots")
+	slots := gamesGroup.Group("/slots")
 	slots.Post("/spin", slotsHandler.Spin)
 	slots.Get("/payouts", slotsHandler.GetPayoutTable)
+
+	// Crash game
+	crashHandler := games.NewCrashHandler()
+	crash := gamesGroup.Group("/crash")
+	crash.Post("/bet", crashHandler.PlaceBet)
+
+	// Hi-Lo game
+	hiloHandler := games.NewHiLoHandler()
+	hilo := gamesGroup.Group("/hilo")
+	hilo.Post("/bet", hiloHandler.PlaceBet)
+
+	// Wheel game
+	wheelHandler := games.NewWheelHandler()
+	wheel := gamesGroup.Group("/wheel")
+	wheel.Post("/spin", wheelHandler.Spin)
 
 	// Game WebSocket routes
 	db := database.GetDB()
