@@ -99,6 +99,11 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	wheel := gamesGroup.Group("/wheel")
 	wheel.Post("/spin", wheelHandler.Spin)
 
+	// Game history routes
+	gameHistoryHandler := handler.NewGameHistoryHandler()
+	gamesGroup.Get("/history", gameHistoryHandler.GetHistory)
+	gamesGroup.Get("/stats", gameHistoryHandler.GetStats)
+
 	// Game WebSocket routes
 	db := database.GetDB()
 	gameHandler := handler.NewGameHandler(db)
