@@ -8,7 +8,7 @@ import (
 	"math"
 	"math/big"
 
-	"freezino/backend/internal/model"
+	"github.com/smoreg/freezino/backend/internal/model"
 
 	"gorm.io/gorm"
 )

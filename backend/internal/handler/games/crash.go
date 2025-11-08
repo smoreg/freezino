@@ -131,17 +131,17 @@ func (h *CrashHandler) PlaceBet(c *fiber.Ctx) error {
 	}
 
 	// Create transaction record
-	transactionType := "game_loss"
+	transactionType := model.TransactionType("game_loss")
 	if won {
-		transactionType = "game_win"
+		transactionType = model.TransactionTypeGameWin
 	}
 
 	transaction := model.Transaction{
-		UserID:      req.UserID,
-		Type:        transactionType,
-		Amount:      math.Abs(netChange),
-		Balance:     newBalance,
-		Description: "Crash game - " + strconv.FormatFloat(crashPoint, 'f', 2, 64) + "x",
+		UserID:       req.UserID,
+		Type:         transactionType,
+		Amount:       math.Abs(netChange),
+		BalanceAfter: newBalance,
+		Description:  "Crash game - " + strconv.FormatFloat(crashPoint, 'f', 2, 64) + "x",
 	}
 
 	if err := db.Create(&transaction).Error; err != nil {

@@ -1,7 +1,7 @@
 package game
 
 import (
-	"freezino/backend/internal/model"
+	"github.com/smoreg/freezino/backend/internal/model"
 )
 
 // Game interface defines methods that all games must implement

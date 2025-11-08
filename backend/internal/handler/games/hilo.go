@@ -152,23 +152,23 @@ func (h *HiLoHandler) PlaceBet(c *fiber.Ctx) error {
 	}
 
 	// Create transaction record
-	transactionType := "game_loss"
+	transactionType := model.TransactionType("game_loss")
 	description := "Hi-Lo game - Loss"
 
 	if isPush {
-		transactionType = "game_push"
+		transactionType = model.TransactionType("game_push")
 		description = "Hi-Lo game - Push (tie)"
 	} else if won {
-		transactionType = "game_win"
+		transactionType = model.TransactionTypeGameWin
 		description = "Hi-Lo game - Win"
 	}
 
 	transaction := model.Transaction{
-		UserID:      req.UserID,
-		Type:        transactionType,
-		Amount:      math.Abs(netChange),
-		Balance:     newBalance,
-		Description: description + " (" + strconv.Itoa(currentCard) + " vs " + strconv.Itoa(nextCard) + ")",
+		UserID:       req.UserID,
+		Type:         transactionType,
+		Amount:       math.Abs(netChange),
+		BalanceAfter: newBalance,
+		Description:  description + " (" + strconv.Itoa(currentCard) + " vs " + strconv.Itoa(nextCard) + ")",
 	}
 
 	if err := db.Create(&transaction).Error; err != nil {

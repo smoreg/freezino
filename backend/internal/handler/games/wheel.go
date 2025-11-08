@@ -137,27 +137,27 @@ func (h *WheelHandler) Spin(c *fiber.Ctx) error {
 	}
 
 	// Create transaction record
-	transactionType := "game_loss"
+	transactionType := model.TransactionType("game_loss")
 	description := "Wheel of Fortune - "
 
 	if winningSegment.Multiplier == 0 {
 		description += "Lost all"
 	} else if netChange > 0 {
-		transactionType = "game_win"
+		transactionType = model.TransactionTypeGameWin
 		description += strconv.FormatFloat(winningSegment.Multiplier, 'f', 1, 64) + "x win"
 	} else if netChange == 0 {
-		transactionType = "game_push"
+		transactionType = model.TransactionType("game_push")
 		description += "Break even"
 	} else {
 		description += strconv.FormatFloat(winningSegment.Multiplier, 'f', 1, 64) + "x (loss)"
 	}
 
 	transaction := model.Transaction{
-		UserID:      req.UserID,
-		Type:        transactionType,
-		Amount:      math.Abs(netChange),
-		Balance:     newBalance,
-		Description: description,
+		UserID:       req.UserID,
+		Type:         transactionType,
+		Amount:       math.Abs(netChange),
+		BalanceAfter: newBalance,
+		Description:  description,
 	}
 
 	if err := db.Create(&transaction).Error; err != nil {
