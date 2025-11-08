@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import TermsPage from './pages/legal/TermsPage';
 import PrivacyPage from './pages/legal/PrivacyPage';
 import CookiesPage from './pages/legal/CookiesPage';
+import CookieConsent from './components/CookieConsent';
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Cookie Consent Banner - shown on first visit */}
+      <CookieConsent />
     </BrowserRouter>
   );
 }
