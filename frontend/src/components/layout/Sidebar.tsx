@@ -1,23 +1,25 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface MenuItem {
   path: string;
-  label: string;
+  labelKey: string;
   icon: string;
-  description?: string;
+  descriptionKey?: string;
 }
 
 const Sidebar = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems: MenuItem[] = [
-    { path: '/dashboard', label: 'Игры', icon: '🎮', description: 'Казино игры' },
-    { path: '/shop', label: 'Магазин', icon: '🛍️', description: 'Купить имущество' },
-    { path: '/credit', label: 'Кредиты', icon: '💳', description: 'Взять кредит' },
-    { path: '/profile', label: 'Профиль', icon: '👤', description: 'Мой профиль' },
-    { path: '/work', label: 'Работа', icon: '⏰', description: 'Заработать деньги' },
+    { path: '/dashboard', labelKey: 'sidebar.games', icon: '🎮', descriptionKey: 'sidebar.games_desc' },
+    { path: '/shop', labelKey: 'sidebar.shop', icon: '🛍️', descriptionKey: 'sidebar.shop_desc' },
+    { path: '/credit', labelKey: 'sidebar.credit', icon: '💳', descriptionKey: 'sidebar.credit_desc' },
+    { path: '/profile', labelKey: 'sidebar.profile', icon: '👤', descriptionKey: 'sidebar.profile_desc' },
+    { path: '/work', labelKey: 'sidebar.work', icon: '⏰', descriptionKey: 'sidebar.work_desc' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -76,10 +78,10 @@ const Sidebar = () => {
                   >
                     <span className="text-xl">{item.icon}</span>
                     <div className="flex flex-col">
-                      <span className="font-medium">{item.label}</span>
-                      {item.description && (
+                      <span className="font-medium">{t(item.labelKey)}</span>
+                      {item.descriptionKey && (
                         <span className={`text-xs ${isActive(item.path) ? 'text-gray-200' : 'text-gray-400'}`}>
-                          {item.description}
+                          {t(item.descriptionKey)}
                         </span>
                       )}
                     </div>
