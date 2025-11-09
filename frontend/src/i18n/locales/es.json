@@ -541,5 +541,87 @@
     "topLosers": "Mayores Perdedores",
     "educationalTitle": "Advertencia Importante",
     "educationalMessage": "Estas estadísticas muestran la realidad del juego: la casa siempre gana. La mayoría de los jugadores pierden dinero. Freezino es un proyecto educativo que muestra lo rápido que puedes perder dinero en un casino. ¡Nunca apuestes con dinero real que no puedas permitirte perder!"
+  },
+  "sidebar": {
+    "games": "Juegos",
+    "games_desc": "Juegos de casino",
+    "shop": "Tienda",
+    "shop_desc": "Comprar artículos",
+    "credit": "Créditos",
+    "credit_desc": "Solicitar un préstamo",
+    "stats": "Estadísticas",
+    "stats_desc": "Ver tus estadísticas"
+  },
+  "credit": {
+    "title": "Créditos",
+    "subtitle": "Pide dinero prestado para seguir jugando",
+    "total_debt": "Deuda Total",
+    "losing_per_second": "Perdiendo por segundo",
+    "active_loans": "Préstamos Activos",
+    "apply": "Solicitar",
+    "loan_amount": "Cantidad del Préstamo",
+    "select_collateral": "Seleccionar Garantía",
+    "choose_item": "Elige un artículo...",
+    "collateral_value": "valor de la garantía",
+    "confirm": "Confirmar Préstamo",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "application": "Solicitud",
+    "borrowed": "Prestado",
+    "remaining": "Restante",
+    "interest": "Interés",
+    "per_second": "Por Segundo",
+    "collateral": "Garantía",
+    "repay": "Pagar",
+    "amount": "Cantidad",
+    "pay": "Pagar",
+    "interest_rate": "Tasa de Interés",
+    "max_amount": "Cantidad Máxima",
+    "max_loans": "Préstamos Máximos",
+    "used": "Usados",
+    "loans": "préstamos",
+    "available_collateral": "Garantía Disponible",
+    "not_required": "No requerido",
+    "instant": "Instantánea",
+    "approval": "Aprobación",
+    "repay_success": "¡Préstamo pagado exitosamente!",
+    "friends": {
+      "title": "Amigos",
+      "description": "Tus amigos pueden prestarte dinero sin intereses"
+    },
+    "bank": {
+      "title": "Banco",
+      "description": "Interés moderado con requisito de garantía",
+      "car_or_house": "Coche o Casa"
+    },
+    "microcredit": {
+      "title": "Microcrédito",
+      "description": "Aprobación instantánea, pero tasas de interés muy altas"
+    },
+    "errors": {
+      "invalid_amount": "Cantidad inválida",
+      "select_collateral": "Por favor selecciona una garantía",
+      "friends_refused": "Tus amigos se niegan a prestarte más dinero",
+      "friends_limit_exceeded": "Has alcanzado la cantidad máxima que tus amigos pueden prestar",
+      "collateral_required": "Los préstamos bancarios requieren garantía",
+      "collateral_not_found": "Artículo de garantía no encontrado",
+      "not_your_item": "Este no es tu artículo",
+      "item_already_collateral": "Este artículo ya está usado como garantía",
+      "collateral_must_be_car_or_house": "Solo coches y casas pueden usarse como garantía",
+      "collateral_insufficient": "El valor de la garantía es insuficiente",
+      "loan_not_found": "Préstamo no encontrado",
+      "not_your_loan": "Este no es tu préstamo",
+      "insufficient_balance": "Saldo insuficiente"
+    }
+  },
+  "bankruptcy": {
+    "title": "¡COBRADORES DE DEUDA!",
+    "message": "¡No pudiste pagar tus deudas!",
+    "money_gone": "Todo tu dinero se ha ido",
+    "debts_cleared": "Todas las deudas están liquidadas",
+    "items_seized": "Todos los artículos han sido confiscados",
+    "fresh_start": "¡Puedes empezar de nuevo, pero ten más cuidado con los préstamos!",
+    "understand": "Entiendo",
+    "warning": "Recuerda: en la vida real, la bancarrota tiene graves consecuencias a largo plazo"
   }
 }

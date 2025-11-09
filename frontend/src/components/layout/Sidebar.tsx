@@ -10,16 +10,17 @@ interface MenuItem {
 }
 
 const Sidebar = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation();
 
   const menuItems: MenuItem[] = [
-    { path: '/dashboard', labelKey: 'sidebar.games', icon: '🎮', descriptionKey: 'sidebar.gamesDesc' },
-    { path: '/shop', labelKey: 'sidebar.shop', icon: '🛍️', descriptionKey: 'sidebar.shopDesc' },
-    { path: '/profile', labelKey: 'sidebar.profile', icon: '👤', descriptionKey: 'sidebar.profileDesc' },
-    { path: '/work', labelKey: 'sidebar.work', icon: '⏰', descriptionKey: 'sidebar.workDesc' },
-    { path: '/casino-stats', labelKey: 'sidebar.stats', icon: '🎰', descriptionKey: 'sidebar.statsDesc' },
+    { path: '/dashboard', labelKey: 'sidebar.games', icon: '🎮', descriptionKey: 'sidebar.games_desc' },
+    { path: '/shop', labelKey: 'sidebar.shop', icon: '🛍️', descriptionKey: 'sidebar.shop_desc' },
+    { path: '/credit', labelKey: 'sidebar.credit', icon: '💳', descriptionKey: 'sidebar.credit_desc' },
+    { path: '/profile', labelKey: 'sidebar.profile', icon: '👤', descriptionKey: 'sidebar.profile_desc' },
+    { path: '/work', labelKey: 'sidebar.work', icon: '⏰', descriptionKey: 'sidebar.work_desc' },
+    { path: '/casino-stats', labelKey: 'sidebar.stats', icon: '🎰', descriptionKey: 'sidebar.stats_desc' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

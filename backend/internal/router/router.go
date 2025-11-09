@@ -156,5 +156,14 @@ func Setup(app *fiber.App, cfg *config.Config) {
 
 	app.Get("/ws/blackjack", websocket.New(gameHandler.BlackjackWebSocket))
 
+	// Loan routes (protected)
+	loanHandler := handler.NewLoanHandler()
+	loans := api.Group("/loans", middleware.AuthMiddleware(cfg))
+	loans.Get("/summary", loanHandler.GetLoanSummary)
+	loans.Get("", loanHandler.GetUserLoans)
+	loans.Post("/take", loanHandler.TakeLoan)
+	loans.Post("/repay/:loanId", loanHandler.RepayLoan)
+	loans.Get("/bankruptcy-check", loanHandler.CheckBankruptcy)
+
 	// Future routes will be added here
 }

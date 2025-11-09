@@ -541,5 +541,87 @@
     "topLosers": "Top Losers",
     "educationalTitle": "Important Warning",
     "educationalMessage": "This statistics shows the reality of gambling: the house always wins. Most players lose money. Freezino is an educational project showing how quickly you can lose money in a casino. Never gamble with real money you cannot afford to lose!"
+  },
+  "sidebar": {
+    "games": "Games",
+    "games_desc": "Casino games",
+    "shop": "Shop",
+    "shop_desc": "Buy items",
+    "credit": "Credits",
+    "credit_desc": "Take a loan",
+    "stats": "Statistics",
+    "stats_desc": "View your stats"
+  },
+  "credit": {
+    "title": "Credits",
+    "subtitle": "Borrow money to keep playing",
+    "total_debt": "Total Debt",
+    "losing_per_second": "Losing per second",
+    "active_loans": "Active Loans",
+    "apply": "Apply",
+    "loan_amount": "Loan Amount",
+    "select_collateral": "Select Collateral",
+    "choose_item": "Choose an item...",
+    "collateral_value": "collateral value",
+    "confirm": "Confirm Loan",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "application": "Application",
+    "borrowed": "Borrowed",
+    "remaining": "Remaining",
+    "interest": "Interest",
+    "per_second": "Per Second",
+    "collateral": "Collateral",
+    "repay": "Repay",
+    "amount": "Amount",
+    "pay": "Pay",
+    "interest_rate": "Interest Rate",
+    "max_amount": "Max Amount",
+    "max_loans": "Max Loans",
+    "used": "Used",
+    "loans": "loans",
+    "available_collateral": "Available Collateral",
+    "not_required": "Not required",
+    "instant": "Instant",
+    "approval": "Approval",
+    "repay_success": "Loan repaid successfully!",
+    "friends": {
+      "title": "Friends",
+      "description": "Your friends can lend you money interest-free"
+    },
+    "bank": {
+      "title": "Bank",
+      "description": "Moderate interest with collateral requirement",
+      "car_or_house": "Car or House"
+    },
+    "microcredit": {
+      "title": "Microcredit",
+      "description": "Instant approval, but very high interest rates"
+    },
+    "errors": {
+      "invalid_amount": "Invalid amount",
+      "select_collateral": "Please select collateral",
+      "friends_refused": "Your friends refuse to lend you more money",
+      "friends_limit_exceeded": "You've reached the maximum amount friends can lend",
+      "collateral_required": "Bank loans require collateral",
+      "collateral_not_found": "Collateral item not found",
+      "not_your_item": "This is not your item",
+      "item_already_collateral": "This item is already used as collateral",
+      "collateral_must_be_car_or_house": "Only cars and houses can be used as collateral",
+      "collateral_insufficient": "Collateral value is insufficient",
+      "loan_not_found": "Loan not found",
+      "not_your_loan": "This is not your loan",
+      "insufficient_balance": "Insufficient balance"
+    }
+  },
+  "bankruptcy": {
+    "title": "DEBT COLLECTORS!",
+    "message": "You couldn't pay your debts!",
+    "money_gone": "All your money is gone",
+    "debts_cleared": "All debts are cleared",
+    "items_seized": "All items have been seized",
+    "fresh_start": "You can start fresh, but be more careful with loans!",
+    "understand": "I Understand",
+    "warning": "Remember: in real life, bankruptcy has serious long-term consequences"
   }
 }
