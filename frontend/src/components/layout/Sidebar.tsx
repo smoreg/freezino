@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
+
+import { useAuthStore } from '../../store/authStore';
 
 interface MenuItem {
   path: string;
@@ -9,8 +12,10 @@ interface MenuItem {
 }
 
 const Sidebar = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuthStore();
 
   const menuItems: MenuItem[] = [
     { path: '/dashboard', label: 'Игры', icon: '🎮', description: 'Казино игры' },
@@ -86,6 +91,17 @@ const Sidebar = () => {
                 </li>
               ))}
             </ul>
+
+            {/* Logout Button */}
+            <div className="mt-4 pt-4 border-t border-gray-700">
+              <button
+                onClick={logout}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-gray-700 hover:text-red-300 transition-all duration-200"
+              >
+                <span className="text-xl">🚪</span>
+                <span className="font-medium">{t('common.logout')}</span>
+              </button>
+            </div>
           </nav>
 
           {/* Sidebar Footer */}

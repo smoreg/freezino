@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 
+import { useAuthStore } from '../../store/authStore';
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -10,6 +12,7 @@ interface MobileMenuProps {
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const { logout } = useAuthStore();
 
   const menuItems = [
     { path: '/', label: t('nav.home'), icon: '🏠' },
@@ -109,6 +112,15 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 >
                   {t('nav.contact')}
                 </Link>
+                <button
+                  onClick={logout}
+                  className="w-full text-left text-red-400 hover:text-red-300 py-2 px-4 text-sm transition-colors"
+                >
+                  <span className="flex items-center space-x-2">
+                    <span>🚪</span>
+                    <span>{t('common.logout')}</span>
+                  </span>
+                </button>
               </div>
             </div>
           </motion.div>

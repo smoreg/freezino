@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -13,8 +13,9 @@ interface HeaderProps {
 
 const Header = ({ onMenuClick }: HeaderProps) => {
   const { t } = useTranslation();
-  const { user, isLoading } = useAuthStore();
+  const { user, isLoading, logout } = useAuthStore();
   const { isMusicEnabled, isSfxEnabled, musicVolume, toggleMusic, toggleSfx } = useSoundStore();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Initialize sound manager
   useEffect(() => {
@@ -40,6 +41,13 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   const handleSfxToggle = () => {
     soundManager.play('click', 0.3);
     toggleSfx();
+  };
+
+  const handleLogout = () => {
+    if (isSfxEnabled) {
+      soundManager.play('click', 0.3);
+    }
+    logout();
   };
 
   return (
@@ -114,19 +122,55 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               )}
             </div>
 
-            {/* Avatar */}
-            <Link to="/profile" className="flex items-center space-x-2 hover:opacity-80 transition-opacity touch-manipulation">
+            {/* Avatar with Dropdown */}
+            <div className="relative">
               {isLoading ? (
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-600 animate-pulse rounded-full"></div>
               ) : (
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center border-2 border-gray-600 hover:border-secondary transition-colors">
-                  <span className="text-lg md:text-xl">{user?.avatar || '👤'}</span>
-                </div>
+                <>
+                  <button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="flex items-center space-x-2 hover:opacity-80 transition-opacity touch-manipulation"
+                  >
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center border-2 border-gray-600 hover:border-secondary transition-colors">
+                      <span className="text-lg md:text-xl">{user?.avatar || '👤'}</span>
+                    </div>
+                    <span className="hidden md:block text-white font-medium">{user?.name || 'Player'}</span>
+                  </button>
+
+                  {/* User Dropdown Menu */}
+                  {showUserMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowUserMenu(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-20">
+                        <Link
+                          to="/profile"
+                          onClick={() => setShowUserMenu(false)}
+                          className="block px-4 py-3 text-white hover:bg-gray-700 transition-colors border-b border-gray-700"
+                        >
+                          <span className="flex items-center space-x-2">
+                            <span>👤</span>
+                            <span>{t('nav.profile')}</span>
+                          </span>
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-3 text-red-400 hover:bg-gray-700 transition-colors rounded-b-lg"
+                        >
+                          <span className="flex items-center space-x-2">
+                            <span>🚪</span>
+                            <span>{t('common.logout')}</span>
+                          </span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </>
               )}
-              {!isLoading && (
-                <span className="hidden md:block text-white font-medium">{user?.name || 'Player'}</span>
-              )}
-            </Link>
+            </div>
           </div>
         </div>
       </div>
