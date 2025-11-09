@@ -202,7 +202,6 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                     {t('statsModal.comparison')}
                   </h3>
                   <p className="text-gray-400 text-sm mb-4" dangerouslySetInnerHTML={{ __html: t('statsModal.toEarn', { amount: earned }) }} />
-                </motion.div>
 
                   <div className="space-y-3">
                     {countriesWithTime.map((country, index) => (
