@@ -26,6 +26,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const SlotsPage = lazy(() => import('./pages/SlotsPage'));
 const RoulettePage = lazy(() => import('./pages/RoulettePage'));
 const WorkPage = lazy(() => import('./pages/WorkPage'));
+const CasinoStatsPage = lazy(() => import('./pages/CasinoStatsPage'));
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
                 <Route path="/history" element={<GameHistoryPage />} />
                 <Route path="/shop" element={<ShopPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/casino-stats" element={<CasinoStatsPage />} />
               </Route>
               {/* Game pages without MainLayout (full screen) */}
               <Route path="/games/slots" element={<SlotsPage />} />

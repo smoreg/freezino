@@ -1,22 +1,25 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface MenuItem {
   path: string;
-  label: string;
+  labelKey: string;
   icon: string;
-  description?: string;
+  descriptionKey?: string;
 }
 
 const Sidebar = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   const menuItems: MenuItem[] = [
-    { path: '/dashboard', label: 'Игры', icon: '🎮', description: 'Казино игры' },
-    { path: '/shop', label: 'Магазин', icon: '🛍️', description: 'Купить имущество' },
-    { path: '/profile', label: 'Профиль', icon: '👤', description: 'Мой профиль' },
-    { path: '/work', label: 'Работа', icon: '⏰', description: 'Заработать деньги' },
+    { path: '/dashboard', labelKey: 'sidebar.games', icon: '🎮', descriptionKey: 'sidebar.gamesDesc' },
+    { path: '/shop', labelKey: 'sidebar.shop', icon: '🛍️', descriptionKey: 'sidebar.shopDesc' },
+    { path: '/profile', labelKey: 'sidebar.profile', icon: '👤', descriptionKey: 'sidebar.profileDesc' },
+    { path: '/work', labelKey: 'sidebar.work', icon: '⏰', descriptionKey: 'sidebar.workDesc' },
+    { path: '/casino-stats', labelKey: 'sidebar.stats', icon: '🎰', descriptionKey: 'sidebar.statsDesc' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -75,10 +78,10 @@ const Sidebar = () => {
                   >
                     <span className="text-xl">{item.icon}</span>
                     <div className="flex flex-col">
-                      <span className="font-medium">{item.label}</span>
-                      {item.description && (
+                      <span className="font-medium">{t(item.labelKey)}</span>
+                      {item.descriptionKey && (
                         <span className={`text-xs ${isActive(item.path) ? 'text-gray-200' : 'text-gray-400'}`}>
-                          {item.description}
+                          {t(item.descriptionKey)}
                         </span>
                       )}
                     </div>
@@ -92,10 +95,10 @@ const Sidebar = () => {
           <div className="p-4 border-t border-gray-700">
             <div className="bg-gray-700 p-3 rounded-lg">
               <p className="text-xs text-gray-400 text-center">
-                Играйте ответственно
+                {t('sidebar.playResponsibly')}
               </p>
               <p className="text-xs text-gray-500 text-center mt-1">
-                Только виртуальная валюта
+                {t('sidebar.virtualCurrency')}
               </p>
             </div>
           </div>
