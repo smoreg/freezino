@@ -226,5 +226,77 @@
   },
   "offline": {
     "message": "Actualmente estás sin conexión. Algunas funciones pueden no estar disponibles."
+  },
+  "credit": {
+    "title": "Créditos",
+    "subtitle": "Pide dinero prestado para seguir jugando",
+    "total_debt": "Deuda Total",
+    "losing_per_second": "Perdiendo por segundo",
+    "active_loans": "Préstamos Activos",
+    "apply": "Solicitar",
+    "loan_amount": "Monto del Préstamo",
+    "select_collateral": "Seleccionar Garantía",
+    "choose_item": "Elige un artículo...",
+    "collateral_value": "valor de garantía",
+    "confirm": "Confirmar Préstamo",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "application": "Solicitud",
+    "borrowed": "Prestado",
+    "remaining": "Restante",
+    "interest": "Interés",
+    "per_second": "Por Segundo",
+    "collateral": "Garantía",
+    "repay": "Pagar",
+    "amount": "Cantidad",
+    "pay": "Pagar",
+    "interest_rate": "Tasa de Interés",
+    "max_amount": "Monto Máximo",
+    "max_loans": "Préstamos Máximos",
+    "used": "Usado",
+    "loans": "préstamos",
+    "available_collateral": "Garantía Disponible",
+    "not_required": "No requerido",
+    "instant": "Instantáneo",
+    "approval": "Aprobación",
+    "repay_success": "¡Préstamo pagado con éxito!",
+    "friends": {
+      "title": "Amigos",
+      "description": "Tus amigos pueden prestarte dinero sin intereses"
+    },
+    "bank": {
+      "title": "Banco",
+      "description": "Interés moderado con requisito de garantía",
+      "car_or_house": "Coche o Casa"
+    },
+    "microcredit": {
+      "title": "Microcrédito",
+      "description": "Aprobación instantánea, pero tasas de interés muy altas"
+    },
+    "errors": {
+      "invalid_amount": "Cantidad inválida",
+      "select_collateral": "Por favor selecciona una garantía",
+      "friends_refused": "Tus amigos se niegan a prestarte más dinero",
+      "friends_limit_exceeded": "Has alcanzado el monto máximo que tus amigos pueden prestar",
+      "collateral_required": "Los préstamos bancarios requieren garantía",
+      "collateral_not_found": "Artículo de garantía no encontrado",
+      "not_your_item": "Este no es tu artículo",
+      "item_already_collateral": "Este artículo ya se usa como garantía",
+      "collateral_must_be_car_or_house": "Solo se pueden usar coches y casas como garantía",
+      "collateral_insufficient": "El valor de la garantía es insuficiente",
+      "loan_not_found": "Préstamo no encontrado",
+      "not_your_loan": "Este no es tu préstamo",
+      "insufficient_balance": "Saldo insuficiente"
+    }
+  },
+  "bankruptcy": {
+    "title": "¡COBRADORES DE DEUDAS!",
+    "message": "¡No pudiste pagar tus deudas!",
+    "money_gone": "Todo tu dinero se ha ido",
+    "debts_cleared": "Todas las deudas están saldadas",
+    "items_seized": "Todos los artículos han sido confiscados",
+    "fresh_start": "Puedes empezar de nuevo, ¡pero ten más cuidado con los préstamos!",
+    "understand": "Entiendo",
+    "warning": "Recuerda: en la vida real, la bancarrota tiene serias consecuencias a largo plazo"
   }
 }

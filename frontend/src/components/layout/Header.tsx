@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { useAuthStore } from '../../store/authStore';
+import { useLoanStore } from '../../store/loanStore';
 import { useSoundStore } from '../../store/soundStore';
 import { soundManager } from '../../utils/sounds';
 import LanguageSwitcher from '../LanguageSwitcher';
@@ -14,12 +15,29 @@ interface HeaderProps {
 const Header = ({ onMenuClick }: HeaderProps) => {
   const { t } = useTranslation();
   const { user, isLoading } = useAuthStore();
+  const { summary, fetchSummary, checkBankruptcy } = useLoanStore();
   const { isMusicEnabled, isSfxEnabled, musicVolume, toggleMusic, toggleSfx } = useSoundStore();
 
   // Initialize sound manager
   useEffect(() => {
     soundManager.init();
   }, []);
+
+  // Fetch loan summary and check bankruptcy periodically
+  useEffect(() => {
+    if (user) {
+      fetchSummary();
+      checkBankruptcy();
+
+      // Update every 5 seconds
+      const interval = setInterval(() => {
+        fetchSummary();
+        checkBankruptcy();
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [user, fetchSummary, checkBankruptcy]);
 
   // Control background music
   useEffect(() => {
@@ -103,14 +121,29 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             </div>
 
             {/* Balance - responsive sizing */}
-            <div className="flex items-center space-x-1 md:space-x-2 bg-gray-700 px-2 md:px-4 py-1.5 md:py-2 rounded-lg hover:bg-gray-600 transition-colors">
-              <span className="text-secondary text-lg md:text-xl font-bold">💰</span>
-              {isLoading ? (
-                <div className="w-12 md:w-16 h-4 md:h-5 bg-gray-600 animate-pulse rounded"></div>
-              ) : (
-                <span className="text-white text-sm md:text-base font-semibold">
-                  ${user?.balance?.toLocaleString() || '0'}
-                </span>
+            <div className="flex flex-col md:flex-row items-end md:items-center space-y-1 md:space-y-0 md:space-x-2">
+              <div className="flex items-center space-x-1 md:space-x-2 bg-gray-700 px-2 md:px-4 py-1.5 md:py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                <span className="text-secondary text-lg md:text-xl font-bold">💰</span>
+                {isLoading ? (
+                  <div className="w-12 md:w-16 h-4 md:h-5 bg-gray-600 animate-pulse rounded"></div>
+                ) : (
+                  <span className="text-white text-sm md:text-base font-semibold">
+                    ${user?.balance?.toLocaleString() || '0'}
+                  </span>
+                )}
+              </div>
+
+              {/* Debt Info */}
+              {summary && summary.interest_per_second > 0 && (
+                <Link
+                  to="/credit"
+                  className="flex items-center space-x-1 bg-red-900/50 px-2 md:px-3 py-1 md:py-1.5 rounded-lg hover:bg-red-900/70 transition-colors border border-red-700"
+                  title={t('credit.losing_per_second', { defaultValue: 'Losing per second' })}
+                >
+                  <span className="text-red-400 text-xs md:text-sm font-semibold">
+                    -${summary.interest_per_second.toFixed(4)}/s
+                  </span>
+                </Link>
               )}
             </div>
 

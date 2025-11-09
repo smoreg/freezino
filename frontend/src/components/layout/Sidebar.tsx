@@ -15,6 +15,7 @@ const Sidebar = () => {
   const menuItems: MenuItem[] = [
     { path: '/dashboard', label: 'Игры', icon: '🎮', description: 'Казино игры' },
     { path: '/shop', label: 'Магазин', icon: '🛍️', description: 'Купить имущество' },
+    { path: '/credit', label: 'Кредиты', icon: '💳', description: 'Взять кредит' },
     { path: '/profile', label: 'Профиль', icon: '👤', description: 'Мой профиль' },
     { path: '/work', label: 'Работа', icon: '⏰', description: 'Заработать деньги' },
   ];

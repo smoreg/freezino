@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import BankruptcyPopup from './components/BankruptcyPopup';
 import CookieConsent from './components/CookieConsent';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -18,6 +19,7 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const GameHistoryPage = lazy(() => import('./pages/GameHistoryPage'));
 const ShopPage = lazy(() => import('./pages/ShopPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const CreditPage = lazy(() => import('./pages/CreditPage'));
 const TermsPage = lazy(() => import('./pages/legal/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/legal/PrivacyPage'));
 const CookiesPage = lazy(() => import('./pages/legal/CookiesPage'));
@@ -56,6 +58,7 @@ function App() {
                 <Route path="/history" element={<GameHistoryPage />} />
                 <Route path="/shop" element={<ShopPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/credit" element={<CreditPage />} />
               </Route>
               {/* Game pages without MainLayout (full screen) */}
               <Route path="/games/slots" element={<SlotsPage />} />
@@ -71,6 +74,9 @@ function App() {
 
         {/* Offline Detection */}
         <OfflineDetector />
+
+        {/* Bankruptcy Popup */}
+        <BankruptcyPopup />
 
         {/* Toast Notifications */}
         <Toaster

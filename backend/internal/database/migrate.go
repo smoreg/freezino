@@ -25,6 +25,7 @@ func Migrate() error {
 		&model.GameSession{},
 		&model.ContactMessage{},
 		&model.RouletteResult{},
+		&model.Loan{},
 	)
 
 	if err != nil {
@@ -52,6 +53,7 @@ func DropAllTables() error {
 	log.Println("Dropping all tables...")
 
 	err := DB.Migrator().DropTable(
+		&model.Loan{},
 		&model.RouletteResult{},
 		&model.ContactMessage{},
 		&model.GameSession{},
