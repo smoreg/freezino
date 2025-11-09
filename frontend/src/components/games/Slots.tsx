@@ -88,7 +88,7 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
       .map(() =>
         Array(3)
           .fill(null)
-          .map(() => null)
+          .map(() => [null])
       );
   }, []);
 
@@ -337,7 +337,7 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
 
                   for (let i = 0; i < line.count; i++) {
                     const symbolRow = payline[i];
-                    const symbolEl = symbolRefs.current[i]?.[symbolRow];
+                    const symbolEl = symbolRefs.current[i]?.[symbolRow]?.[0];
 
                     if (!symbolEl) continue;
 
@@ -401,7 +401,10 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
                             if (!symbolRefs.current[reelIndex]) {
                               symbolRefs.current[reelIndex] = [];
                             }
-                            symbolRefs.current[reelIndex][symbolIndex] = el;
+                            if (!symbolRefs.current[reelIndex][symbolIndex]) {
+                              symbolRefs.current[reelIndex][symbolIndex] = [];
+                            }
+                            symbolRefs.current[reelIndex][symbolIndex][0] = el;
                           }}
                           animate={
                             spinning
