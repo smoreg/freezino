@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface CountryComparison {
   code: string;
@@ -16,60 +17,62 @@ interface StatsModalProps {
 }
 
 const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps) => {
+  const { t } = useTranslation();
+
   // Country data with average hourly wages in USD
   const countries: CountryComparison[] = [
     {
       code: 'US',
-      name: 'США',
+      name: t('statsModal.countries.us'),
       flag: '🇺🇸',
       avgSalaryPerHour: 30,
       timeNeeded: '',
     },
     {
       code: 'GB',
-      name: 'Великобритания',
+      name: t('statsModal.countries.gb'),
       flag: '🇬🇧',
       avgSalaryPerHour: 25,
       timeNeeded: '',
     },
     {
       code: 'DE',
-      name: 'Германия',
+      name: t('statsModal.countries.de'),
       flag: '🇩🇪',
       avgSalaryPerHour: 22,
       timeNeeded: '',
     },
     {
       code: 'FR',
-      name: 'Франция',
+      name: t('statsModal.countries.fr'),
       flag: '🇫🇷',
       avgSalaryPerHour: 20,
       timeNeeded: '',
     },
     {
       code: 'JP',
-      name: 'Япония',
+      name: t('statsModal.countries.jp'),
       flag: '🇯🇵',
       avgSalaryPerHour: 18,
       timeNeeded: '',
     },
     {
       code: 'CN',
-      name: 'Китай',
+      name: t('statsModal.countries.cn'),
       flag: '🇨🇳',
       avgSalaryPerHour: 8,
       timeNeeded: '',
     },
     {
       code: 'RU',
-      name: 'Россия',
+      name: t('statsModal.countries.ru'),
       flag: '🇷🇺',
       avgSalaryPerHour: 5,
       timeNeeded: '',
     },
     {
       code: 'IN',
-      name: 'Индия',
+      name: t('statsModal.countries.in'),
       flag: '🇮🇳',
       avgSalaryPerHour: 3,
       timeNeeded: '',
@@ -83,20 +86,20 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
 
     let timeNeeded = '';
     if (minutesNeeded < 60) {
-      timeNeeded = `${minutesNeeded.toFixed(1)} минут`;
+      timeNeeded = t('statsModal.time.minutes', { count: parseFloat(minutesNeeded.toFixed(1)) });
     } else if (minutesNeeded < 1440) {
       // less than 24 hours
       const hours = Math.floor(minutesNeeded / 60);
       const minutes = Math.floor(minutesNeeded % 60);
       timeNeeded = minutes > 0
-        ? `${hours} ч ${minutes} мин`
-        : `${hours} ч`;
+        ? t('statsModal.time.hoursMinutes', { hours, minutes })
+        : t('statsModal.time.hours', { count: hours });
     } else {
       const days = Math.floor(minutesNeeded / 1440);
       const hours = Math.floor((minutesNeeded % 1440) / 60);
       timeNeeded = hours > 0
-        ? `${days} дн ${hours} ч`
-        : `${days} дн`;
+        ? t('statsModal.time.daysHours', { days, hours })
+        : t('statsModal.time.days', { count: days });
     }
 
     return { ...country, timeNeeded };
@@ -109,11 +112,11 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
     const secs = seconds % 60;
 
     if (hours > 0) {
-      return `${hours} ч ${minutes} мин`;
+      return t('statsModal.time.hoursMinutes', { hours, minutes });
     } else if (minutes > 0) {
-      return `${minutes} мин ${secs} сек`;
+      return t('statsModal.time.minutesSeconds', { minutes, seconds: secs });
     } else {
-      return `${secs} сек`;
+      return t('statsModal.time.seconds', { count: secs });
     }
   };
 
@@ -144,16 +147,16 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                 <div>
                   <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                     <span className="text-3xl">📊</span>
-                    Статистика работы
+                    {t('statsModal.title')}
                   </h2>
                   <p className="text-gray-400 text-sm mt-1">
-                    Сравнение с мировыми зарплатами
+                    {t('statsModal.subtitle')}
                   </p>
                 </div>
                 <button
                   onClick={onClose}
                   className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
-                  aria-label="Закрыть"
+                  aria-label={t('statsModal.close')}
                 >
                   <svg
                     width="24"
@@ -180,12 +183,12 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                   transition={{ delay: 0.1 }}
                   className="bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/30 rounded-xl p-6 text-center"
                 >
-                  <p className="text-gray-300 text-sm mb-2">Вы заработали</p>
+                  <p className="text-gray-300 text-sm mb-2">{t('statsModal.earned')}</p>
                   <p className="text-5xl font-bold text-secondary">
                     ${earned.toFixed(2)}
                   </p>
                   <p className="text-gray-400 text-sm mt-2">
-                    За {formatWorkTime(totalWorkTime)}
+                    {t('statsModal.for', { time: formatWorkTime(totalWorkTime) })}
                   </p>
                 </motion.div>
 
@@ -196,12 +199,10 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                   transition={{ delay: 0.2 }}
                 >
                   <h3 className="text-lg font-semibold text-white mb-4">
-                    Сравнение с другими странами
+                    {t('statsModal.comparison')}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Чтобы заработать <span className="text-secondary font-semibold">${earned}</span>,
-                    в других странах вам потребовалось бы:
-                  </p>
+                  <p className="text-gray-400 text-sm mb-4" dangerouslySetInnerHTML={{ __html: t('statsModal.toEarn', { amount: earned }) }} />
+                </motion.div>
 
                   <div className="space-y-3">
                     {countriesWithTime.map((country, index) => (
@@ -220,7 +221,7 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                                 {country.name}
                               </p>
                               <p className="text-gray-400 text-xs">
-                                ~${country.avgSalaryPerHour}/час
+                                {t('statsModal.perHour', { amount: country.avgSalaryPerHour })}
                               </p>
                             </div>
                           </div>
@@ -228,7 +229,7 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                             <p className="text-secondary font-bold text-lg">
                               {country.timeNeeded}
                             </p>
-                            <p className="text-gray-500 text-xs">работы</p>
+                            <p className="text-gray-500 text-xs">{t('statsModal.work')}</p>
                           </div>
                         </div>
                       </motion.div>
@@ -236,7 +237,7 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                   </div>
                 </motion.div>
 
-                {/* Educational Note */}
+                {/* Educational Note - Note: translation key not found in locale files */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -256,7 +257,7 @@ const StatsModal = ({ isOpen, onClose, earned, totalWorkTime }: StatsModalProps)
                   onClick={onClose}
                   className="w-full bg-primary hover:bg-primary/80 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
-                  Закрыть
+                  {t('statsModal.close')}
                 </button>
               </div>
             </div>

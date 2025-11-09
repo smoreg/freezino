@@ -16,7 +16,7 @@ const (
 	SymbolDiamond SlotSymbol = "💎"
 	SymbolStar    SlotSymbol = "⭐"
 	SymbolSeven   SlotSymbol = "7️⃣"
-	// Новые символы для оптимизированной конфигурации (RTP 95%, WinRate 25%)
+	// New symbols for optimized configuration (RTP 95%, WinRate 25%)
 	SymbolClover  SlotSymbol = "🍀"
 	SymbolBell    SlotSymbol = "🔔"
 	SymbolBar     SlotSymbol = "━"
@@ -30,10 +30,10 @@ type WinTier string
 
 const (
 	WinTierNone   WinTier = "none"    // No win
-	WinTierSmall  WinTier = "small"   // 1-10x (мелкие выигрыши)
-	WinTierMedium WinTier = "medium"  // 10-50x (средние выигрыши)
-	WinTierBig    WinTier = "big"     // 50-100x (большие выигрыши)
-	WinTierJackpot WinTier = "jackpot" // 100x+ (джекпот)
+	WinTierSmall  WinTier = "small"   // 1-10x (small wins)
+	WinTierMedium WinTier = "medium"  // 10-50x (medium wins)
+	WinTierBig    WinTier = "big"     // 50-100x (big wins)
+	WinTierJackpot WinTier = "jackpot" // 100x+ (jackpot)
 )
 
 // SlotResult represents the result of a slot spin
@@ -59,18 +59,18 @@ type WinningLine struct {
 type Payline [5]int
 
 var (
-	// All available symbols (включая оптимизированные для RTP 95% и WinRate 25%)
+	// All available symbols (including optimized for RTP 95% and WinRate 25%)
 	allSymbols = []SlotSymbol{
 		SymbolCherry, SymbolLemon, SymbolOrange, SymbolGrape,
 		SymbolDiamond, SymbolStar, SymbolSeven,
 		SymbolClover, SymbolBell, SymbolBar,
 	}
 
-	// Оптимизированные веса символов (на основе генетической оптимизации)
+	// Optimized symbol weights (based on genetic optimization)
 	// RTP: 95.21%, Win Rate: 24.96%
-	// Распределение: Мелкие 22.6%, Средние 2.32%, Большие 0%, Джекпот 0.04%
+	// Distribution: Small 22.6%, Medium 2.32%, Big 0%, Jackpot 0.04%
 	symbolWeights = map[SlotSymbol]int{
-		SymbolClover:  9, // 27.3% - самый частый (мелкие выигрыши)
+		SymbolClover:  9, // 27.3% - most frequent (small wins)
 		SymbolBell:    7, // 21.2%
 		SymbolGrape:   4, // 12.1%
 		SymbolDiamond: 3, // 9.1%
@@ -78,7 +78,7 @@ var (
 		SymbolLemon:   2, // 6.1%
 		SymbolCherry:  2, // 6.1%
 		SymbolOrange:  1, // 3.0%
-		SymbolSeven:   1, // 3.0% - редкий джекпот
+		SymbolSeven:   1, // 3.0% - rare jackpot
 		SymbolStar:    1, // 3.0%
 	}
 
@@ -98,7 +98,7 @@ var (
 
 	// Payout table: symbol -> count -> multiplier
 	// count can be 3, 4, or 5 (number of symbols in a row)
-	// Оптимизировано для RTP 95% и WinRate 25%
+	// Optimized for RTP 95% and WinRate 25%
 	payoutTable = map[SlotSymbol]map[int]float64{
 		SymbolSeven: {
 			5: 500.0, // 5 sevens = 500x bet (Jackpot)
@@ -135,7 +135,7 @@ var (
 			4: 10.0,
 			3: 2.0,
 		},
-		// Новые символы для частых мелких выигрышей
+		// New symbols for frequent small wins
 		SymbolBar: {
 			5: 20.0,
 			4: 5.0,
@@ -185,18 +185,18 @@ func (se *SlotsEngine) Spin(bet float64) *SlotResult {
 		}
 	}
 
-	// Определяем тир выигрыша для анимаций
+	// Determine win tier for animations
 	if result.TotalWin > 0 && bet > 0 {
 		winMultiplier := result.TotalWin / bet
 
 		if winMultiplier >= 100 {
-			result.WinTier = WinTierJackpot // 100x+ = Джекпот 🎉🎉🎉
+			result.WinTier = WinTierJackpot // 100x+ = Jackpot 🎉🎉🎉
 		} else if winMultiplier >= 50 {
-			result.WinTier = WinTierBig // 50-100x = Большой выигрыш 🎉
+			result.WinTier = WinTierBig // 50-100x = Big win 🎉
 		} else if winMultiplier >= 10 {
-			result.WinTier = WinTierMedium // 10-50x = Средний выигрыш
+			result.WinTier = WinTierMedium // 10-50x = Medium win
 		} else {
-			result.WinTier = WinTierSmall // 1-10x = Мелкий выигрыш
+			result.WinTier = WinTierSmall // 1-10x = Small win
 		}
 	}
 
@@ -215,21 +215,21 @@ func (se *SlotsEngine) generateReels() [5]SlotReel {
 }
 
 // generateReel generates a single reel with 3 weighted random symbols
-// Использует оптимизированные веса для достижения RTP 95% и WinRate 25%
+// Uses optimized weights to achieve RTP 95% and WinRate 25%
 func (se *SlotsEngine) generateReel() SlotReel {
 	var reel SlotReel
 
-	// Вычисляем общий вес
+	// Calculate total weight
 	totalWeight := 0
 	for _, weight := range symbolWeights {
 		totalWeight += weight
 	}
 
 	for i := 0; i < 3; i++ {
-		// Генерируем случайное число от 0 до totalWeight
+		// Generate random number from 0 to totalWeight
 		roll := se.rng.Intn(totalWeight)
 
-		// Выбираем символ на основе веса
+		// Select symbol based on weight
 		currentWeight := 0
 		for _, symbol := range allSymbols {
 			currentWeight += symbolWeights[symbol]

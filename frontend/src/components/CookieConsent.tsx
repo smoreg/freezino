@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 type CookiePreference = 'all' | 'essential' | 'none';
 
 const COOKIE_CONSENT_KEY = 'freezino-cookie-consent';
 
 const CookieConsent = () => {
+  const { t } = useTranslation();
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
@@ -52,18 +54,16 @@ const CookieConsent = () => {
               <div className="flex items-center space-x-2">
                 <span className="text-2xl">🍪</span>
                 <h3 className="text-lg font-bold text-white">
-                  Cookie Consent
+                  {t('cookies.consent.title')}
                 </h3>
               </div>
               <p className="text-gray-300 text-sm leading-relaxed">
-                Мы используем cookies для улучшения вашего опыта. Необходимые cookies нужны для
-                функционирования сайта (авторизация, настройки). Аналитические cookies помогают
-                нам понять, как вы используете сайт.{' '}
+                {t('cookies.consent.description')}{' '}
                 <Link
                   to="/cookies"
                   className="text-secondary hover:text-primary underline transition-colors"
                 >
-                  Узнать больше
+                  {t('cookies.consent.learnMore')}
                 </Link>
               </p>
             </div>
@@ -74,19 +74,19 @@ const CookieConsent = () => {
                 onClick={() => handleConsent('all')}
                 className="px-6 py-3 bg-primary hover:bg-red-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 shadow-lg whitespace-nowrap"
               >
-                Принять все
+                {t('cookies.consent.acceptAll')}
               </button>
               <button
                 onClick={() => handleConsent('essential')}
                 className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-all transform hover:scale-105 shadow-lg whitespace-nowrap"
               >
-                Только необходимые
+                {t('cookies.consent.onlyEssential')}
               </button>
               <button
                 onClick={() => handleConsent('none')}
                 className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold rounded-lg border border-gray-600 transition-all transform hover:scale-105 whitespace-nowrap"
               >
-                Отклонить все
+                {t('cookies.consent.rejectAll')}
               </button>
             </div>
           </div>
