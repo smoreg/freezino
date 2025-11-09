@@ -13,7 +13,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setLoading: (isLoading: boolean) => void;
   login: (authData: AuthResponse) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   refreshToken: () => Promise<boolean>;
 }
@@ -42,7 +42,15 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      logout: () => {
+      logout: async () => {
+        try {
+          // Call backend logout endpoint to clear server-side cookies
+          await api.post('/auth/logout');
+        } catch (error) {
+          console.error('Logout API call failed:', error);
+          // Continue with client-side logout even if API call fails
+        }
+
         // Clear tokens
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');

@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 
+import { useAuthStore } from '../../store/authStore';
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -10,6 +12,7 @@ interface MobileMenuProps {
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const { logout } = useAuthStore();
 
   const menuItems = [
     { path: '/', label: t('nav.home'), icon: '🏠' },
@@ -90,6 +93,17 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   </li>
                 ))}
               </ul>
+
+              {/* Logout Button - prominent placement */}
+              <div className="mt-4 pt-4 border-t border-gray-700">
+                <button
+                  onClick={logout}
+                  className="w-full flex items-center space-x-3 px-4 py-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors touch-manipulation"
+                >
+                  <span className="text-2xl">🚪</span>
+                  <span className="font-medium text-lg">{t('common.logout')}</span>
+                </button>
+              </div>
             </nav>
 
             {/* Footer Links */}
