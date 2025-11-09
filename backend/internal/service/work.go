@@ -225,7 +225,7 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 		// Count equipped clothing items
 		if err := tx.Model(&model.UserItem{}).
 			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
 				userID, true, model.ItemTypeClothing).
 			Count(&clothingCount).Error; err != nil {
 			return fmt.Errorf("failed to check clothing: %w", err)
@@ -234,7 +234,7 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 		// Count equipped car items
 		if err := tx.Model(&model.UserItem{}).
 			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
 				userID, true, model.ItemTypeCar).
 			Count(&carCount).Error; err != nil {
 			return fmt.Errorf("failed to check car: %w", err)

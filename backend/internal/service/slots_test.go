@@ -183,7 +183,8 @@ func TestSlotsServiceGetSymbols(t *testing.T) {
 
 	symbols := service.GetSymbols()
 	assert.NotNil(t, symbols)
-	assert.Equal(t, 7, len(symbols))
+	// Updated to 10 symbols after adding Clover, Bell, and Bar symbols
+	assert.Equal(t, 10, len(symbols))
 }
 
 func TestSlotsServiceWinLossTracking(t *testing.T) {
