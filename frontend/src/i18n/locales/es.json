@@ -92,6 +92,8 @@
   },
   "work": {
     "button": "Trabajar",
+    "title": "Trabajo",
+    "description": "Gana dinero virtual trabajando durante 3 minutos",
     "modalTitle": "Proceso de Trabajo",
     "modalSubtitle": "Completa el trabajo para ganar dinero",
     "timeRemaining": "hasta completar",
@@ -112,7 +114,13 @@
     "educationalMessage": "⚠️ Recuerda: En la vida real, ganar dinero requiere mucho más tiempo y esfuerzo. El juego es entretenimiento con alto riesgo de pérdidas.",
     "hours": "{{count}} h",
     "minutes": "{{count}} min",
-    "hoursAndMinutes": "{{hours}} h {{minutes}} min"
+    "hoursAndMinutes": "{{hours}} h {{minutes}} min",
+    "howItWorks": "Cómo funciona",
+    "step1": "Haz clic en el botón \"Trabajar\" cuando tu saldo sea bajo",
+    "step2": "Espera 3 minutos mientras se cuenta el tiempo",
+    "step3": "Recibe $500 después de completar la sesión de trabajo",
+    "educationalTitle": "Propósito Educativo",
+    "educationalText": "Este sistema de trabajo demuestra el valor del tiempo y el dinero. En la vida real, ganar dinero requiere tiempo y esfuerzo significativos. Los juegos de casino muestran qué tan rápido puedes perder lo que trabajaste arduamente para ganar."
   },
   "countries": {
     "usa": "EE.UU.",

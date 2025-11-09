@@ -124,9 +124,9 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => {
+          onClick={async () => {
             playSound('click');
-            startWork();
+            await startWork();
           }}
           className="fixed bottom-8 right-8 bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-300 z-50 flex items-center space-x-3"
         >

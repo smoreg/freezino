@@ -1,11 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// import api from '../services/api';
+import api from '../services/api';
 import type { WorkSession } from '../types';
 
 const WORK_DURATION_SECONDS = 180; // 3 minutes
-const WORK_REWARD = 500; // $500
 
 interface WorkStats {
   total_work_time: number; // in seconds
@@ -26,10 +25,10 @@ interface WorkState {
   lastCompletedSession: WorkSession | null;
 
   // Actions
-  startWork: () => void;
+  startWork: () => Promise<void>;
   pauseWork: () => void;
   resumeWork: () => void;
-  completeWork: () => void;
+  completeWork: () => Promise<void>;
   cancelWork: () => void;
   tick: () => void;
   closeStatsModal: () => void;
@@ -53,15 +52,23 @@ export const useWorkStore = create<WorkState>()(
       showStatsModal: false,
       lastCompletedSession: null,
 
-      startWork: () => {
-        const now = Date.now();
-        set({
-          isWorking: true,
-          isPaused: false,
-          timeRemaining: WORK_DURATION_SECONDS,
-          startTime: now,
-          pausedTime: 0,
-        });
+      startWork: async () => {
+        try {
+          // Call API to start work session
+          await api.post('/work/start');
+
+          const now = Date.now();
+          set({
+            isWorking: true,
+            isPaused: false,
+            timeRemaining: WORK_DURATION_SECONDS,
+            startTime: now,
+            pausedTime: 0,
+          });
+        } catch (error) {
+          console.error('Failed to start work:', error);
+          // Don't start work if API call fails
+        }
       },
 
       pauseWork: () => {
@@ -72,35 +79,58 @@ export const useWorkStore = create<WorkState>()(
         set({ isPaused: false });
       },
 
-      completeWork: () => {
+      completeWork: async () => {
         const state = get();
-        const completedSession: WorkSession = {
-          id: String(Date.now()),
-          user_id: 'current_user', // Will be replaced with actual user_id from auth
-          duration_seconds: WORK_DURATION_SECONDS,
-          earned: WORK_REWARD,
-          completed_at: new Date().toISOString(),
-        };
 
-        // In production, this would be an API call
-        // await api.post('/work/complete', { duration: WORK_DURATION_SECONDS });
+        try {
+          // Call API to complete work session
+          const response = await api.post<{ success: boolean; data: {
+            user_id: number;
+            earned: number;
+            new_balance: number;
+            duration_seconds: number;
+            completed_at: string;
+            transaction_id: number;
+            work_session_id: number;
+          } }>('/work/complete');
 
-        set({
-          isWorking: false,
-          isPaused: false,
-          timeRemaining: WORK_DURATION_SECONDS,
-          startTime: null,
-          pausedTime: 0,
-          workSessions: [completedSession, ...state.workSessions],
-          stats: {
-            total_work_time: state.stats.total_work_time + WORK_DURATION_SECONDS,
-            total_earned: state.stats.total_earned + WORK_REWARD,
-            sessions_count: state.stats.sessions_count + 1,
-            last_session: completedSession.completed_at,
-          },
-          showStatsModal: true,
-          lastCompletedSession: completedSession,
-        });
+          const { data } = response.data;
+
+          const completedSession: WorkSession = {
+            id: String(data.work_session_id),
+            user_id: String(data.user_id),
+            duration_seconds: data.duration_seconds,
+            earned: data.earned,
+            completed_at: data.completed_at,
+          };
+
+          set({
+            isWorking: false,
+            isPaused: false,
+            timeRemaining: WORK_DURATION_SECONDS,
+            startTime: null,
+            pausedTime: 0,
+            workSessions: [completedSession, ...state.workSessions],
+            stats: {
+              total_work_time: state.stats.total_work_time + data.duration_seconds,
+              total_earned: state.stats.total_earned + data.earned,
+              sessions_count: state.stats.sessions_count + 1,
+              last_session: completedSession.completed_at,
+            },
+            showStatsModal: true,
+            lastCompletedSession: completedSession,
+          });
+        } catch (error) {
+          console.error('Failed to complete work:', error);
+          // On error, still reset the timer but don't update stats
+          set({
+            isWorking: false,
+            isPaused: false,
+            timeRemaining: WORK_DURATION_SECONDS,
+            startTime: null,
+            pausedTime: 0,
+          });
+        }
       },
 
       cancelWork: () => {
@@ -121,7 +151,7 @@ export const useWorkStore = create<WorkState>()(
         const newTimeRemaining = state.timeRemaining - 1;
 
         if (newTimeRemaining <= 0) {
-          get().completeWork();
+          void get().completeWork();
         } else {
           set({ timeRemaining: newTimeRemaining });
         }

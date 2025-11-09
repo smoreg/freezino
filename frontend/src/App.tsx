@@ -23,6 +23,9 @@ const PrivacyPage = lazy(() => import('./pages/legal/PrivacyPage'));
 const CookiesPage = lazy(() => import('./pages/legal/CookiesPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const SlotsPage = lazy(() => import('./pages/SlotsPage'));
+const RoulettePage = lazy(() => import('./pages/RoulettePage'));
+const WorkPage = lazy(() => import('./pages/WorkPage'));
 
 function App() {
   return (
@@ -49,10 +52,14 @@ function App() {
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/work" element={<WorkPage />} />
                 <Route path="/history" element={<GameHistoryPage />} />
                 <Route path="/shop" element={<ShopPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
+              {/* Game pages without MainLayout (full screen) */}
+              <Route path="/games/slots" element={<SlotsPage />} />
+              <Route path="/games/roulette" element={<RoulettePage />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

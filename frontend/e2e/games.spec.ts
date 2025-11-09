@@ -5,7 +5,7 @@ test.describe('Play Game Flow', () => {
     await page.goto('/');
   });
 
-  test('should display game cards on dashboard', async ({ page, context }) => {
+  test('should display game cards on dashboard', async ({ page }) => {
     // This would require authentication
     // Testing basic navigation for now
     await page.goto('/login');

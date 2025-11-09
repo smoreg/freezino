@@ -113,6 +113,8 @@
   },
   "work": {
     "button": "Work",
+    "title": "Work",
+    "description": "Earn virtual money by working for 3 minutes",
     "modalTitle": "Work Process",
     "modalSubtitle": "Complete work to earn money",
     "timeRemaining": "until completion",
@@ -133,7 +135,13 @@
     "educationalMessage": "⚠️ Remember: In real life, earning money requires much more time and effort. Gambling is entertainment with a high risk of losses.",
     "hours": "{{count}} h",
     "minutes": "{{count}} min",
-    "hoursAndMinutes": "{{hours}} h {{minutes}} min"
+    "hoursAndMinutes": "{{hours}} h {{minutes}} min",
+    "howItWorks": "How it works",
+    "step1": "Click the \"Work\" button when your balance is low",
+    "step2": "Wait for 3 minutes while the timer counts down",
+    "step3": "Receive $500 after completing the work session",
+    "educationalTitle": "Educational Purpose",
+    "educationalText": "This work system demonstrates the value of time and money. In real life, earning money takes significant time and effort. The casino games show how quickly you can lose what you worked hard to earn."
   },
   "countries": {
     "usa": "USA",
