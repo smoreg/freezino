@@ -3,6 +3,7 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -33,6 +34,45 @@ func generateState() string {
 		return base64.URLEncoding.EncodeToString([]byte(time.Now().String()))
 	}
 	return base64.URLEncoding.EncodeToString(b)
+}
+
+// giveStarterItems gives new users basic clothing and a cheap house
+func giveStarterItems(userID uint) error {
+	db := database.GetDB()
+
+	// Find cheapest clothing item
+	var clothingItem model.Item
+	if err := db.Where("type = ?", "clothing").Order("price ASC").First(&clothingItem).Error; err != nil {
+		return fmt.Errorf("failed to find starter clothing: %w", err)
+	}
+
+	// Find cheapest house item
+	var houseItem model.Item
+	if err := db.Where("type = ?", "house").Order("price ASC").First(&houseItem).Error; err != nil {
+		return fmt.Errorf("failed to find starter house: %w", err)
+	}
+
+	// Give clothing (equipped)
+	clothingUserItem := &model.UserItem{
+		UserID:     userID,
+		ItemID:     clothingItem.ID,
+		IsEquipped: true,
+	}
+	if err := db.Create(clothingUserItem).Error; err != nil {
+		return fmt.Errorf("failed to give starter clothing: %w", err)
+	}
+
+	// Give house (equipped)
+	houseUserItem := &model.UserItem{
+		UserID:     userID,
+		ItemID:     houseItem.ID,
+		IsEquipped: true,
+	}
+	if err := db.Create(houseUserItem).Error; err != nil {
+		return fmt.Errorf("failed to give starter house: %w", err)
+	}
+
+	return nil
 }
 
 // GoogleLogin initiates Google OAuth flow
@@ -100,7 +140,8 @@ func (h *Handler) GoogleCallback(c *fiber.Ctx) error {
 	var user model.User
 
 	result := db.Where("google_id = ?", userInfo.ID).First(&user)
-	if result.Error != nil {
+	isNewUser := result.Error != nil
+	if isNewUser {
 		// User doesn't exist, create new one
 		googleID := userInfo.ID
 		user = model.User{
@@ -115,6 +156,12 @@ func (h *Handler) GoogleCallback(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "failed to create user",
 			})
+		}
+
+		// Give starter items to new user
+		if err := giveStarterItems(user.ID); err != nil {
+			// Log error but don't fail login
+			fmt.Printf("Warning: Failed to give starter items to user %d: %v\n", user.ID, err)
 		}
 	}
 

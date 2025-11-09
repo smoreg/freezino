@@ -27,7 +27,7 @@ export interface Transaction {
 }
 
 // Item types
-export type ItemType = 'clothing' | 'car' | 'house' | 'accessory';
+export type ItemType = 'clothing' | 'car' | 'house' | 'accessories';
 export type ItemRarity = 'common' | 'rare' | 'epic' | 'legendary';
 
 export interface Item {

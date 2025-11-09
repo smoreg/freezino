@@ -23,11 +23,10 @@ const getCountryComparisons = (t: (key: string) => string): CountryComparison[] 
 ];
 
 interface WorkTimerProps {
-  userBalance?: number;
   onWorkComplete?: (earned: number) => void;
 }
 
-const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
+const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
   const { t } = useTranslation();
   const { playSound } = useSound();
   const previousTimeRef = useRef<number>(0);
@@ -119,8 +118,8 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
 
   return (
     <>
-      {/* Work Button (shown when balance is 0) */}
-      {userBalance === 0 && !isWorking && (
+      {/* Work Button */}
+      {!isWorking && (
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -128,10 +127,10 @@ const WorkTimer = ({ userBalance = 0, onWorkComplete }: WorkTimerProps) => {
             playSound('click');
             await startWork();
           }}
-          className="fixed bottom-8 right-8 bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 px-8 rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-300 z-50 flex items-center space-x-3"
+          className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-6 px-8 rounded-xl shadow-2xl hover:shadow-primary/50 transition-all duration-300 flex items-center justify-center space-x-3 text-xl"
         >
-          <span className="text-2xl">💼</span>
-          <span className="text-lg">{t('work.button')}</span>
+          <span className="text-3xl">💼</span>
+          <span>{t('work.button', 'Work')}</span>
         </motion.button>
       )}
 

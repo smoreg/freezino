@@ -46,6 +46,11 @@ Thumbs.db
 *.log
 logs/
 
+# PID files
+*.pid
+.backend.pid
+.frontend.pid
+
 # Temporary files
 tmp/
 temp/

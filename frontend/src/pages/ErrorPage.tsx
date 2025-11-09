@@ -40,7 +40,7 @@ const ErrorPage = ({ statusCode = 500, message }: ErrorPageProps) => {
             {t('error.retry', 'Try Again')}
           </button>
           <Link
-            to="/"
+            to="/dashboard"
             className="bg-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-red-700 transition-colors inline-block"
           >
             {t('error.goHome', 'Go Home')}

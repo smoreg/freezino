@@ -90,6 +90,45 @@
     "comingSoon": "Próximamente",
     "minBet": "Apuesta Mínima:"
   },
+  "roulette": {
+    "wheel": "Rueda de Ruleta",
+    "recentNumbers": "Números Recientes",
+    "bettingBoard": "Tablero de Apuestas",
+    "activeBets": "Apuestas Activas",
+    "totalBet": "Apuesta Total",
+    "totalWin": "Ganancia Total",
+    "profit": "Beneficio",
+    "clear": "Limpiar Apuestas",
+    "spin": "GIRAR",
+    "spinning": "Girando...",
+    "win": "🎉 ¡Ganaste!",
+    "lose": "❌ Perdiste",
+    "noBets": "¡Por favor, haz al menos una apuesta!",
+    "insufficientBalance": "¡Saldo insuficiente!",
+    "betFailed": "Error al realizar la apuesta",
+    "red": "Rojo",
+    "black": "Negro",
+    "odd": "Impar",
+    "even": "Par"
+  },
+  "slots": {
+    "title": "Máquina Tragamonedas",
+    "balance": "Balance",
+    "showPaytable": "Mostrar Tabla de Pagos",
+    "hidePaytable": "Ocultar Tabla de Pagos",
+    "paytable": "Tabla de Pagos",
+    "paytableInfo": "Gana emparejando 3+ símbolos en cualquiera de las 10 líneas de pago",
+    "selectBet": "Selecciona Apuesta",
+    "spin": "GIRAR",
+    "spinning": "GIRANDO...",
+    "win": "GANASTE",
+    "line": "Línea",
+    "youWon": "¡Ganaste ${{amount}}!",
+    "tryAgain": "¡Inténtalo de nuevo!",
+    "insufficientBalance": "¡Saldo insuficiente!",
+    "error": "Ocurrió un error",
+    "info": "10 líneas de pago • Empareja 3+ símbolos para ganar • Apuestas más altas = ganancias más altas"
+  },
   "work": {
     "button": "Trabajar",
     "title": "Trabajo",
@@ -161,7 +200,17 @@
     "noItemsDescription": "¡Visita la tienda para comprar tus primeros artículos!",
     "equipped": "Equipado",
     "equip": "Equipar",
-    "purchased": "Comprado"
+    "purchased": "Comprado",
+    "equipment": {
+      "clothing": "Ropa",
+      "vehicle": "Vehículo",
+      "home": "Casa",
+      "accessories": "Accesorios",
+      "noClothing": "Estás tímidamente envuelto en un cartel publicitario",
+      "noVehicle": "Solo viajas a pie. ¡Saludable!",
+      "noHome": "Vives en una caja de cartón en la calle",
+      "noAccessories": "Sin accesorios elegantes"
+    }
   },
   "error": {
     "500": {

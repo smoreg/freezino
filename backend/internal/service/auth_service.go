@@ -34,6 +34,43 @@ type LoginRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
+// giveStarterItems gives new users basic clothing and a cheap house
+func (s *AuthService) giveStarterItems(userID uint) error {
+	// Find cheapest clothing item
+	var clothingItem model.Item
+	if err := s.db.Where("type = ?", "clothing").Order("price ASC").First(&clothingItem).Error; err != nil {
+		return fmt.Errorf("failed to find starter clothing: %w", err)
+	}
+
+	// Find cheapest house item
+	var houseItem model.Item
+	if err := s.db.Where("type = ?", "house").Order("price ASC").First(&houseItem).Error; err != nil {
+		return fmt.Errorf("failed to find starter house: %w", err)
+	}
+
+	// Give clothing (equipped)
+	clothingUserItem := &model.UserItem{
+		UserID:     userID,
+		ItemID:     clothingItem.ID,
+		IsEquipped: true,
+	}
+	if err := s.db.Create(clothingUserItem).Error; err != nil {
+		return fmt.Errorf("failed to give starter clothing: %w", err)
+	}
+
+	// Give house (equipped)
+	houseUserItem := &model.UserItem{
+		UserID:     userID,
+		ItemID:     houseItem.ID,
+		IsEquipped: true,
+	}
+	if err := s.db.Create(houseUserItem).Error; err != nil {
+		return fmt.Errorf("failed to give starter house: %w", err)
+	}
+
+	return nil
+}
+
 // Register creates a new user with username/password
 func (s *AuthService) Register(req RegisterRequest) (*model.User, error) {
 	// Check if username already exists
@@ -65,6 +102,12 @@ func (s *AuthService) Register(req RegisterRequest) (*model.User, error) {
 
 	if err := s.db.Create(user).Error; err != nil {
 		return nil, fmt.Errorf("failed to create user: %w", err)
+	}
+
+	// Give starter items
+	if err := s.giveStarterItems(user.ID); err != nil {
+		// Log error but don't fail registration
+		fmt.Printf("Warning: Failed to give starter items to user %d: %v\n", user.ID, err)
 	}
 
 	return user, nil

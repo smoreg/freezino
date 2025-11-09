@@ -5,7 +5,10 @@ import i18n from '../i18n/config';
  * @param amount - The amount to format
  * @returns Formatted currency string
  */
-export const formatCurrency = (amount: number): string => {
+export const formatCurrency = (amount: number | undefined | null): string => {
+  // Handle undefined/null values
+  const safeAmount = amount ?? 0;
+
   const currentLang = i18n.language;
 
   const currencyMap: Record<string, { symbol: string; position: 'before' | 'after' }> = {
@@ -15,7 +18,7 @@ export const formatCurrency = (amount: number): string => {
   };
 
   const currency = currencyMap[currentLang] || currencyMap.en;
-  const formattedAmount = amount.toLocaleString(currentLang);
+  const formattedAmount = safeAmount.toLocaleString(currentLang);
 
   return currency.position === 'before'
     ? `${currency.symbol}${formattedAmount}`

@@ -34,7 +34,6 @@ const Home = () => {
 
       {/* Work Timer Component */}
       <WorkTimer
-        userBalance={user?.balance || 0}
         onWorkComplete={handleWorkComplete}
       />
 

@@ -50,10 +50,10 @@ export const useShopStore = create<ShopState>((set, get) => ({
       if (filterType !== 'all') params.append('type', filterType);
       if (filterRarity !== 'all') params.append('rarity', filterRarity);
 
-      const response = await api.get<Item[]>(`/shop/items?${params.toString()}`);
+      const response = await api.get<{ success: boolean; data: { items: Item[]; count: number } }>(`/shop/items?${params.toString()}`);
 
       set({
-        items: response.data,
+        items: response.data.data.items,
         isLoading: false
       });
     } catch (error: unknown) {
@@ -66,8 +66,8 @@ export const useShopStore = create<ShopState>((set, get) => ({
 
   fetchMyItems: async () => {
     try {
-      const response = await api.get<UserItem[]>('/shop/my-items');
-      set({ myItems: response.data });
+      const response = await api.get<{ success: boolean; data: { items: UserItem[]; count: number } }>('/shop/my-items');
+      set({ myItems: response.data.data.items });
     } catch (error: unknown) {
       console.error('Failed to fetch my items:', error);
     }
@@ -92,7 +92,10 @@ export const useShopStore = create<ShopState>((set, get) => ({
       // Refresh my items
       await get().fetchMyItems();
     } catch (error: unknown) {
-      throw new Error((error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to sell item');
+      const axiosError = error as { response?: { data?: { message?: string; error?: string } }; message?: string };
+      const errorMessage = axiosError.response?.data?.message || axiosError.response?.data?.error || axiosError.message || 'Failed to sell item';
+      console.error('Sell item error details:', error);
+      throw new Error(errorMessage);
     }
   },
 

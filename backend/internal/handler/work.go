@@ -25,7 +25,6 @@ func NewWorkHandler() *WorkHandler {
 // @Tags work
 // @Accept json
 // @Produce json
-// @Param user_id query int true "User ID"
 // @Success 200 {object} service.StartWorkResponse
 // @Failure 400 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
@@ -33,25 +32,16 @@ func NewWorkHandler() *WorkHandler {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/work/start [post]
 func (h *WorkHandler) StartWork(c *fiber.Ctx) error {
-	// In production, you would get user_id from JWT token/session
-	// For now, we'll get it from query parameter
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	result, err := h.workService.StartWork(uint(userID))
+	result, err := h.workService.StartWork(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -84,30 +74,22 @@ func (h *WorkHandler) StartWork(c *fiber.Ctx) error {
 // @Tags work
 // @Accept json
 // @Produce json
-// @Param user_id query int true "User ID"
 // @Success 200 {object} service.WorkStatusResponse
 // @Failure 400 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/work/status [get]
 func (h *WorkHandler) GetStatus(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	status, err := h.workService.GetStatus(uint(userID))
+	status, err := h.workService.GetStatus(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -133,7 +115,6 @@ func (h *WorkHandler) GetStatus(c *fiber.Ctx) error {
 // @Tags work
 // @Accept json
 // @Produce json
-// @Param user_id query int true "User ID"
 // @Success 200 {object} service.CompleteWorkResponse
 // @Failure 400 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
@@ -141,23 +122,16 @@ func (h *WorkHandler) GetStatus(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/work/complete [post]
 func (h *WorkHandler) CompleteWork(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	result, err := h.workService.CompleteWork(uint(userID))
+	result, err := h.workService.CompleteWork(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -197,7 +171,6 @@ func (h *WorkHandler) CompleteWork(c *fiber.Ctx) error {
 // @Tags work
 // @Accept json
 // @Produce json
-// @Param user_id query int true "User ID"
 // @Param limit query int false "Limit number of sessions" default(50)
 // @Param offset query int false "Offset for pagination" default(0)
 // @Success 200 {object} service.WorkHistoryResponse
@@ -206,19 +179,12 @@ func (h *WorkHandler) CompleteWork(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/work/history [get]
 func (h *WorkHandler) GetHistory(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 

@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/smoreg/freezino/backend/internal/service"
 )
@@ -33,20 +31,12 @@ func NewSlotsHandler() *SlotsHandler {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/games/slots/spin [post]
 func (h *SlotsHandler) Spin(c *fiber.Ctx) error {
-	// Get user_id from query parameter
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 
@@ -70,7 +60,7 @@ func (h *SlotsHandler) Spin(c *fiber.Ctx) error {
 
 	// Perform spin
 	spinReq := &service.SpinRequest{
-		UserID: uint(userID),
+		UserID: userID,
 		Bet:    reqBody.Bet,
 	}
 

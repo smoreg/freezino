@@ -68,6 +68,16 @@ export default function BuyModal({ item, isOpen, onClose }: BuyModalProps) {
     try {
       await buyItem(item.id);
 
+      // Refresh user balance
+      const checkAuth = useAuthStore.getState().checkAuth;
+      await checkAuth();
+
+      // Fetch updated items
+      await fetchMyItems();
+
+      // Purchase successful - stop loading
+      setIsLoading(false);
+
       // Play purchase sound
       playSound('purchase', 0.6);
 
@@ -75,9 +85,6 @@ export default function BuyModal({ item, isOpen, onClose }: BuyModalProps) {
       if (isRareItem) {
         setShowConfetti(true);
       }
-
-      // Fetch updated items
-      await fetchMyItems();
 
       // Close modal after short delay
       setTimeout(() => {
@@ -136,7 +143,7 @@ export default function BuyModal({ item, isOpen, onClose }: BuyModalProps) {
                     {item.type === 'clothing' && '👔'}
                     {item.type === 'car' && '🚗'}
                     {item.type === 'house' && '🏠'}
-                    {item.type === 'accessory' && '💎'}
+                    {item.type === 'accessories' && '💎'}
                   </div>
 
                   <h3 className="text-2xl font-bold text-white mb-2">{item.name}</h3>

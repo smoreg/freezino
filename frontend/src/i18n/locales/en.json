@@ -111,6 +111,24 @@
     "odd": "Odd",
     "even": "Even"
   },
+  "slots": {
+    "title": "Slot Machine",
+    "balance": "Balance",
+    "showPaytable": "Show Paytable",
+    "hidePaytable": "Hide Paytable",
+    "paytable": "Paytable",
+    "paytableInfo": "Win by matching 3+ symbols on any of the 10 paylines",
+    "selectBet": "Select Bet",
+    "spin": "SPIN",
+    "spinning": "SPINNING...",
+    "win": "WIN",
+    "line": "Line",
+    "youWon": "You won ${{amount}}!",
+    "tryAgain": "Try again!",
+    "insufficientBalance": "Insufficient balance!",
+    "error": "An error occurred",
+    "info": "10 paylines • Match 3+ symbols to win • Higher bets = higher wins"
+  },
   "work": {
     "button": "Work",
     "title": "Work",
@@ -182,7 +200,17 @@
     "noItemsDescription": "Visit the shop to buy your first items!",
     "equipped": "Equipped",
     "equip": "Equip",
-    "purchased": "Purchased"
+    "purchased": "Purchased",
+    "equipment": {
+      "clothing": "Clothing",
+      "vehicle": "Vehicle",
+      "home": "Home",
+      "accessories": "Accessories",
+      "noClothing": "You are shyly wrapped in an advertising poster",
+      "noVehicle": "You only travel on foot. Healthy!",
+      "noHome": "You live in a cardboard box on the street",
+      "noAccessories": "No fancy accessories"
+    }
   },
   "error": {
     "500": {

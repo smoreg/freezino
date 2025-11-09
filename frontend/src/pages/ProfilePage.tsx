@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import Avatar from '../components/profile/Avatar';
+import api from '../services/api';
+import SellModal from '../components/shop/SellModal';
+import { useShopStore } from '../store/shopStore';
 import type { UserItem } from '../types';
 
 interface ProfileStats {
@@ -20,6 +23,7 @@ interface ProfileStats {
 
 interface UserProfile {
   id: number;
+  username?: string;
   name: string;
   email: string;
   avatar: string;
@@ -28,11 +32,17 @@ interface UserProfile {
 }
 
 const ProfilePage = () => {
+  const { t } = useTranslation();
+  const { equipItem, sellItem } = useShopStore();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [items, setItems] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [equipLoading, setEquipLoading] = useState<string | null>(null);
+  const [sellLoading, setSellLoading] = useState<string | null>(null);
+  const [selectedItemToSell, setSelectedItemToSell] = useState<UserItem | null>(null);
+  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -48,29 +58,54 @@ const ProfilePage = () => {
 
       // Fetch profile, stats, and items in parallel
       const [profileRes, statsRes, itemsRes] = await Promise.all([
-        fetch(`/api/user/profile?user_id=${userId}`),
-        fetch(`/api/user/stats?user_id=${userId}`),
-        fetch(`/api/user/items?user_id=${userId}`),
+        api.get(`/user/profile?user_id=${userId}`),
+        api.get(`/user/stats?user_id=${userId}`),
+        api.get(`/user/items?user_id=${userId}`),
       ]);
 
-      if (!profileRes.ok || !statsRes.ok || !itemsRes.ok) {
-        throw new Error('Failed to fetch profile data');
-      }
-
-      const [profileData, statsData, itemsData] = await Promise.all([
-        profileRes.json(),
-        statsRes.json(),
-        itemsRes.json(),
-      ]);
-
-      setProfile(profileData.data);
-      setStats(statsData.data);
-      setItems(itemsData.data.items || []);
+      setProfile(profileRes.data.data);
+      setStats(statsRes.data.data);
+      setItems(itemsRes.data.data.items || []);
     } catch (err) {
       console.error('Error fetching profile:', err);
       setError('Failed to load profile data. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEquipItem = async (itemId: string) => {
+    setEquipLoading(itemId);
+    try {
+      await equipItem(itemId);
+      // Refresh items to show updated equipped state
+      await fetchProfileData();
+    } catch (err) {
+      console.error('Error equipping item:', err);
+      setError('Failed to equip item. Please try again.');
+    } finally {
+      setEquipLoading(null);
+    }
+  };
+
+  const handleSellClick = (item: UserItem) => {
+    setSelectedItemToSell(item);
+    setIsSellModalOpen(true);
+  };
+
+  const handleConfirmSell = async (itemId: string) => {
+    setSellLoading(itemId);
+    try {
+      await sellItem(itemId);
+      // Refresh data to show updated balance and items
+      await fetchProfileData();
+      setIsSellModalOpen(false);
+      setSelectedItemToSell(null);
+    } catch (err) {
+      console.error('Error selling item:', err);
+      setError('Failed to sell item. Please try again.');
+    } finally {
+      setSellLoading(null);
     }
   };
 
@@ -130,6 +165,12 @@ const ProfilePage = () => {
 
   const equippedItems = items.filter(item => item.is_equipped);
 
+  // Group equipped items by type
+  const clothing = equippedItems.find(item => item.item.type === 'clothing');
+  const car = equippedItems.find(item => item.item.type === 'car');
+  const house = equippedItems.find(item => item.item.type === 'house');
+  const accessories = equippedItems.filter(item => item.item.type === 'accessories');
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black py-12 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -140,7 +181,7 @@ const ProfilePage = () => {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold text-white mb-2">
-            {profile?.name}'s Profile
+            {profile?.name || profile?.username || 'User'}'s Profile
           </h1>
           <p className="text-gray-400">
             Member since {profile ? new Date(profile.created_at).toLocaleDateString() : ''}
@@ -149,7 +190,7 @@ const ProfilePage = () => {
 
         {/* Main Content Grid */}
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Left Column - Avatar */}
+          {/* Left Column - Equipment */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -157,9 +198,82 @@ const ProfilePage = () => {
           >
             <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-                <span className="mr-2">👤</span> Your Avatar
+                <span className="mr-2">👤</span> Your Equipment
               </h2>
-              <Avatar equippedItems={equippedItems} />
+
+              <div className="space-y-6">
+                {/* Clothing */}
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">👔</span>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-400">{t('profile.equipment.clothing')}:</p>
+                    {clothing ? (
+                      <p className="text-lg font-semibold text-white">
+                        {clothing.item.name}
+                      </p>
+                    ) : (
+                      <p className="text-base text-gray-500 italic">
+                        {t('profile.equipment.noClothing')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Car */}
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🚗</span>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-400">{t('profile.equipment.vehicle')}:</p>
+                    {car ? (
+                      <p className="text-lg font-semibold text-white">
+                        {car.item.name}
+                      </p>
+                    ) : (
+                      <p className="text-base text-gray-500 italic">
+                        {t('profile.equipment.noVehicle')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* House */}
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">🏠</span>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-400">{t('profile.equipment.home')}:</p>
+                    {house ? (
+                      <p className="text-lg font-semibold text-white">
+                        {house.item.name}
+                      </p>
+                    ) : (
+                      <p className="text-base text-gray-500 italic">
+                        {t('profile.equipment.noHome')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Accessories */}
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">💎</span>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-400">{t('profile.equipment.accessories')}:</p>
+                    {accessories.length > 0 ? (
+                      <ul className="space-y-1 mt-1">
+                        {accessories.map((item) => (
+                          <li key={item.id} className="text-base font-medium text-white">
+                            • {item.item.name}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-base text-gray-500 italic">
+                        {t('profile.equipment.noAccessories')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -329,7 +443,7 @@ const ProfilePage = () => {
                         {userItem.item.type === 'house' && '🏠'}
                         {userItem.item.type === 'clothing' && '👕'}
                         {userItem.item.type === 'car' && '🚗'}
-                        {userItem.item.type === 'accessory' && '💎'}
+                        {userItem.item.type === 'accessories' && '💎'}
                       </div>
                     )}
                   </div>
@@ -339,20 +453,73 @@ const ProfilePage = () => {
                   <p className="text-xs text-gray-400 text-center mb-2 capitalize">
                     {userItem.item.type}
                   </p>
-                  {userItem.is_equipped && (
-                    <div className="text-xs text-secondary text-center font-semibold">
-                      ✓ Equipped
-                    </div>
-                  )}
                   <p className="text-xs text-gray-500 text-center mt-2">
                     Purchased: {new Date(userItem.purchased_at).toLocaleDateString()}
                   </p>
+
+                  {/* Action buttons */}
+                  <div className="flex gap-2 mt-3">
+                    <button
+                      onClick={() => handleEquipItem(userItem.id.toString())}
+                      disabled={userItem.is_equipped || equipLoading === userItem.id.toString() || sellLoading === userItem.id.toString()}
+                      className={`flex-1 py-2 px-3 rounded-lg font-medium text-sm transition-colors ${
+                        userItem.is_equipped
+                          ? 'bg-secondary/20 text-secondary cursor-default'
+                          : 'bg-secondary hover:bg-secondary/80 text-white'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    >
+                      {equipLoading === userItem.id.toString() ? (
+                        <span className="flex items-center justify-center gap-1">
+                          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                              fill="none"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                        </span>
+                      ) : userItem.is_equipped ? (
+                        '✓ Equipped'
+                      ) : (
+                        'Equip'
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handleSellClick(userItem)}
+                      disabled={equipLoading === userItem.id.toString() || sellLoading === userItem.id.toString()}
+                      className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-3 rounded-lg font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+                    >
+                      💰 Sell
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           </motion.div>
         )}
       </div>
+
+      {/* Sell Modal */}
+      <SellModal
+        isOpen={isSellModalOpen}
+        onClose={() => {
+          setIsSellModalOpen(false);
+          setSelectedItemToSell(null);
+        }}
+        item={selectedItemToSell}
+        onConfirm={handleConfirmSell}
+        isLoading={sellLoading !== null}
+      />
     </div>
   );
 };

@@ -23,7 +23,7 @@ const StatsPage = () => {
       setStats(statsResponse.data);
 
       // Fetch work sessions (last 10)
-      await api.get<WorkSession[]>('/work/sessions?limit=10');
+      await api.get<WorkSession[]>('/work/history?limit=10');
 
       // Fetch game sessions (last 10)
       await api.get<GameSession[]>('/games/sessions?limit=10');

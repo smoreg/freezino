@@ -39,11 +39,11 @@ const typeEmojis: Record<string, string> = {
   clothing: '👔',
   car: '🚗',
   house: '🏠',
-  accessory: '💎',
+  accessories: '💎',
 };
 
 export default function ItemCard({ item, onBuy, owned = false }: ItemCardProps) {
-  const rarity = rarityColors[item.rarity];
+  const rarity = rarityColors[item.rarity] || rarityColors.common;
 
   return (
     <motion.div

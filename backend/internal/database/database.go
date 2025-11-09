@@ -70,3 +70,8 @@ func Close() error {
 func GetDB() *gorm.DB {
 	return DB
 }
+
+// SetDB sets the database instance (for testing)
+func SetDB(db *gorm.DB) {
+	DB = db
+}

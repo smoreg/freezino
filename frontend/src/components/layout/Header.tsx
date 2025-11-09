@@ -1,16 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import { useAuthStore } from '../../store/authStore';
 import { useSoundStore } from '../../store/soundStore';
 import { soundManager } from '../../utils/sounds';
 import LanguageSwitcher from '../LanguageSwitcher';
-
-interface User {
-  name: string;
-  avatar: string;
-  balance: number;
-}
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -18,31 +13,8 @@ interface HeaderProps {
 
 const Header = ({ onMenuClick }: HeaderProps) => {
   const { t } = useTranslation();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading } = useAuthStore();
   const { isMusicEnabled, isSfxEnabled, musicVolume, toggleMusic, toggleSfx } = useSoundStore();
-
-  useEffect(() => {
-    // Simulate API call to fetch user data
-    const fetchUser = async () => {
-      try {
-        // TODO: Replace with actual API call
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        setUser({
-          name: 'Player',
-          avatar: '👤',
-          balance: 1000,
-        });
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   // Initialize sound manager
   useEffect(() => {
@@ -133,26 +105,26 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             {/* Balance - responsive sizing */}
             <div className="flex items-center space-x-1 md:space-x-2 bg-gray-700 px-2 md:px-4 py-1.5 md:py-2 rounded-lg hover:bg-gray-600 transition-colors">
               <span className="text-secondary text-lg md:text-xl font-bold">💰</span>
-              {loading ? (
+              {isLoading ? (
                 <div className="w-12 md:w-16 h-4 md:h-5 bg-gray-600 animate-pulse rounded"></div>
               ) : (
                 <span className="text-white text-sm md:text-base font-semibold">
-                  ${user?.balance?.toFixed(0) || 0}
+                  ${user?.balance?.toLocaleString() || '0'}
                 </span>
               )}
             </div>
 
             {/* Avatar */}
             <Link to="/profile" className="flex items-center space-x-2 hover:opacity-80 transition-opacity touch-manipulation">
-              {loading ? (
+              {isLoading ? (
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-600 animate-pulse rounded-full"></div>
               ) : (
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center border-2 border-gray-600 hover:border-secondary transition-colors">
                   <span className="text-lg md:text-xl">{user?.avatar || '👤'}</span>
                 </div>
               )}
-              {!loading && (
-                <span className="hidden md:block text-white font-medium">{user?.name}</span>
+              {!isLoading && (
+                <span className="hidden md:block text-white font-medium">{user?.name || 'Player'}</span>
               )}
             </Link>
           </div>

@@ -28,7 +28,7 @@ func main() {
 	}
 	defer database.Close()
 
-	// Run database migrations
+	// Run database migrations (includes seeding initial data)
 	if err := database.Migrate(); err != nil {
 		log.Fatalf("Failed to run migrations: %v", err)
 	}

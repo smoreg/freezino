@@ -48,9 +48,9 @@ func Setup(app *fiber.App, cfg *config.Config) {
 		authGroup.Post("/logout", middleware.AuthMiddleware(cfg), authHandler.Logout)
 	}
 
-	// User routes
+	// User routes (protected)
 	userHandler := handler.NewUserHandler()
-	user := api.Group("/user")
+	user := api.Group("/user", middleware.AuthMiddleware(cfg))
 	user.Get("/profile", userHandler.GetProfile)
 	user.Patch("/profile", userHandler.UpdateProfile)
 	user.Get("/balance", userHandler.GetBalance)
@@ -58,9 +58,9 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	user.Get("/transactions", userHandler.GetTransactions)
 	user.Get("/items", userHandler.GetUserItems)
 
-	// Work routes
+	// Work routes (protected)
 	workHandler := handler.NewWorkHandler()
-	work := api.Group("/work")
+	work := api.Group("/work", middleware.AuthMiddleware(cfg))
 	work.Post("/start", workHandler.StartWork)
 	work.Get("/status", workHandler.GetStatus)
 	work.Post("/complete", workHandler.CompleteWork)
@@ -79,30 +79,42 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	contactHandler := handler.NewContactHandler()
 	api.Post("/contact", contactHandler.SubmitMessage)
 
+	// Dev/testing routes
+	devHandler := handler.NewDevHandler()
+	dev := api.Group("/dev")
+	// Public dev routes (no auth needed)
+	dev.Post("/seed", devHandler.SeedDatabase) // Public - needs to create test users
+	// Protected dev routes (require auth)
+	devProtected := dev.Group("", middleware.AuthMiddleware(cfg))
+	devProtected.Post("/add-money", devHandler.AddMoney)
+	devProtected.Post("/reset-balance", devHandler.ResetBalance)
+
 	// Shop routes
 	shopHandler := handler.NewShopHandler()
 	shop := api.Group("/shop")
-	shop.Get("/items", shopHandler.GetItems)
-	shop.Post("/buy/:itemId", shopHandler.BuyItem)
-	shop.Post("/sell/:userItemId", shopHandler.SellItem)
-	shop.Get("/my-items", shopHandler.GetMyItems)
-	shop.Post("/equip/:userItemId", shopHandler.EquipItem)
+	shop.Get("/items", shopHandler.GetItems) // Public - can browse items without auth
+	// Protected shop routes (require auth)
+	shopProtected := shop.Group("", middleware.AuthMiddleware(cfg))
+	shopProtected.Post("/buy/:itemId", shopHandler.BuyItem)
+	shopProtected.Post("/sell/:userItemId", shopHandler.SellItem)
+	shopProtected.Get("/my-items", shopHandler.GetMyItems)
+	shopProtected.Post("/equip/:userItemId", shopHandler.EquipItem)
 
-	// Game routes
-	gamesGroup := api.Group("/games")
+	// Game routes (protected)
+	gamesGroup := api.Group("/games", middleware.AuthMiddleware(cfg))
 
 	// Roulette routes
 	rouletteHandler := handler.NewRouletteHandler()
 	roulette := gamesGroup.Group("/roulette")
 	roulette.Post("/bet", rouletteHandler.PlaceBet)
 	roulette.Get("/history", rouletteHandler.GetHistory)
-	roulette.Get("/recent", rouletteHandler.GetRecentNumbers)
+	roulette.Get("/recent", rouletteHandler.GetRecentNumbers) // Public - can view recent numbers
 
 	// Slots routes
 	slotsHandler := handler.NewSlotsHandler()
 	slots := gamesGroup.Group("/slots")
 	slots.Post("/spin", slotsHandler.Spin)
-	slots.Get("/payouts", slotsHandler.GetPayoutTable)
+	slots.Get("/payouts", slotsHandler.GetPayoutTable) // Public - can view payout table
 
 	// Crash game
 	crashHandler := games.NewCrashHandler()

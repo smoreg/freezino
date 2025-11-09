@@ -334,13 +334,21 @@ func (s *ShopService) EquipItem(userID uint, userItemID uint) (*UserItemResponse
 	}
 
 	// Unequip all items of the same type for this user
-	if err := tx.Model(&model.UserItem{}).
-		Where("user_id = ? AND id != ?", userID, userItemID).
-		Joins("JOIN items ON items.id = user_items.item_id").
-		Where("items.type = ?", userItem.Item.Type).
-		Update("is_equipped", false).Error; err != nil {
+	// First, get all user items of the same type
+	var sameTypeUserItems []model.UserItem
+	if err := tx.Joins("Item").
+		Where("user_items.user_id = ? AND user_items.id != ? AND Item.type = ?", userID, userItemID, userItem.Item.Type).
+		Find(&sameTypeUserItems).Error; err != nil {
 		tx.Rollback()
-		return nil, fmt.Errorf("failed to unequip other items: %w", err)
+		return nil, fmt.Errorf("failed to find other items: %w", err)
+	}
+
+	// Unequip them
+	for _, item := range sameTypeUserItems {
+		if err := tx.Model(&item).Update("is_equipped", false).Error; err != nil {
+			tx.Rollback()
+			return nil, fmt.Errorf("failed to unequip other items: %w", err)
+		}
 	}
 
 	// Equip the selected item

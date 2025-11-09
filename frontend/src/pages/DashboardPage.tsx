@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { PageTransition, GameCardSkeleton } from '../components/animations';
 import GameCard from '../components/GameCard';
@@ -16,6 +17,7 @@ interface Game {
 
 const DashboardPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -105,8 +107,18 @@ const DashboardPage = () => {
   }, [t]);
 
   const handleGameClick = (gameId: string) => {
-    console.error('Game clicked:', gameId);
-    // TODO: Navigate to game page
+    // Map game IDs to routes
+    const gameRoutes: { [key: string]: string } = {
+      '1': '/games/roulette',
+      '2': '/games/slots',
+    };
+
+    const route = gameRoutes[gameId];
+    if (route) {
+      navigate(route);
+    } else {
+      console.log('Game not yet implemented:', gameId);
+    }
   };
 
   return (
@@ -153,7 +165,7 @@ const DashboardPage = () => {
             <span className="text-4xl">⏰</span>
             <div>
               <p className="text-gray-400 text-sm">{t('dashboard.timePlayed')}</p>
-              <p className="text-2xl font-bold text-white">0 {t('work.hours', { count: 0 })}</p>
+              <p className="text-2xl font-bold text-white">{t('work.hours', { count: 0 })}</p>
             </div>
           </div>
         </div>

@@ -33,20 +33,12 @@ func NewRouletteHandler() *RouletteHandler {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/games/roulette/bet [post]
 func (h *RouletteHandler) PlaceBet(c *fiber.Ctx) error {
-	// Get user ID from query parameter (in production, use JWT)
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 
@@ -59,8 +51,8 @@ func (h *RouletteHandler) PlaceBet(c *fiber.Ctx) error {
 		})
 	}
 
-	// Override user_id from query parameter
-	req.UserID = uint(userID)
+	// Set user_id from context
+	req.UserID = userID
 
 	// Validate bets
 	if len(req.Bets) == 0 {
@@ -112,19 +104,12 @@ func (h *RouletteHandler) PlaceBet(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/games/roulette/history [get]
 func (h *RouletteHandler) GetHistory(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 

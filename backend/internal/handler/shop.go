@@ -66,6 +66,15 @@ func (h *ShopHandler) GetItems(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/shop/buy/{itemId} [post]
 func (h *ShopHandler) BuyItem(c *fiber.Ctx) error {
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "unauthorized",
+		})
+	}
+
 	// Get item ID from path parameter
 	itemIDStr := c.Params("itemId")
 	itemID, err := strconv.ParseUint(itemIDStr, 10, 32)
@@ -76,25 +85,8 @@ func (h *ShopHandler) BuyItem(c *fiber.Ctx) error {
 		})
 	}
 
-	// Get user ID from query parameter (in production, use JWT)
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
 	// Buy the item
-	result, err := h.shopService.BuyItem(uint(userID), uint(itemID))
+	result, err := h.shopService.BuyItem(userID, uint(itemID))
 	if err != nil {
 		// Check specific error types
 		errMsg := err.Error()
@@ -137,6 +129,15 @@ func (h *ShopHandler) BuyItem(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/shop/sell/{userItemId} [post]
 func (h *ShopHandler) SellItem(c *fiber.Ctx) error {
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "unauthorized",
+		})
+	}
+
 	// Get user item ID from path parameter
 	userItemIDStr := c.Params("userItemId")
 	userItemID, err := strconv.ParseUint(userItemIDStr, 10, 32)
@@ -147,25 +148,8 @@ func (h *ShopHandler) SellItem(c *fiber.Ctx) error {
 		})
 	}
 
-	// Get user ID from query parameter (in production, use JWT)
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
 	// Sell the item
-	result, err := h.shopService.SellItem(uint(userID), uint(userItemID))
+	result, err := h.shopService.SellItem(userID, uint(userItemID))
 	if err != nil {
 		// Check specific error types
 		errMsg := err.Error()
@@ -175,9 +159,11 @@ func (h *ShopHandler) SellItem(c *fiber.Ctx) error {
 				"message": errMsg,
 			})
 		}
+		// Log the actual error for debugging
+		c.Context().Logger().Printf("Error selling item: %v", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
-			"message": "failed to sell item",
+			"message": errMsg, // Return the actual error message instead of generic one
 		})
 	}
 
@@ -201,24 +187,16 @@ func (h *ShopHandler) SellItem(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/shop/my-items [get]
 func (h *ShopHandler) GetMyItems(c *fiber.Ctx) error {
-	// Get user ID from query parameter (in production, use JWT)
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	items, err := h.shopService.GetMyItems(uint(userID))
+	items, err := h.shopService.GetMyItems(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -255,6 +233,15 @@ func (h *ShopHandler) GetMyItems(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/shop/equip/{userItemId} [post]
 func (h *ShopHandler) EquipItem(c *fiber.Ctx) error {
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "unauthorized",
+		})
+	}
+
 	// Get user item ID from path parameter
 	userItemIDStr := c.Params("userItemId")
 	userItemID, err := strconv.ParseUint(userItemIDStr, 10, 32)
@@ -265,25 +252,8 @@ func (h *ShopHandler) EquipItem(c *fiber.Ctx) error {
 		})
 	}
 
-	// Get user ID from query parameter (in production, use JWT)
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
 	// Equip the item
-	result, err := h.shopService.EquipItem(uint(userID), uint(userItemID))
+	result, err := h.shopService.EquipItem(userID, uint(userItemID))
 	if err != nil {
 		// Check specific error types
 		errMsg := err.Error()

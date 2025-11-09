@@ -32,25 +32,16 @@ func NewUserHandler() *UserHandler {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/user/profile [get]
 func (h *UserHandler) GetProfile(c *fiber.Ctx) error {
-	// In production, you would get user_id from JWT token/session
-	// For now, we'll get it from query parameter
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	profile, err := h.userService.GetProfile(uint(userID))
+	profile, err := h.userService.GetProfile(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -84,20 +75,12 @@ func (h *UserHandler) GetProfile(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/user/profile [patch]
 func (h *UserHandler) UpdateProfile(c *fiber.Ctx) error {
-	// Get user ID from query parameter (in production, use JWT)
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 
@@ -118,7 +101,7 @@ func (h *UserHandler) UpdateProfile(c *fiber.Ctx) error {
 		})
 	}
 
-	profile, err := h.userService.UpdateProfile(uint(userID), req)
+	profile, err := h.userService.UpdateProfile(userID, req)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -152,23 +135,16 @@ func (h *UserHandler) UpdateProfile(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/user/balance [get]
 func (h *UserHandler) GetBalance(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	balance, err := h.userService.GetBalance(uint(userID))
+	balance, err := h.userService.GetBalance(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -201,23 +177,16 @@ func (h *UserHandler) GetBalance(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/user/stats [get]
 func (h *UserHandler) GetStats(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	stats, err := h.userService.GetStats(uint(userID))
+	stats, err := h.userService.GetStats(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -252,19 +221,12 @@ func (h *UserHandler) GetStats(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/user/transactions [get]
 func (h *UserHandler) GetTransactions(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 
@@ -283,7 +245,7 @@ func (h *UserHandler) GetTransactions(c *fiber.Ctx) error {
 		}
 	}
 
-	transactions, total, err := h.userService.GetTransactions(uint(userID), limit, offset)
+	transactions, total, err := h.userService.GetTransactions(userID, limit, offset)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -321,23 +283,16 @@ func (h *UserHandler) GetTransactions(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/user/items [get]
 func (h *UserHandler) GetUserItems(c *fiber.Ctx) error {
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
+			"message": "unauthorized",
 		})
 	}
 
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
-		})
-	}
-
-	items, err := h.userService.GetUserItems(uint(userID))
+	items, err := h.userService.GetUserItems(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

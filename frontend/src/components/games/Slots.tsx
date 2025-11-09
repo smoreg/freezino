@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSound } from '../../hooks/useSound';
+import api from '../../services/api';
 import { WinConfetti } from '../animations';
 
 // Slot symbols
@@ -65,8 +65,14 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
   const spinTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
+    console.log('[Slots] Setting balance from userBalance prop:', userBalance);
     setBalance(userBalance);
   }, [userBalance]);
+
+  // Debug: log initial state
+  useEffect(() => {
+    console.log('[Slots] Component mounted. Initial userBalance:', userBalance, 'userId:', userId);
+  }, []);
 
   // Generate random symbols for animation
   const generateRandomSymbols = () => {
@@ -135,8 +141,8 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
     }
 
     try {
-      const response = await axios.post(
-        `/api/games/slots/spin?user_id=${userId}`,
+      const response = await api.post(
+        `/games/slots/spin?user_id=${userId}`,
         { bet: selectedBet }
       );
 

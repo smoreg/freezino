@@ -79,5 +79,12 @@ export default defineConfig({
     hmr: {
       overlay: true,
     },
+    // Proxy API requests to backend
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
   },
 })

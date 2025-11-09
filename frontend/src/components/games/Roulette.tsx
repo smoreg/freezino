@@ -142,7 +142,7 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-4xl font-bold text-white">
-            {t('games.roulette')}
+            {t('games.roulette.title')}
           </h1>
           <div className="text-white text-xl">
             {t('common.balance')}: {formatCurrency(balance)}

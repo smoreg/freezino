@@ -59,6 +59,27 @@ export const useAuthStore = create<AuthState>()(
       },
 
       checkAuth: async () => {
+        // Development mode: check for user_id parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('user_id');
+
+        if (userId) {
+          // In dev mode with user_id, fetch user data directly
+          try {
+            const response = await api.get<{ user: User }>('/auth/me');
+            set({
+              user: response.data.user,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+            return;
+          } catch (error) {
+            console.error('Dev mode auth failed:', error);
+            set({ isLoading: false, isAuthenticated: false, user: null });
+            return;
+          }
+        }
+
         const token = localStorage.getItem('access_token');
 
         if (!token) {
@@ -68,10 +89,10 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           // Fetch current user data
-          const response = await api.get<User>('/auth/me');
+          const response = await api.get<{ user: User }>('/auth/me');
 
           set({
-            user: response.data,
+            user: response.data.user,
             isAuthenticated: true,
             isLoading: false,
           });
@@ -103,10 +124,10 @@ export const useAuthStore = create<AuthState>()(
           localStorage.setItem('access_token', response.data.access_token);
 
           // Fetch user data with new token
-          const userResponse = await api.get<User>('/auth/me');
+          const userResponse = await api.get<{ user: User }>('/auth/me');
 
           set({
-            user: userResponse.data,
+            user: userResponse.data.user,
             isAuthenticated: true,
             isLoading: false,
           });

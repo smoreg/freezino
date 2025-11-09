@@ -35,20 +35,12 @@ func NewGameHistoryHandler() *GameHistoryHandler {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/games/history [get]
 func (h *GameHistoryHandler) GetHistory(c *fiber.Ctx) error {
-	// Get user ID from query parameter
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 
@@ -71,7 +63,7 @@ func (h *GameHistoryHandler) GetHistory(c *fiber.Ctx) error {
 	}
 
 	// Get history from service
-	history, err := h.gameHistoryService.GetHistory(uint(userID), gameType, limit, offset)
+	history, err := h.gameHistoryService.GetHistory(userID, gameType, limit, offset)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -104,25 +96,17 @@ func (h *GameHistoryHandler) GetHistory(c *fiber.Ctx) error {
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/games/stats [get]
 func (h *GameHistoryHandler) GetStats(c *fiber.Ctx) error {
-	// Get user ID from query parameter
-	userIDStr := c.Query("user_id")
-	if userIDStr == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
-			"message": "user_id is required",
-		})
-	}
-
-	userID, err := strconv.ParseUint(userIDStr, 10, 32)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "invalid user_id",
+			"message": "unauthorized",
 		})
 	}
 
 	// Get stats from service
-	stats, err := h.gameHistoryService.GetStats(uint(userID))
+	stats, err := h.gameHistoryService.GetStats(userID)
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

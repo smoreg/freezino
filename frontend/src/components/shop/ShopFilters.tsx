@@ -8,7 +8,7 @@ const itemTypes: { value: ItemType | 'all'; label: string; emoji: string }[] = [
   { value: 'clothing', label: 'Clothing', emoji: '👔' },
   { value: 'car', label: 'Cars', emoji: '🚗' },
   { value: 'house', label: 'Houses', emoji: '🏠' },
-  { value: 'accessory', label: 'Accessories', emoji: '💎' },
+  { value: 'accessories', label: 'Accessories', emoji: '💎' },
 ];
 
 const rarities: { value: ItemRarity | 'all'; label: string; color: string }[] = [

@@ -32,6 +32,14 @@ func Migrate() error {
 	}
 
 	log.Println("Database migrations completed successfully")
+
+	// Seed initial data (items) as part of migration
+	log.Println("Checking for initial data...")
+	if err := seedInitialData(); err != nil {
+		log.Printf("Warning: Failed to seed initial data: %v", err)
+		// Don't fail the migration if seeding fails
+	}
+
 	return nil
 }
 
@@ -69,4 +77,27 @@ func ResetDatabase() error {
 	}
 
 	return Migrate()
+}
+
+// seedInitialData seeds the database with initial items
+// This is called as part of migrations
+func seedInitialData() error {
+	// Check if items already exist
+	var count int64
+	DB.Model(&model.Item{}).Count(&count)
+
+	if count > 0 {
+		log.Printf("Initial data already exists (%d items), skipping seed...", count)
+		return nil
+	}
+
+	log.Println("Seeding initial items...")
+
+	// Call the seedItems function from seed.go
+	if err := seedItems(); err != nil {
+		return fmt.Errorf("failed to seed items: %w", err)
+	}
+
+	log.Println("Initial data seeded successfully")
+	return nil
 }

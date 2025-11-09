@@ -10,7 +10,7 @@ import { useShopStore } from '../store/shopStore';
 import type { Item } from '../types';
 
 export default function ShopPage() {
-  const { items, myItems, isLoading, fetchItems, fetchMyItems, minPrice, maxPrice } = useShopStore();
+  const { items, myItems, isLoading, fetchItems, fetchMyItems, minPrice, maxPrice, filterType, filterRarity } = useShopStore();
   const user = useAuthStore((state) => state.user);
 
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -22,10 +22,21 @@ export default function ShopPage() {
     fetchMyItems();
   }, [fetchItems, fetchMyItems]);
 
-  // Filter items by price range
+  // Filter items by type, rarity, and price range
   const filteredItems = useMemo(() => {
-    return items.filter((item) => item.price >= minPrice && item.price <= maxPrice);
-  }, [items, minPrice, maxPrice]);
+    return items.filter((item) => {
+      // Filter by type
+      const matchesType = filterType === 'all' || item.type === filterType;
+
+      // Filter by rarity
+      const matchesRarity = filterRarity === 'all' || item.rarity === filterRarity;
+
+      // Filter by price
+      const matchesPrice = item.price >= minPrice && item.price <= maxPrice;
+
+      return matchesType && matchesRarity && matchesPrice;
+    });
+  }, [items, minPrice, maxPrice, filterType, filterRarity]);
 
   // Check if item is owned
   const isItemOwned = (itemId: string) => {
@@ -64,7 +75,7 @@ export default function ShopPage() {
           <div className="mt-4 inline-block bg-gradient-to-r from-yellow-600 to-yellow-500 rounded-lg px-6 py-3 shadow-lg">
             <div className="flex items-center gap-2">
               <span className="text-white font-semibold">Your Balance:</span>
-              <span className="text-white text-2xl font-bold">${user?.balance.toLocaleString()}</span>
+              <span className="text-white text-2xl font-bold">${user?.balance?.toLocaleString() || '0'}</span>
             </div>
           </div>
         </motion.div>

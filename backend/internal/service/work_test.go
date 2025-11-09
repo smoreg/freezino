@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -13,11 +14,18 @@ import (
 )
 
 func setupTestDB(t *testing.T) *gorm.DB {
-	// Use in-memory SQLite for testing
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
+	// Use unique in-memory database per test for isolation
+	// For concurrency tests, use shared memory mode
+	dbName := fmt.Sprintf("file:%s?mode=memory&cache=shared", t.Name())
+	db, err := gorm.Open(sqlite.Open(dbName), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	require.NoError(t, err, "failed to connect to test database")
+
+	// Enable WAL mode for better concurrency
+	db.Exec("PRAGMA journal_mode=WAL")
+	// Set busy timeout to 5 seconds for locked tables
+	db.Exec("PRAGMA busy_timeout=5000")
 
 	// Auto migrate models
 	err = db.AutoMigrate(
@@ -34,10 +42,15 @@ func setupTestDB(t *testing.T) *gorm.DB {
 }
 
 func createTestUser(t *testing.T, db *gorm.DB, balance float64) *model.User {
-	googleID := "test-google-id-" + time.Now().Format("20060102150405.000000")
+	timestamp := time.Now().UnixNano()
+	googleID := fmt.Sprintf("test-google-id-%d", timestamp)
+	username := fmt.Sprintf("testuser%d", timestamp)
+	email := fmt.Sprintf("test%d@example.com", timestamp)
+
 	user := &model.User{
 		GoogleID: &googleID,
-		Email:    "test@example.com",
+		Username: username,
+		Email:    email,
 		Name:     "Test User",
 		Balance:  balance,
 	}
@@ -138,8 +151,8 @@ func TestWorkServiceGetStatusWorking(t *testing.T) {
 	_, err := service.StartWork(user.ID)
 	require.NoError(t, err)
 
-	// Small delay to have elapsed time
-	time.Sleep(100 * time.Millisecond)
+	// Small delay to have elapsed time (at least 1 second for int conversion)
+	time.Sleep(1100 * time.Millisecond)
 
 	// Get status
 	status, err := service.GetStatus(user.ID)
