@@ -133,10 +133,15 @@
     "button": "Work",
     "title": "Work",
     "description": "Earn virtual money by working for 3 minutes",
+    "startButton": "Start Work",
     "modalTitle": "Work Process",
     "modalSubtitle": "Complete work to earn money",
     "timeRemaining": "until completion",
     "reward": "Reward:",
+    "requires": "Requires",
+    "bonus": "Bonus",
+    "penalty": "Penalty",
+    "variable": "Variable Reward",
     "pause": "⏸ Pause",
     "resume": "▶️ Resume",
     "cancelButton": "❌ Cancel",
@@ -159,7 +164,57 @@
     "step2": "Wait for 3 minutes while the timer counts down",
     "step3": "Receive $500 after completing the work session",
     "educationalTitle": "Educational Purpose",
-    "educationalText": "This work system demonstrates the value of time and money. In real life, earning money takes significant time and effort. The casino games show how quickly you can lose what you worked hard to earn."
+    "educationalText": "This work system demonstrates the value of time and money. In real life, earning money takes significant time and effort. The casino games show how quickly you can lose what you worked hard to earn.",
+    "jobs": {
+      "office": {
+        "name": "Office Worker",
+        "description": "Standard office job. Requires at least one clothing item."
+      },
+      "courier": {
+        "name": "Courier",
+        "description": "Delivery work. Requires Courier Uniform. +$250 with own car."
+      },
+      "lab_rat": {
+        "name": "Lab Test Subject",
+        "description": "Be a test subject for mad scientist. Receive random mutation."
+      },
+      "stunt_driver": {
+        "name": "Stunt Driver",
+        "description": "High-risk stunts. Requires car. Earn $1500 but car gets broken."
+      },
+      "drug_dealer": {
+        "name": "Surprise Delivery",
+        "description": "Risky business. Earn $2000 but you'll be caught (8 year sentence, skippable)."
+      },
+      "streamer": {
+        "name": "Streamer",
+        "description": "Stream online. 70% = $0, 29% = $1, 1% = $10,000 + go viral."
+      },
+      "bottle_collector": {
+        "name": "Bottle Collector",
+        "description": "Collect bottles and cans. Always $100. Available to everyone."
+      }
+    },
+    "requirements": {
+      "clothing": "Any clothing",
+      "courier_uniform": "Courier Uniform",
+      "car": "A car"
+    },
+    "bonuses": {
+      "own_car": "+$250 with car"
+    },
+    "penalties": {
+      "car_broken": "Car broken",
+      "jail_8years": "8 years jail"
+    },
+    "rewards": {
+      "random_mutation": "Random mutation"
+    },
+    "errors": {
+      "office_no_clothes": "You can't work in the office naked! Buy at least some cheap clothes.",
+      "courier_no_uniform": "You need a Courier Uniform to work as a courier!",
+      "stunt_driver_no_car": "You need a car to be a stunt driver!"
+    }
   },
   "countries": {
     "usa": "USA",

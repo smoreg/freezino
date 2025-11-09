@@ -23,9 +23,10 @@ interface WorkState {
   stats: WorkStats;
   showStatsModal: boolean;
   lastCompletedSession: WorkSession | null;
+  selectedJobType: string;
 
   // Actions
-  startWork: () => Promise<void>;
+  startWork: (jobType?: string) => Promise<void>;
   pauseWork: () => void;
   resumeWork: () => void;
   completeWork: () => Promise<void>;
@@ -33,6 +34,7 @@ interface WorkState {
   tick: () => void;
   closeStatsModal: () => void;
   loadStats: () => Promise<void>;
+  setSelectedJobType: (jobType: string) => void;
 }
 
 export const useWorkStore = create<WorkState>()(
@@ -51,11 +53,12 @@ export const useWorkStore = create<WorkState>()(
       },
       showStatsModal: false,
       lastCompletedSession: null,
+      selectedJobType: 'office',
 
-      startWork: async () => {
+      startWork: async (jobType = 'office') => {
         try {
-          // Call API to start work session
-          await api.post('/work/start');
+          // Call API to start work session with job type
+          await api.post('/work/start', { job_type: jobType });
 
           const now = Date.now();
           set({
@@ -64,11 +67,17 @@ export const useWorkStore = create<WorkState>()(
             timeRemaining: WORK_DURATION_SECONDS,
             startTime: now,
             pausedTime: 0,
+            selectedJobType: jobType,
           });
         } catch (error) {
           console.error('Failed to start work:', error);
-          // Don't start work if API call fails
+          // Re-throw error to handle in component
+          throw error;
         }
+      },
+
+      setSelectedJobType: (jobType) => {
+        set({ selectedJobType: jobType });
       },
 
       pauseWork: () => {

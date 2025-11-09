@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSound } from '../hooks/useSound';
 import { useWorkStore } from '../store/workStore';
 import { formatCurrency, formatDuration } from '../utils/formatters';
+import { JobSelector } from './JobSelector';
 
 interface CountryComparison {
   name: string;
@@ -30,6 +31,7 @@ const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
   const { t } = useTranslation();
   const { playSound } = useSound();
   const previousTimeRef = useRef<number>(0);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     isWorking,
@@ -38,12 +40,14 @@ const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
     showStatsModal,
     lastCompletedSession,
     stats,
+    selectedJobType,
     startWork,
     pauseWork,
     resumeWork,
     cancelWork,
     tick,
     closeStatsModal,
+    setSelectedJobType,
   } = useWorkStore();
 
   const countryComparisons = getCountryComparisons(t);
@@ -122,20 +126,43 @@ const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
 
   return (
     <>
-      {/* Work Button */}
+      {/* Job Selection */}
       {!isWorking && (
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={async () => {
-            playSound('click');
-            await startWork();
-          }}
-          className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-6 px-8 rounded-xl shadow-2xl hover:shadow-primary/50 transition-all duration-300 flex items-center justify-center space-x-3 text-xl"
-        >
-          <span className="text-3xl">💼</span>
-          <span>{t('work.button', 'Work')}</span>
-        </motion.button>
+        <div className="space-y-4">
+          <JobSelector
+            selectedJob={selectedJobType}
+            onSelect={(jobType) => {
+              playSound('click');
+              setSelectedJobType(jobType);
+              setError(null);
+            }}
+            onStart={async () => {
+              try {
+                playSound('click');
+                await startWork(selectedJobType);
+                setError(null);
+              } catch (err: any) {
+                // Handle job requirement errors
+                const errorMessage = err?.response?.data?.message || 'failed to start work';
+                setError(errorMessage);
+                playSound('error');
+              }
+            }}
+          />
+
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-500/10 border border-red-500 rounded-lg p-4"
+            >
+              <p className="text-red-400 text-center font-semibold">
+                {t(`work.errors.${error}`, error)}
+              </p>
+            </motion.div>
+          )}
+        </div>
       )}
 
       {/* Work Timer Modal */}
