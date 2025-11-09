@@ -113,7 +113,23 @@ func seedItems() error {
 	}
 
 	items := []model.Item{
-		// CLOTHING - Common (5 items, $500-$2,000)
+		// CLOTHING - Common (7 items, $50-$2,000)
+		{
+			Name:        "Worn Homeless Clothes",
+			Type:        model.ItemTypeClothing,
+			Rarity:      model.ItemRarityCommon,
+			Price:       50.00,
+			ImageURL:    "/images/clothing/homeless-clothes.jpg",
+			Description: "Stolen from a homeless person. Smells terrible but better than nothing.",
+		},
+		{
+			Name:        "Courier Uniform",
+			Type:        model.ItemTypeClothing,
+			Rarity:      model.ItemRarityCommon,
+			Price:       300.00,
+			ImageURL:    "/images/clothing/courier-uniform.jpg",
+			Description: "Required for courier job. Company branded uniform.",
+		},
 		{
 			Name:        "Plain T-Shirt",
 			Type:        model.ItemTypeClothing,
@@ -575,6 +591,72 @@ func seedItems() error {
 			Price:       1000000.00,
 			ImageURL:    "/images/houses/island-villa.jpg",
 			Description: "Private island villa paradise",
+		},
+
+		// MUTATIONS - Received from Lab Rat job (hidden from shop)
+		{
+			Name:        "Third Eye",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityRare,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/third-eye.jpg",
+			Description: "You can see things others can't. Not always pleasant.",
+		},
+		{
+			Name:        "Glowing Skin",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityEpic,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/glowing-skin.jpg",
+			Description: "Your skin emits a faint green glow in the dark.",
+		},
+		{
+			Name:        "Extra Arm",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityRare,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/extra-arm.jpg",
+			Description: "A third arm grew from your back. Very practical!",
+		},
+		{
+			Name:        "Tentacle Fingers",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityEpic,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/tentacle-fingers.jpg",
+			Description: "Your fingers became tentacles. Typing is... difficult.",
+		},
+		{
+			Name:        "Super Strength",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityLegendary,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/super-strength.jpg",
+			Description: "You're incredibly strong now! Worth the pain.",
+		},
+		{
+			Name:        "Night Vision",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityRare,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/night-vision.jpg",
+			Description: "You can see perfectly in the dark. Your eyes glow red though.",
+		},
+		{
+			Name:        "Scaly Skin",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityCommon,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/scaly-skin.jpg",
+			Description: "Reptilian scales cover your body. At least they're pretty.",
+		},
+		{
+			Name:        "Prehensile Tail",
+			Type:        model.ItemTypeMutation,
+			Rarity:      model.ItemRarityRare,
+			Price:       0.00,
+			ImageURL:    "/images/mutations/tail.jpg",
+			Description: "You grew a tail! It can grab things.",
 		},
 	}
 

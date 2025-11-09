@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/smoreg/freezino/backend/internal/model"
 	"github.com/smoreg/freezino/backend/internal/service"
 )
 
@@ -19,12 +20,18 @@ func NewWorkHandler() *WorkHandler {
 	}
 }
 
+// StartWorkRequest represents the request body for starting work
+type StartWorkRequest struct {
+	JobType string `json:"job_type"`
+}
+
 // StartWork handles POST /api/work/start
 // @Summary Start a work session
 // @Description Start a new work session for the authenticated user
 // @Tags work
 // @Accept json
 // @Produce json
+// @Param request body StartWorkRequest true "Job type selection"
 // @Success 200 {object} service.StartWorkResponse
 // @Failure 400 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
@@ -41,7 +48,21 @@ func (h *WorkHandler) StartWork(c *fiber.Ctx) error {
 		})
 	}
 
-	result, err := h.workService.StartWork(userID)
+	// Parse request body
+	var req StartWorkRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "invalid request body",
+		})
+	}
+
+	// Default to office if not specified
+	if req.JobType == "" {
+		req.JobType = "office"
+	}
+
+	result, err := h.workService.StartWork(userID, model.JobType(req.JobType))
 	if err != nil {
 		if err.Error() == "user not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -53,6 +74,25 @@ func (h *WorkHandler) StartWork(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 				"error":   true,
 				"message": "work session already in progress",
+			})
+		}
+		// Check for job requirement errors
+		if err.Error() == "office_no_clothes" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error":   true,
+				"message": "office_no_clothes",
+			})
+		}
+		if err.Error() == "courier_no_uniform" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error":   true,
+				"message": "courier_no_uniform",
+			})
+		}
+		if err.Error() == "stunt_driver_no_car" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error":   true,
+				"message": "stunt_driver_no_car",
 			})
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -220,5 +260,113 @@ func (h *WorkHandler) GetHistory(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
 		"data":    history,
+	})
+}
+
+// GetAvailableJobs handles GET /api/work/jobs
+// @Summary Get available job types
+// @Description Get list of available job types with requirements
+// @Tags work
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/work/jobs [get]
+func (h *WorkHandler) GetAvailableJobs(c *fiber.Ctx) error {
+	jobs := []map[string]interface{}{
+		{
+			"type":        "office",
+			"name":        "Office Worker",
+			"base_reward": 500,
+			"requires":    "clothing",
+			"description": "Standard office job. Requires at least one clothing item.",
+		},
+		{
+			"type":        "courier",
+			"name":        "Courier",
+			"base_reward": 500,
+			"requires":    "courier_uniform",
+			"bonus":       "own_car",
+			"description": "Delivery work. Requires Courier Uniform. +$250 with own car.",
+		},
+		{
+			"type":        "lab_rat",
+			"name":        "Lab Test Subject",
+			"base_reward": 500,
+			"reward":      "random_mutation",
+			"description": "Be a test subject for mad scientist. Receive random mutation.",
+		},
+		{
+			"type":        "stunt_driver",
+			"name":        "Stunt Driver",
+			"base_reward": 1500,
+			"requires":    "car",
+			"penalty":     "car_broken",
+			"description": "High-risk stunts. Requires car. Earn $1500 but car gets broken.",
+		},
+		{
+			"type":        "drug_dealer",
+			"name":        "Surprise Delivery",
+			"base_reward": 2000,
+			"penalty":     "jail_8years",
+			"description": "Risky business. Earn $2000 but you'll be caught (8 year sentence, skippable).",
+		},
+		{
+			"type":        "streamer",
+			"name":        "Streamer",
+			"base_reward": 0,
+			"variable":    "lottery",
+			"description": "Stream online. 70% = $0, 29% = $1, 1% = $10,000 + go viral (all future streams $10k).",
+		},
+		{
+			"type":        "bottle_collector",
+			"name":        "Bottle Collector",
+			"base_reward": 100,
+			"description": "Collect bottles and cans. Always $100. Available to everyone.",
+		},
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    jobs,
+	})
+}
+
+// SkipJailTime handles POST /api/work/skip-jail
+// @Summary Skip jail time
+// @Description Skip the jail sentence time (instant release)
+// @Tags work
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /api/work/skip-jail [post]
+func (h *WorkHandler) SkipJailTime(c *fiber.Ctx) error {
+	// Get user ID from context (set by auth middleware)
+	userID, ok := c.Locals("userID").(uint)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "unauthorized",
+		})
+	}
+
+	if err := h.workService.SkipJailTime(userID); err != nil {
+		if err.Error() == "not in jail" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error":   true,
+				"message": "not in jail",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": "failed to skip jail time",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"message": "jail time skipped successfully",
 	})
 }
