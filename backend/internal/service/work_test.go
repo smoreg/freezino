@@ -148,7 +148,7 @@ func TestWorkServiceGetStatusWorking(t *testing.T) {
 	}
 
 	// Start work
-	_, err := service.StartWork(user.ID, model.JobTypeOffice)
+	_, err := service.StartWork(user.ID, model.JobTypeBottleCollector)
 	require.NoError(t, err)
 
 	// Small delay to have elapsed time (at least 1 second for int conversion)
@@ -248,7 +248,7 @@ func TestWorkServiceCompleteWorkTooEarly(t *testing.T) {
 	}
 
 	// Start work
-	_, err := service.StartWork(user.ID, model.JobTypeOffice)
+	_, err := service.StartWork(user.ID, model.JobTypeBottleCollector)
 	require.NoError(t, err)
 
 	// Try to complete immediately (should fail)
