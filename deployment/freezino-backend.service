@@ -1,0 +1,23 @@
+[Unit]
+Description=Freezino Backend Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/freezino/backend
+ExecStart=/opt/freezino/backend/freezino-server
+Restart=always
+RestartSec=5
+StandardOutput=append:/opt/freezino/backend/server.log
+StandardError=append:/opt/freezino/backend/server.log
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Environment
+Environment="GIN_MODE=release"
+
+[Install]
+WantedBy=multi-user.target

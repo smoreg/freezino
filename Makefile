@@ -132,14 +132,23 @@ deploy-backend:
 		rm ../backend-src.tar.gz && \
 		go build -o freezino-server cmd/server/main.go && \
 		echo '✅ Build complete'"
-	@echo "🔄 Restarting backend service..."
+	@echo "⚙️  Setting up systemd service..."
+	@scp deployment/freezino-backend.service root@freezino.online:/tmp/
 	@ssh root@freezino.online "\
-		systemctl restart freezino-backend 2>/dev/null || \
-		(cd /opt/freezino/backend && pkill freezino-server || true && \
-		nohup ./freezino-server > server.log 2>&1 </dev/null &) && \
-		sleep 2"
+		if ! systemctl is-enabled freezino-backend >/dev/null 2>&1; then \
+			echo '📝 Creating systemd service...'; \
+			mv /tmp/freezino-backend.service /etc/systemd/system/; \
+			systemctl daemon-reload; \
+			systemctl enable freezino-backend; \
+			echo '✅ Service created and enabled'; \
+		else \
+			echo '✅ Service already exists'; \
+			rm /tmp/freezino-backend.service 2>/dev/null || true; \
+		fi"
+	@echo "🔄 Restarting backend service..."
+	@ssh root@freezino.online "systemctl restart freezino-backend"
 	@echo "🏥 Health check..."
-	@ssh root@freezino.online "curl -sf http://localhost:3000/api/health || echo 'Warning: Health check failed'"
+	@ssh root@freezino.online "sleep 2 && curl -sf http://localhost:3000/api/health || echo 'Warning: Health check failed'"
 	@echo "✅ Backend deployed successfully!"
 
 # Deploy frontend to production server

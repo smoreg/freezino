@@ -23,6 +23,21 @@ const PAYOUTS = {
 // Bet options
 const BET_OPTIONS = [10, 25, 50, 100, 250, 500];
 
+// Paylines - standard 10 paylines for 5-reel slots
+// Each array represents row indices (0=top, 1=middle, 2=bottom) for each of the 5 reels
+const PAYLINES: number[][] = [
+  [1, 1, 1, 1, 1], // Line 1: Middle horizontal
+  [0, 0, 0, 0, 0], // Line 2: Top horizontal
+  [2, 2, 2, 2, 2], // Line 3: Bottom horizontal
+  [0, 1, 2, 1, 0], // Line 4: V shape
+  [2, 1, 0, 1, 2], // Line 5: Inverted V
+  [1, 0, 1, 0, 1], // Line 6: Zigzag
+  [1, 2, 1, 2, 1], // Line 7: Reverse zigzag
+  [0, 1, 0, 1, 0], // Line 8: W shape
+  [2, 1, 2, 1, 2], // Line 9: M shape
+  [0, 0, 1, 2, 2], // Line 10: Diagonal
+];
+
 interface WinningLine {
   line_number: number;
   symbol: string;
@@ -63,6 +78,19 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
   const [message, setMessage] = useState('');
   const [showConfetti, setShowConfetti] = useState(false);
   const spinTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const reelsContainerRef = useRef<HTMLDivElement>(null);
+  const symbolRefs = useRef<(HTMLDivElement | null)[][][]>([]);
+
+  // Initialize refs array
+  useEffect(() => {
+    symbolRefs.current = Array(5)
+      .fill(null)
+      .map(() =>
+        Array(3)
+          .fill(null)
+          .map(() => null)
+      );
+  }, []);
 
   useEffect(() => {
     console.log('[Slots] Setting balance from userBalance prop:', userBalance);
@@ -195,6 +223,20 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
     };
   }, []);
 
+  // Check if a symbol at a specific position is part of a winning line
+  const isWinningSymbol = (reelIndex: number, symbolIndex: number): boolean => {
+    return winningLines.some(line => {
+      const payline = PAYLINES[line.line_number - 1];
+      if (!payline) return false;
+
+      // Check if this reel is part of the winning combination
+      if (reelIndex >= line.count) return false;
+
+      // Check if the symbol position matches the payline pattern
+      return payline[reelIndex] === symbolIndex;
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-8">
       <div className="max-w-6xl mx-auto">
@@ -274,29 +316,123 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
           className="bg-gradient-to-b from-red-900 to-red-700 rounded-3xl p-8 shadow-2xl border-8 border-yellow-600"
         >
           {/* Reels */}
-          <div className="bg-black/50 rounded-2xl p-6 mb-6">
-            <div className="flex justify-center gap-4">
+          <div className="bg-black/50 rounded-2xl p-6 mb-6 relative">
+            {/* SVG overlay for winning lines */}
+            {!spinning && winningLines.length > 0 && (
+              <svg
+                className="absolute inset-0 pointer-events-none"
+                style={{ width: '100%', height: '100%' }}
+              >
+                {winningLines.map((line, lineIdx) => {
+                  const payline = PAYLINES[line.line_number - 1];
+                  if (!payline) return null;
+
+                  // Get the SVG container position
+                  const svgContainer = reelsContainerRef.current?.parentElement;
+                  if (!svgContainer) return null;
+                  const svgRect = svgContainer.getBoundingClientRect();
+
+                  // Calculate path through winning symbols using actual element positions
+                  const points: { x: number; y: number }[] = [];
+
+                  for (let i = 0; i < line.count; i++) {
+                    const symbolRow = payline[i];
+                    const symbolEl = symbolRefs.current[i]?.[symbolRow];
+
+                    if (!symbolEl) continue;
+
+                    // Get the symbol's position relative to the viewport
+                    const symbolRect = symbolEl.getBoundingClientRect();
+
+                    // Calculate center of symbol relative to SVG container
+                    const x = symbolRect.left - svgRect.left + symbolRect.width / 2;
+                    const y = symbolRect.top - svgRect.top + symbolRect.height / 2;
+
+                    points.push({ x, y });
+                  }
+
+                  if (points.length === 0) return null;
+
+                  const pathData = points
+                    .map((point, idx) => `${idx === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+                    .join(' ');
+
+                  return (
+                    <motion.path
+                      key={lineIdx}
+                      d={pathData}
+                      stroke="#eab308"
+                      strokeWidth="6"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{
+                        pathLength: [0, 1, 1, 0],
+                        opacity: [0, 1, 1, 0],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: lineIdx * 0.3,
+                      }}
+                      style={{
+                        filter: 'drop-shadow(0 0 8px rgba(234, 179, 8, 0.8))',
+                      }}
+                    />
+                  );
+                })}
+              </svg>
+            )}
+
+            <div className="flex justify-center gap-4" ref={reelsContainerRef}>
               {reels.map((reel, reelIndex) => (
                 <div
                   key={reelIndex}
                   className="bg-white/10 rounded-xl p-2 border-4 border-yellow-500/50"
                 >
                   <div className="flex flex-col gap-2">
-                    {reel.map((symbol, symbolIndex) => (
-                      <motion.div
-                        key={`${reelIndex}-${symbolIndex}`}
-                        animate={spinning ? { y: [0, -10, 0] } : { y: 0 }}
-                        transition={{
-                          duration: 0.1,
-                          repeat: spinning ? Infinity : 0,
-                        }}
-                        className={`text-6xl w-20 h-20 flex items-center justify-center ${
-                          symbolIndex === 1 ? 'bg-yellow-500/20 rounded-lg' : ''
-                        }`}
-                      >
-                        {symbol}
-                      </motion.div>
-                    ))}
+                    {reel.map((symbol, symbolIndex) => {
+                      const isWinning = !spinning && isWinningSymbol(reelIndex, symbolIndex);
+                      return (
+                        <motion.div
+                          key={`${reelIndex}-${symbolIndex}`}
+                          ref={(el) => {
+                            if (!symbolRefs.current[reelIndex]) {
+                              symbolRefs.current[reelIndex] = [];
+                            }
+                            symbolRefs.current[reelIndex][symbolIndex] = el;
+                          }}
+                          animate={
+                            spinning
+                              ? { y: [0, -10, 0] }
+                              : isWinning
+                              ? {
+                                  scale: [1, 1.1, 1],
+                                  boxShadow: [
+                                    '0 0 0px rgba(234, 179, 8, 0)',
+                                    '0 0 20px rgba(234, 179, 8, 0.8)',
+                                    '0 0 0px rgba(234, 179, 8, 0)',
+                                  ],
+                                }
+                              : { y: 0 }
+                          }
+                          transition={{
+                            duration: spinning ? 0.1 : 1,
+                            repeat: spinning ? Infinity : isWinning ? Infinity : 0,
+                          }}
+                          className={`text-6xl w-20 h-20 flex items-center justify-center rounded-lg transition-all ${
+                            symbolIndex === 1 ? 'bg-yellow-500/20' : ''
+                          } ${
+                            isWinning
+                              ? 'bg-yellow-500/40 border-4 border-yellow-400 shadow-lg shadow-yellow-400/50'
+                              : ''
+                          }`}
+                        >
+                          {symbol}
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
