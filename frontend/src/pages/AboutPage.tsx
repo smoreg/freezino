@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const AboutPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-dark to-gray-900 py-12 px-4">
       <div className="max-w-5xl mx-auto">
@@ -11,10 +14,10 @@ const AboutPage = () => {
           className="text-center mb-12"
         >
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-4">
-            ℹ️ О проекте Freezino
+            {t('about.title')}
           </h1>
           <p className="text-gray-400 text-base md:text-lg lg:text-xl">
-            Образовательный симулятор для борьбы с игровой зависимостью
+            {t('about.subtitle')}
           </p>
         </motion.div>
 
@@ -28,18 +31,11 @@ const AboutPage = () => {
           <div className="flex items-center space-x-4 mb-6">
             <span className="text-6xl">🎯</span>
             <div>
-              <h2 className="text-3xl font-bold text-white">Наша миссия</h2>
-              <p className="text-gray-400">Борьба с игровой зависимостью</p>
+              <h2 className="text-3xl font-bold text-white">{t('about.mission.title')}</h2>
+              <p className="text-gray-400">{t('about.mission.subtitle')}</p>
             </div>
           </div>
-          <p className="text-gray-300 leading-relaxed text-lg">
-            <strong className="text-white">Freezino</strong> — это не обычное
-            казино. Это образовательный проект, созданный для того, чтобы показать
-            реальные опасности азартных игр в безопасной среде. Мы используем
-            только виртуальную валюту, чтобы игроки могли на собственном опыте
-            понять, как легко потерять деньги в казино, не рискуя при этом
-            реальными средствами.
-          </p>
+          <p className="text-gray-300 leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: t('about.mission.description') }} />
         </motion.div>
 
         {/* How It Works */}
@@ -52,8 +48,8 @@ const AboutPage = () => {
           <div className="flex items-center space-x-4 mb-6">
             <span className="text-6xl">⚙️</span>
             <div>
-              <h2 className="text-3xl font-bold text-white">Как это работает</h2>
-              <p className="text-gray-400">Механика проекта</p>
+              <h2 className="text-3xl font-bold text-white">{t('about.howItWorks.title')}</h2>
+              <p className="text-gray-400">{t('about.howItWorks.subtitle')}</p>
             </div>
           </div>
 
@@ -65,12 +61,9 @@ const AboutPage = () => {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg mb-2">
-                  Виртуальные деньги
+                  {t('about.howItWorks.step1.title')}
                 </h3>
-                <p className="text-gray-300">
-                  Вы начинаете с виртуального баланса в 1000 псевдодолларов.
-                  Реальные деньги <strong className="text-primary">НИКОГДА</strong> не используются.
-                </p>
+                <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: t('about.howItWorks.step1.description') }} />
               </div>
             </div>
 
@@ -81,12 +74,10 @@ const AboutPage = () => {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg mb-2">
-                  Игры казино
+                  {t('about.howItWorks.step2.title')}
                 </h3>
                 <p className="text-gray-300">
-                  Играйте в рулетку, слоты, блэкджек и другие классические игры.
-                  Все игры работают с реалистичной механикой, чтобы показать
-                  настоящие шансы на выигрыш.
+                  {t('about.howItWorks.step2.description')}
                 </p>
               </div>
             </div>
@@ -98,12 +89,10 @@ const AboutPage = () => {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg mb-2">
-                  Работа за деньги
+                  {t('about.howItWorks.step3.title')}
                 </h3>
                 <p className="text-gray-300">
-                  Когда баланс заканчивается, вы можете "поработать" 3 минуты,
-                  чтобы заработать 500$. Это показывает контраст между трудом и
-                  скоростью потери денег в казино.
+                  {t('about.howItWorks.step3.description')}
                 </p>
               </div>
             </div>
@@ -115,12 +104,10 @@ const AboutPage = () => {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg mb-2">
-                  Статистика и осознание
+                  {t('about.howItWorks.step4.title')}
                 </h3>
                 <p className="text-gray-300">
-                  После каждой сессии работы мы показываем статистику,
-                  сравнивающую ваш виртуальный заработок с реальными зарплатами
-                  в разных странах. Это помогает осознать ценность денег.
+                  {t('about.howItWorks.step4.description')}
                 </p>
               </div>
             </div>

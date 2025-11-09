@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 type CookiePreference = 'all' | 'essential' | 'none';
 
@@ -11,6 +12,7 @@ interface CookieSettingsProps {
 }
 
 const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
+  const { t } = useTranslation();
   const [, setPreference] = useState<CookiePreference>('essential');
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
 
@@ -57,7 +59,7 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
         <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-2xl">🍪</span>
-            <h2 className="text-2xl font-bold text-white">Cookie Settings</h2>
+            <h2 className="text-2xl font-bold text-white">{t('cookies.settings.title')}</h2>
           </div>
           <button
             onClick={onClose}
@@ -71,14 +73,13 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
         {/* Content */}
         <div className="px-6 py-6 space-y-6">
           <p className="text-gray-300 leading-relaxed">
-            Управляйте настройками cookies для вашего опыта на Freezino. Необходимые cookies всегда
-            включены, так как они нужны для работы сайта.{' '}
+            {t('cookies.settings.description')}{' '}
             <Link
               to="/cookies"
               className="text-secondary hover:text-primary underline transition-colors"
               onClick={onClose}
             >
-              Подробнее о cookies
+              {t('cookies.settings.learnMore')}
             </Link>
           </p>
 
@@ -90,24 +91,22 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center space-x-2">
                     <span className="text-xl">🔒</span>
-                    <h3 className="text-lg font-semibold text-white">Необходимые cookies</h3>
+                    <h3 className="text-lg font-semibold text-white">{t('cookies.settings.essential.title')}</h3>
                   </div>
                   <p className="text-sm text-gray-400 leading-relaxed">
-                    Эти cookies необходимы для базовой функциональности сайта, включая
-                    аутентификацию, настройки языка и сохранение ваших предпочтений по cookies.
-                    Они не могут быть отключены.
+                    {t('cookies.settings.essential.description')}
                   </p>
                   <div className="text-xs text-gray-500 space-y-1">
-                    <p>• JWT токен аутентификации</p>
-                    <p>• Выбор языка интерфейса</p>
-                    <p>• Настройки cookies</p>
+                    <p>{t('cookies.settings.essential.items.jwt')}</p>
+                    <p>{t('cookies.settings.essential.items.language')}</p>
+                    <p>{t('cookies.settings.essential.items.settings')}</p>
                   </div>
                 </div>
                 <div className="ml-4">
                   <div className="flex items-center justify-center w-12 h-6 bg-green-600 rounded-full cursor-not-allowed">
                     <div className="w-4 h-4 bg-white rounded-full transform translate-x-3"></div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1 text-center">Всегда</p>
+                  <p className="text-xs text-gray-500 mt-1 text-center">{t('cookies.settings.always')}</p>
                 </div>
               </div>
             </div>
@@ -118,16 +117,15 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center space-x-2">
                     <span className="text-xl">📊</span>
-                    <h3 className="text-lg font-semibold text-white">Аналитические cookies</h3>
+                    <h3 className="text-lg font-semibold text-white">{t('cookies.settings.analytics.title')}</h3>
                   </div>
                   <p className="text-sm text-gray-400 leading-relaxed">
-                    Помогают нам понять, как вы используете сайт, чтобы улучшить ваш опыт.
-                    Статистика собирается анонимно и используется только для аналитики.
+                    {t('cookies.settings.analytics.description')}
                   </p>
                   <div className="text-xs text-gray-500 space-y-1">
-                    <p>• Статистика посещений страниц</p>
-                    <p>• Анализ популярности игр</p>
-                    <p>• Отслеживание ошибок (опционально)</p>
+                    <p>{t('cookies.settings.analytics.items.pageViews')}</p>
+                    <p>{t('cookies.settings.analytics.items.gamePopularity')}</p>
+                    <p>{t('cookies.settings.analytics.items.errorTracking')}</p>
                   </div>
                 </div>
                 <div className="ml-4">
@@ -144,7 +142,7 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
                     ></div>
                   </button>
                   <p className="text-xs text-gray-500 mt-1 text-center">
-                    {analyticsEnabled ? 'Вкл' : 'Выкл'}
+                    {analyticsEnabled ? t('cookies.settings.enabled') : t('cookies.settings.disabled')}
                   </p>
                 </div>
               </div>
@@ -154,10 +152,10 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
           {/* Current Preference */}
           <div className="bg-gray-800 rounded-lg p-4 border border-secondary">
             <p className="text-sm text-gray-300">
-              <span className="font-semibold text-secondary">Текущая настройка:</span>{' '}
+              <span className="font-semibold text-secondary">{t('cookies.settings.currentSetting')}</span>{' '}
               {analyticsEnabled
-                ? 'Все cookies разрешены'
-                : 'Только необходимые cookies'}
+                ? t('cookies.settings.allAllowed')
+                : t('cookies.settings.onlyEssential')}
             </p>
           </div>
         </div>
@@ -168,13 +166,13 @@ const CookieSettings = ({ isOpen, onClose }: CookieSettingsProps) => {
             onClick={onClose}
             className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
           >
-            Отмена
+            {t('cookies.settings.cancel')}
           </button>
           <button
             onClick={handleSave}
             className="px-6 py-3 bg-primary hover:bg-red-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 shadow-lg"
           >
-            Сохранить настройки
+            {t('cookies.settings.save')}
           </button>
         </div>
       </div>

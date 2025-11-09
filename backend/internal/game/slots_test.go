@@ -150,7 +150,7 @@ func TestSlotsGetPayoutTable(t *testing.T) {
 	assert.Equal(t, 100.0, sevenPayouts[4])
 	assert.Equal(t, 20.0, sevenPayouts[3])
 
-	// Verify Clover has lowest payout (новый символ для мелких выигрышей)
+	// Verify Clover has lowest payout (new symbol for small wins)
 	cloverPayouts := table[SymbolClover]
 	require.NotNil(t, cloverPayouts)
 	assert.Equal(t, 12.0, cloverPayouts[5])

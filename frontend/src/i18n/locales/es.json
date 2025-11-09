@@ -226,5 +226,234 @@
   },
   "offline": {
     "message": "Actualmente estás sin conexión. Algunas funciones pueden no estar disponibles."
+  },
+  "home": {
+    "title": "¡Bienvenido a Freezino! 🎰",
+    "subtitle": "Simulador de casino educativo para combatir la adicción al juego",
+    "features": {
+      "play": {
+        "title": "Juega",
+        "description": "Más de 10 juegos de casino diferentes con dinero virtual"
+      },
+      "work": {
+        "title": "Trabaja",
+        "description": "Gana dinero virtual trabajando 3 minutos = $500"
+      },
+      "analyze": {
+        "title": "Analiza",
+        "description": "Ve estadísticas y compara con salarios reales"
+      }
+    },
+    "important": {
+      "title": "⚠️ ¡Importante!",
+      "noRealMoney": "❌ NO se permite depositar dinero real",
+      "onlyVirtual": "✅ Solo moneda virtual (pseudo-dólares)",
+      "educational": "🎓 Propósito educativo - demostrar problemas del juego"
+    }
+  },
+  "about": {
+    "title": "ℹ️ Sobre el Proyecto Freezino",
+    "subtitle": "Simulador educativo para combatir la adicción al juego",
+    "mission": {
+      "title": "Nuestra Misión",
+      "subtitle": "Combatir la adicción al juego",
+      "description": "<strong>Freezino</strong> no es un casino ordinario. Es un proyecto educativo creado para demostrar los peligros reales del juego en un entorno seguro. Usamos solo moneda virtual para que los jugadores puedan experimentar de primera mano lo fácil que es perder dinero en un casino, sin arriesgar fondos reales."
+    },
+    "howItWorks": {
+      "title": "Cómo Funciona",
+      "subtitle": "Mecánica del proyecto",
+      "step1": {
+        "title": "Dinero Virtual",
+        "description": "Comienzas con un saldo virtual de 1000 pseudo-dólares. El dinero real <strong>NUNCA</strong> se usa."
+      },
+      "step2": {
+        "title": "Juegos de Casino",
+        "description": "Juega ruleta, tragamonedas, blackjack y otros juegos clásicos. Todos los juegos funcionan con mecánicas realistas para mostrar probabilidades reales de ganar."
+      },
+      "step3": {
+        "title": "Sistema de Trabajo",
+        "description": "¿Sin dinero? Trabaja 3 minutos para ganar $500. Esto simula el tiempo requerido para ganar dinero en la vida real."
+      },
+      "step4": {
+        "title": "Estadísticas y Análisis",
+        "description": "Ve tus estadísticas y compara cuánto tiempo te tomaría ganar la misma cantidad en un trabajo real en diferentes países."
+      }
+    },
+    "features": {
+      "title": "Características Clave",
+      "subtitle": "Lo que nos hace especiales",
+      "f1": {
+        "title": "🎰 Juegos Realistas",
+        "description": "Todos los juegos funcionan con matemáticas y probabilidades de casino reales"
+      },
+      "f2": {
+        "title": "💰 Moneda Virtual",
+        "description": "Sin riesgo de perder dinero real - solo demostración educativa"
+      },
+      "f3": {
+        "title": "⏰ Sistema de Trabajo",
+        "description": "Demuestra el valor del tiempo y el trabajo versus las pérdidas del juego"
+      },
+      "f4": {
+        "title": "📊 Estadísticas",
+        "description": "Análisis detallado de tus sesiones y comparaciones con salarios reales"
+      },
+      "f5": {
+        "title": "🌍 Comparación Internacional",
+        "description": "Compara tus \"ganancias\" con salarios por hora en diferentes países"
+      },
+      "f6": {
+        "title": "🎓 Educativo",
+        "description": "Aprende sobre problemas del juego sin riesgo financiero"
+      }
+    },
+    "warning": {
+      "title": "⚠️ Descargo de Responsabilidad Importante",
+      "text": "Freezino es un proyecto educativo. No fomentamos el juego con dinero real. Si tú o alguien que conoces tiene un problema de juego, por favor busca ayuda profesional.",
+      "helpline": "Línea de ayuda para el juego:",
+      "remember": "Recuerda:",
+      "r1": "La casa siempre gana a largo plazo",
+      "r2": "El juego no es una forma de ganar dinero",
+      "r3": "Nunca apuestes dinero que no puedas permitirte perder",
+      "r4": "El juego solo debe ser entretenimiento, no una fuente de ingresos"
+    }
+  },
+  "gameHistory": {
+    "title": "Historial de Juegos",
+    "subtitle": "Estadísticas detalladas e historial de todos tus juegos",
+    "loading": "Cargando historial de juegos...",
+    "gameNames": {
+      "roulette": "Ruleta",
+      "slots": "Tragamonedas",
+      "blackjack": "Blackjack",
+      "craps": "Dados",
+      "baccara": "Baccarat",
+      "wheel": "Rueda de la Fortuna",
+      "keno": "Keno",
+      "poker": "Póker",
+      "hilo": "Hi-Lo",
+      "crash": "Crash",
+      "bingo": "Bingo",
+      "plinko": "Plinko"
+    },
+    "stats": {
+      "totalGames": "Total de Juegos",
+      "winRate": "Porcentaje de Victorias",
+      "netProfit": "Ganancia Neta",
+      "favoriteGame": "Juego Favorito"
+    },
+    "charts": {
+      "gameDistribution": "Distribución de Juegos",
+      "profitByGame": "Ganancia/Pérdida por Juego",
+      "netProfit": "Ganancia Neta",
+      "winsLosses": "Estadísticas de Victorias y Derrotas",
+      "wins": "Victorias",
+      "losses": "Derrotas"
+    },
+    "filter": {
+      "label": "Filtrar por juego:",
+      "allGames": "Todos los Juegos"
+    },
+    "table": {
+      "date": "Fecha",
+      "game": "Juego",
+      "bet": "Apuesta",
+      "win": "Ganancia",
+      "profit": "Beneficio",
+      "noHistory": "Sin historial de juegos"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {{page}}"
+    }
+  },
+  "statsModal": {
+    "title": "Estadísticas de Trabajo",
+    "subtitle": "Comparación con salarios mundiales",
+    "close": "Cerrar",
+    "earned": "Has ganado",
+    "for": "En {{time}}",
+    "comparison": "Comparación con otros países",
+    "toEarn": "Para ganar <strong>${{amount}}</strong>, en otros países necesitarías:",
+    "perHour": "~${{amount}}/hora",
+    "work": "trabajo",
+    "countries": {
+      "us": "EE.UU.",
+      "gb": "Reino Unido",
+      "de": "Alemania",
+      "fr": "Francia",
+      "jp": "Japón",
+      "cn": "China",
+      "ru": "Rusia",
+      "in": "India"
+    },
+    "time": {
+      "minutes": "{{count}} minutos",
+      "hours": "{{count}} h",
+      "hoursMinutes": "{{hours}} h {{minutes}} min",
+      "days": "{{count}} días",
+      "daysHours": "{{days}} días {{hours}} h",
+      "seconds": "{{count}} seg",
+      "minutesSeconds": "{{minutes}} min {{seconds}} seg"
+    }
+  },
+  "cookies": {
+    "consent": {
+      "title": "Configuración de Cookies",
+      "description": "Usamos cookies para mejorar tu experiencia. Las cookies esenciales son necesarias para la funcionalidad del sitio (autenticación, configuraciones). Las cookies analíticas nos ayudan a entender cómo usas el sitio.",
+      "learnMore": "Más información",
+      "acceptAll": "Aceptar Todas",
+      "onlyEssential": "Solo Esenciales",
+      "rejectAll": "Rechazar Todas"
+    },
+    "settings": {
+      "title": "Configuración de Cookies",
+      "description": "Administra la configuración de cookies para tu experiencia en Freezino. Las cookies esenciales siempre están habilitadas ya que son necesarias para que el sitio funcione.",
+      "learnMore": "Más información sobre cookies",
+      "essential": {
+        "title": "Cookies Esenciales",
+        "description": "Estas cookies son necesarias para la funcionalidad básica del sitio, incluyendo autenticación, configuración de idioma y guardar tus preferencias de cookies. No se pueden desactivar.",
+        "items": {
+          "jwt": "• Token de autenticación JWT",
+          "language": "• Selección de idioma de interfaz",
+          "settings": "• Configuración de cookies"
+        }
+      },
+      "analytics": {
+        "title": "Cookies Analíticas",
+        "description": "Nos ayudan a entender cómo usas el sitio para mejorar tu experiencia. Las estadísticas se recopilan de forma anónima y se usan solo para análisis.",
+        "items": {
+          "pageViews": "• Estadísticas de visitas a páginas",
+          "gamePopularity": "• Análisis de popularidad de juegos",
+          "errorTracking": "• Seguimiento de errores (opcional)"
+        }
+      },
+      "always": "Siempre",
+      "enabled": "Act",
+      "disabled": "Desact",
+      "currentSetting": "Configuración actual:",
+      "allAllowed": "Todas las cookies permitidas",
+      "onlyEssential": "Solo cookies esenciales",
+      "cancel": "Cancelar",
+      "save": "Guardar Configuración"
+    }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "subtitle": "¿Tienes preguntas? ¡Estamos aquí para ayudar!",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "message": "Mensaje",
+      "submit": "Enviar Mensaje",
+      "success": "¡Mensaje enviado con éxito!",
+      "error": "No se pudo enviar el mensaje. Por favor, inténtalo de nuevo."
+    }
+  },
+  "notFound": {
+    "title": "404 - Página No Encontrada",
+    "description": "La página que buscas no existe.",
+    "goHome": "Ir al Inicio"
   }
 }

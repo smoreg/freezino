@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   BarChart,
   Bar,
@@ -43,30 +44,20 @@ interface GameStats {
   }[];
 }
 
-const GAME_NAMES: Record<string, string> = {
-  roulette: 'Рулетка',
-  slots: 'Слоты',
-  blackjack: 'Блэкджек',
-  craps: 'Кости',
-  baccara: 'Баккара',
-  wheel: 'Колесо фортуны',
-  keno: 'Кено',
-  poker: 'Покер',
-  hilo: 'Hi-Lo',
-  crash: 'Crash',
-  bingo: 'Бинго',
-  plinko: 'Plinko',
-};
-
 const COLORS = ['#DC2626', '#FBBF24', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899'];
 
 const GameHistoryPage = () => {
+  const { t } = useTranslation();
   const [history, setHistory] = useState<GameHistoryItem[]>([]);
   const [stats, setStats] = useState<GameStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedGame, setSelectedGame] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 10; // для будущей пагинации
+  // const itemsPerPage = 10; // for future pagination
+
+  const getGameName = (gameType: string) => {
+    return t(`gameHistory.gameNames.${gameType}`, gameType);
+  };
 
   useEffect(() => {
     fetchHistory();
@@ -77,15 +68,15 @@ const GameHistoryPage = () => {
     try {
       setLoading(true);
 
-      // В реальном приложении использовать axios или fetch
-      // const userId = 1; // получить из auth контекста
+      // In a real application use axios or fetch
+      // const userId = 1; // get from auth context
       // const offset = (currentPage - 1) * itemsPerPage;
       // const gameParam = selectedGame ? `&game=${selectedGame}` : '';
       // const response = await fetch(`/api/games/history?user_id=${userId}&limit=${itemsPerPage}&offset=${offset}${gameParam}`);
       // const data = await response.json();
       // setHistory(data.data.games);
 
-      // Демо данные
+      // Demo data
       const mockData: GameHistoryItem[] = [
         { id: 1, game_type: 'roulette', bet: 100, win: 200, profit: 100, created_at: '2025-11-08T10:30:00Z' },
         { id: 2, game_type: 'slots', bet: 50, win: 0, profit: -50, created_at: '2025-11-08T10:25:00Z' },
@@ -106,12 +97,12 @@ const GameHistoryPage = () => {
 
   const fetchStats = async () => {
     try {
-      // В реальном приложении:
+      // In a real application:
       // const response = await fetch(`/api/games/stats?user_id=${userId}`);
       // const data = await response.json();
       // setStats(data.data);
 
-      // Демо данные
+      // Demo data
       const mockStats: GameStats = {
         total_games: 42,
         total_wins: 18,
@@ -153,7 +144,7 @@ const GameHistoryPage = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary mx-auto"></div>
-          <p className="text-gray-400 mt-4">Загрузка истории игр...</p>
+          <p className="text-gray-400 mt-4">{t('gameHistory.loading')}</p>
         </div>
       </div>
     );
@@ -170,10 +161,10 @@ const GameHistoryPage = () => {
       >
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-2 md:gap-3">
           <span className="text-4xl md:text-5xl">🎮</span>
-          История игр
+          {t('gameHistory.title')}
         </h1>
         <p className="text-sm md:text-base text-gray-400">
-          Подробная статистика и история всех ваших игр
+          {t('gameHistory.subtitle')}
         </p>
       </motion.div>
 
@@ -189,7 +180,7 @@ const GameHistoryPage = () => {
             <div className="flex items-center justify-between mb-4">
               <span className="text-4xl">🎲</span>
             </div>
-            <p className="text-gray-400 text-sm mb-1">Всего игр</p>
+            <p className="text-gray-400 text-sm mb-1">{t('gameHistory.stats.totalGames')}</p>
             <p className="text-2xl font-bold text-white">{stats.total_games}</p>
           </div>
 
@@ -197,7 +188,7 @@ const GameHistoryPage = () => {
             <div className="flex items-center justify-between mb-4">
               <span className="text-4xl">🏆</span>
             </div>
-            <p className="text-gray-400 text-sm mb-1">Процент побед</p>
+            <p className="text-gray-400 text-sm mb-1">{t('gameHistory.stats.winRate')}</p>
             <p className="text-2xl font-bold text-secondary">{stats.win_rate.toFixed(1)}%</p>
           </div>
 
@@ -205,7 +196,7 @@ const GameHistoryPage = () => {
             <div className="flex items-center justify-between mb-4">
               <span className="text-4xl">💰</span>
             </div>
-            <p className="text-gray-400 text-sm mb-1">Чистая прибыль</p>
+            <p className="text-gray-400 text-sm mb-1">{t('gameHistory.stats.netProfit')}</p>
             <p className={`text-2xl font-bold ${stats.net_profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               ${stats.net_profit.toFixed(2)}
             </p>
@@ -215,8 +206,8 @@ const GameHistoryPage = () => {
             <div className="flex items-center justify-between mb-4">
               <span className="text-4xl">❤️</span>
             </div>
-            <p className="text-gray-400 text-sm mb-1">Любимая игра</p>
-            <p className="text-2xl font-bold text-white">{GAME_NAMES[stats.favorite_game] || stats.favorite_game}</p>
+            <p className="text-gray-400 text-sm mb-1">{t('gameHistory.stats.favoriteGame')}</p>
+            <p className="text-2xl font-bold text-white">{getGameName(stats.favorite_game)}</p>
           </div>
         </motion.div>
       )}
@@ -231,7 +222,7 @@ const GameHistoryPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-gray-800 border border-gray-700 rounded-xl p-6"
           >
-            <h2 className="text-xl font-bold text-white mb-4">Распределение игр</h2>
+            <h2 className="text-xl font-bold text-white mb-4">{t('gameHistory.charts.gameDistribution')}</h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -241,7 +232,7 @@ const GameHistoryPage = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  label={(props: any) => GAME_NAMES[props.game_type] || props.game_type}
+                  label={(props: any) => getGameName(props.game_type)}
                 >
                   {stats.game_breakdown.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -262,23 +253,23 @@ const GameHistoryPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-gray-800 border border-gray-700 rounded-xl p-6"
           >
-            <h2 className="text-xl font-bold text-white mb-4">Прибыль/Убыток по играм</h2>
+            <h2 className="text-xl font-bold text-white mb-4">{t('gameHistory.charts.profitByGame')}</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={stats.game_breakdown}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis
                   dataKey="game_type"
                   stroke="#9CA3AF"
-                  tickFormatter={(value) => GAME_NAMES[value] || value}
+                  tickFormatter={(value) => getGameName(value)}
                 />
                 <YAxis stroke="#9CA3AF" />
                 <Tooltip
                   contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151' }}
                   labelStyle={{ color: '#F3F4F6' }}
-                  labelFormatter={(value) => GAME_NAMES[value] || value}
+                  labelFormatter={(value) => getGameName(value)}
                 />
                 <Legend />
-                <Bar dataKey="net_profit" name="Чистая прибыль" fill="#FBBF24" />
+                <Bar dataKey="net_profit" name={t('gameHistory.charts.netProfit')} fill="#FBBF24" />
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
@@ -290,12 +281,12 @@ const GameHistoryPage = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="bg-gray-800 border border-gray-700 rounded-xl p-6 lg:col-span-2"
           >
-            <h2 className="text-xl font-bold text-white mb-4">Статистика выигрышей и проигрышей</h2>
+            <h2 className="text-xl font-bold text-white mb-4">{t('gameHistory.charts.winsLosses')}</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 data={[
-                  { name: 'Победы', value: stats.total_wins },
-                  { name: 'Поражения', value: stats.total_losses },
+                  { name: t('gameHistory.charts.wins'), value: stats.total_wins },
+                  { name: t('gameHistory.charts.losses'), value: stats.total_losses },
                 ]}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -325,7 +316,7 @@ const GameHistoryPage = () => {
         className="bg-gray-800 border border-gray-700 rounded-xl p-6 mb-6"
       >
         <div className="flex flex-wrap gap-4 items-center">
-          <label className="text-white font-semibold">Фильтр по игре:</label>
+          <label className="text-white font-semibold">{t('gameHistory.filter.label')}</label>
           <select
             value={selectedGame}
             onChange={(e) => {
@@ -334,10 +325,10 @@ const GameHistoryPage = () => {
             }}
             className="bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            <option value="">Все игры</option>
-            {Object.entries(GAME_NAMES).map(([key, name]) => (
+            <option value="">{t('gameHistory.filter.allGames')}</option>
+            {['roulette', 'slots', 'blackjack', 'craps', 'baccara', 'wheel', 'keno', 'poker', 'hilo', 'crash', 'bingo', 'plinko'].map((key) => (
               <option key={key} value={key}>
-                {name}
+                {getGameName(key)}
               </option>
             ))}
           </select>
@@ -355,18 +346,18 @@ const GameHistoryPage = () => {
           <table className="w-full">
             <thead className="bg-gray-900">
               <tr>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-300">Дата</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-300">Игра</th>
-                <th className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">Ставка</th>
-                <th className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">Выигрыш</th>
-                <th className="px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">Прибыль</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-300">{t('gameHistory.table.date')}</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-300">{t('gameHistory.table.game')}</th>
+                <th className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">{t('gameHistory.table.bet')}</th>
+                <th className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">{t('gameHistory.table.win')}</th>
+                <th className="px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-gray-300">{t('gameHistory.table.profit')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700">
               {history.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center text-gray-400">
-                    Нет истории игр
+                    {t('gameHistory.table.noHistory')}
                   </td>
                 </tr>
               ) : (
@@ -377,7 +368,7 @@ const GameHistoryPage = () => {
                       <div className="hidden sm:block">{formatDate(item.created_at)}</div>
                     </td>
                     <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-white font-medium">
-                      {GAME_NAMES[item.game_type] || item.game_type}
+                      {getGameName(item.game_type)}
                     </td>
                     <td className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-right text-gray-300">${item.bet.toFixed(2)}</td>
                     <td className="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-right text-secondary">${item.win.toFixed(2)}</td>
@@ -403,15 +394,15 @@ const GameHistoryPage = () => {
               disabled={currentPage === 1}
               className="px-3 md:px-4 py-2.5 md:py-2 text-sm md:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation min-h-[44px]"
             >
-              <span className="hidden sm:inline">Предыдущая</span>
+              <span className="hidden sm:inline">{t('gameHistory.pagination.previous')}</span>
               <span className="sm:hidden">←</span>
             </button>
-            <span className="text-xs md:text-sm text-gray-400">Стр. {currentPage}</span>
+            <span className="text-xs md:text-sm text-gray-400">{t('gameHistory.pagination.page', { page: currentPage })}</span>
             <button
               onClick={() => setCurrentPage((prev) => prev + 1)}
               className="px-3 md:px-4 py-2.5 md:py-2 text-sm md:text-base bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors touch-manipulation min-h-[44px]"
             >
-              <span className="hidden sm:inline">Следующая</span>
+              <span className="hidden sm:inline">{t('gameHistory.pagination.next')}</span>
               <span className="sm:hidden">→</span>
             </button>
           </div>

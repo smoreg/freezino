@@ -69,7 +69,7 @@ func (s *ShopService) GetItems(itemType string, rarity string) ([]ItemResponse, 
 	}
 
 	// Filter by rarity if provided (future feature - Rarity field doesn't exist yet)
-	// This will be implemented when Клод 20 adds the rarity field
+	// This will be implemented when Claude 20 adds the rarity field
 	if rarity != "" {
 		// query = query.Where("rarity = ?", rarity)
 		// For now, we'll ignore rarity filter as the field doesn't exist yet
