@@ -132,6 +132,11 @@ deploy-backend:
 		rm ../backend-src.tar.gz && \
 		go build -o freezino-server cmd/server/main.go && \
 		echo '✅ Build complete'"
+	@echo "📁 Creating data directory..."
+	@ssh root@freezino.online "\
+		mkdir -p /opt/freezino/backend/data && \
+		chown -R www-data:www-data /opt/freezino/backend/data && \
+		echo '✅ Data directory created'"
 	@echo "⚙️  Setting up systemd service..."
 	@scp deployment/freezino-backend.service root@freezino.online:/tmp/
 	@ssh root@freezino.online "\
