@@ -75,6 +75,11 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	stats.Get("/countries", statsHandler.GetCountries)
 	stats.Get("/countries/:code", statsHandler.GetCountryByCode)
 
+	// Casino statistics routes
+	casinoStatsHandler := handler.NewCasinoStatsHandler()
+	casino := api.Group("/casino")
+	casino.Get("/stats", casinoStatsHandler.GetCasinoStats) // Public - anyone can view casino stats
+
 	// Contact routes
 	contactHandler := handler.NewContactHandler()
 	api.Post("/contact", contactHandler.SubmitMessage)

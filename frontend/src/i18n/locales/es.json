@@ -226,5 +226,36 @@
   },
   "offline": {
     "message": "Actualmente estás sin conexión. Algunas funciones pueden no estar disponibles."
+  },
+  "casinoStats": {
+    "title": "Estadísticas del Casino",
+    "subtitle": "Estadísticas globales de todos los jugadores de Freezino",
+    "loading": "Cargando estadísticas...",
+    "noData": "No hay datos para mostrar",
+    "players": "Jugadores",
+    "games": "Juegos",
+    "bets": "Apuestas",
+    "casino": "Casino",
+    "totalPlayers": "Total de Jugadores",
+    "totalGames": "Juegos Jugados",
+    "totalBet": "Total Apostado",
+    "houseProfit": "Ganancia del Casino",
+    "casinoStats": "Estadísticas del Casino",
+    "totalBetAmount": "Total Apostado",
+    "totalWon": "Total Pagado",
+    "houseEdge": "Ventaja de la Casa",
+    "averageBet": "Apuesta Promedio",
+    "playerProfitability": "Rentabilidad de Jugadores",
+    "playersInProfit": "Jugadores en Ganancia",
+    "playersInLoss": "Jugadores en Pérdida",
+    "playersBreakEven": "Punto de Equilibrio",
+    "profitWarning": "¡{{percent}} de los jugadores perdieron dinero!",
+    "gameBreakdown": "Estadísticas por Juego",
+    "game": "Juego",
+    "gamesPlayed": "Juegos Jugados",
+    "topWinners": "Mejores Ganadores",
+    "topLosers": "Mayores Perdedores",
+    "educationalTitle": "Advertencia Importante",
+    "educationalMessage": "Estas estadísticas muestran la realidad de los juegos de azar: el casino siempre gana. La mayoría de los jugadores pierden dinero. Freezino es un proyecto educativo que muestra qué tan rápido puedes perder dinero en un casino. ¡Nunca apuestes con dinero real que no puedas permitirte perder!"
   }
 }

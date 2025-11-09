@@ -17,6 +17,7 @@ const Sidebar = () => {
     { path: '/shop', label: 'Магазин', icon: '🛍️', description: 'Купить имущество' },
     { path: '/profile', label: 'Профиль', icon: '👤', description: 'Мой профиль' },
     { path: '/work', label: 'Работа', icon: '⏰', description: 'Заработать деньги' },
+    { path: '/casino-stats', label: 'Статистика', icon: '🎰', description: 'Статистика казино' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
