@@ -141,7 +141,7 @@ func TestSlotsGetPayoutTable(t *testing.T) {
 	table := GetPayoutTable()
 
 	require.NotNil(t, table)
-	assert.Len(t, table, 7, "should have payouts for 7 symbols")
+	assert.Len(t, table, 10, "should have payouts for 10 symbols (7 original + 3 new)")
 
 	// Verify Seven has highest payout
 	sevenPayouts := table[SymbolSeven]
@@ -150,18 +150,18 @@ func TestSlotsGetPayoutTable(t *testing.T) {
 	assert.Equal(t, 100.0, sevenPayouts[4])
 	assert.Equal(t, 20.0, sevenPayouts[3])
 
-	// Verify Cherry has lowest payout
-	cherryPayouts := table[SymbolCherry]
-	require.NotNil(t, cherryPayouts)
-	assert.Equal(t, 40.0, cherryPayouts[5])
-	assert.Equal(t, 10.0, cherryPayouts[4])
-	assert.Equal(t, 2.0, cherryPayouts[3])
+	// Verify Clover has lowest payout (новый символ для мелких выигрышей)
+	cloverPayouts := table[SymbolClover]
+	require.NotNil(t, cloverPayouts)
+	assert.Equal(t, 12.0, cloverPayouts[5])
+	assert.Equal(t, 3.0, cloverPayouts[4])
+	assert.Equal(t, 1.0, cloverPayouts[3])
 }
 
 func TestSlotsGetAllSymbols(t *testing.T) {
 	symbols := GetAllSymbols()
 
-	assert.Len(t, symbols, 7, "should have 7 symbols")
+	assert.Len(t, symbols, 10, "should have 10 symbols")
 	assert.Contains(t, symbols, SymbolCherry)
 	assert.Contains(t, symbols, SymbolLemon)
 	assert.Contains(t, symbols, SymbolOrange)
@@ -169,6 +169,9 @@ func TestSlotsGetAllSymbols(t *testing.T) {
 	assert.Contains(t, symbols, SymbolDiamond)
 	assert.Contains(t, symbols, SymbolStar)
 	assert.Contains(t, symbols, SymbolSeven)
+	assert.Contains(t, symbols, SymbolClover)
+	assert.Contains(t, symbols, SymbolBell)
+	assert.Contains(t, symbols, SymbolBar)
 }
 
 func TestSlotsPaylines(t *testing.T) {

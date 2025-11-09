@@ -138,3 +138,8 @@ func (s *SlotsService) GetPayoutTable() map[game.SlotSymbol]map[int]float64 {
 func (s *SlotsService) GetSymbols() []game.SlotSymbol {
 	return game.GetAllSymbols()
 }
+
+// GetPaytableForAPI returns paytable in API-friendly format
+func (s *SlotsService) GetPaytableForAPI() []game.PaytableEntry {
+	return game.GetPaytableForAPI()
+}

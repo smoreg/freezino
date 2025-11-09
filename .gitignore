@@ -42,3 +42,8 @@ backend/static/images/
 *.swp
 *.swo
 *~
+
+# Process IDs
+*.pid
+.backend.pid
+.frontend.pid
