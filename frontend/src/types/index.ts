@@ -47,6 +47,7 @@ export interface UserItem {
   item: Item;
   purchased_at: string;
   is_equipped: boolean;
+  is_collateral: boolean;
 }
 
 // Work Session types
