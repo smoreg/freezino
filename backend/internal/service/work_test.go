@@ -183,13 +183,14 @@ func TestWorkServiceCompleteWorkSuccess(t *testing.T) {
 	startTime := time.Now().Add(-WORK_DURATION * time.Second)
 	service.activeSessions[user.ID] = startTime
 
-	// Complete work
+	// Complete work (user has no clothing = -250 penalty, so earns 250 instead of 500)
+	expectedEarned := 250.0 // WORK_REWARD (500) - clothing penalty (250)
 	response, err := service.CompleteWork(user.ID)
 	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, user.ID, response.UserID)
-	assert.Equal(t, WORK_REWARD, response.Earned)
-	assert.Equal(t, 600.0, response.NewBalance) // 100 + 500
+	assert.Equal(t, expectedEarned, response.Earned)
+	assert.Equal(t, 350.0, response.NewBalance) // 100 + 250
 	assert.Equal(t, WORK_DURATION, response.DurationSec)
 	assert.Greater(t, response.TransactionID, uint(0))
 	assert.Greater(t, response.WorkSessionID, uint(0))
@@ -202,20 +203,20 @@ func TestWorkServiceCompleteWorkSuccess(t *testing.T) {
 	var updatedUser model.User
 	err = db.First(&updatedUser, user.ID).Error
 	require.NoError(t, err)
-	assert.Equal(t, 600.0, updatedUser.Balance)
+	assert.Equal(t, 350.0, updatedUser.Balance)
 
 	// Verify transaction created
 	var transaction model.Transaction
 	err = db.Where("user_id = ? AND type = ?", user.ID, model.TransactionTypeWork).First(&transaction).Error
 	require.NoError(t, err)
-	assert.Equal(t, WORK_REWARD, transaction.Amount)
+	assert.Equal(t, expectedEarned, transaction.Amount)
 
 	// Verify work session created
 	var workSession model.WorkSession
 	err = db.Where("user_id = ?", user.ID).First(&workSession).Error
 	require.NoError(t, err)
 	assert.Equal(t, WORK_DURATION, workSession.DurationSeconds)
-	assert.Equal(t, WORK_REWARD, workSession.Earned)
+	assert.Equal(t, expectedEarned, workSession.Earned)
 }
 
 func TestWorkServiceCompleteWorkNoActiveSession(t *testing.T) {
