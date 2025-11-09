@@ -66,13 +66,18 @@ type WorkStatusResponse struct {
 
 // CompleteWorkResponse represents the response for completing work
 type CompleteWorkResponse struct {
-	UserID        uint      `json:"user_id"`
-	Earned        float64   `json:"earned"`
-	NewBalance    float64   `json:"new_balance"`
-	DurationSec   int       `json:"duration_seconds"`
-	CompletedAt   time.Time `json:"completed_at"`
-	TransactionID uint      `json:"transaction_id"`
-	WorkSessionID uint      `json:"work_session_id"`
+	UserID         uint      `json:"user_id"`
+	Earned         float64   `json:"earned"`
+	BaseReward     float64   `json:"base_reward"`
+	NewBalance     float64   `json:"new_balance"`
+	DurationSec    int       `json:"duration_seconds"`
+	CompletedAt    time.Time `json:"completed_at"`
+	TransactionID  uint      `json:"transaction_id"`
+	WorkSessionID  uint      `json:"work_session_id"`
+	HasClothing    bool      `json:"has_clothing"`
+	HasCar         bool      `json:"has_car"`
+	ClothingBonus  float64   `json:"clothing_bonus"`  // 0 or -250
+	CarBonus       float64   `json:"car_bonus"`       // 0 or +250
 }
 
 // WorkHistoryItem represents a work session in history
@@ -213,18 +218,70 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 			return fmt.Errorf("failed to find user: %w", err)
 		}
 
+		// Check for clothing and car bonuses
+		var clothingCount int64
+		var carCount int64
+
+		// Count equipped clothing items
+		if err := tx.Model(&model.UserItem{}).
+			Joins("JOIN items ON items.id = user_items.item_id").
+			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+				userID, true, model.ItemTypeClothing).
+			Count(&clothingCount).Error; err != nil {
+			return fmt.Errorf("failed to check clothing: %w", err)
+		}
+
+		// Count equipped car items
+		if err := tx.Model(&model.UserItem{}).
+			Joins("JOIN items ON items.id = user_items.item_id").
+			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+				userID, true, model.ItemTypeCar).
+			Count(&carCount).Error; err != nil {
+			return fmt.Errorf("failed to check car: %w", err)
+		}
+
+		// Calculate earnings with modifiers
+		earnedAmount := WORK_REWARD
+		clothingBonus := 0.0
+		carBonus := 0.0
+
+		// No clothing penalty: -250
+		if clothingCount == 0 {
+			clothingBonus = -250.0
+		}
+
+		// Car bonus: +250
+		if carCount > 0 {
+			carBonus = 250.0
+		}
+
+		earnedAmount += clothingBonus + carBonus
+
+		// Ensure minimum earning of 0
+		if earnedAmount < 0 {
+			earnedAmount = 0
+		}
+
 		// Update user balance
-		newBalance := user.Balance + WORK_REWARD
+		newBalance := user.Balance + earnedAmount
 		if err := tx.Model(&user).Update("balance", newBalance).Error; err != nil {
 			return fmt.Errorf("failed to update balance: %w", err)
 		}
 
 		// Create transaction record
+		description := fmt.Sprintf("Work reward for %d seconds", WORK_DURATION)
+		if clothingBonus < 0 {
+			description += " (no clothing penalty)"
+		}
+		if carBonus > 0 {
+			description += " (car bonus)"
+		}
+
 		transaction := model.Transaction{
 			UserID:      userID,
 			Type:        model.TransactionTypeWork,
-			Amount:      WORK_REWARD,
-			Description: fmt.Sprintf("Work reward for %d seconds", WORK_DURATION),
+			Amount:      earnedAmount,
+			Description: description,
 		}
 		if err := tx.Create(&transaction).Error; err != nil {
 			return fmt.Errorf("failed to create transaction: %w", err)
@@ -234,7 +291,7 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 		workSession := model.WorkSession{
 			UserID:          userID,
 			DurationSeconds: WORK_DURATION,
-			Earned:          WORK_REWARD,
+			Earned:          earnedAmount,
 			CompletedAt:     now,
 		}
 		if err := tx.Create(&workSession).Error; err != nil {
@@ -243,12 +300,17 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 
 		response = &CompleteWorkResponse{
 			UserID:        userID,
-			Earned:        WORK_REWARD,
+			Earned:        earnedAmount,
+			BaseReward:    WORK_REWARD,
 			NewBalance:    newBalance,
 			DurationSec:   WORK_DURATION,
 			CompletedAt:   now,
 			TransactionID: transaction.ID,
 			WorkSessionID: workSession.ID,
+			HasClothing:   clothingCount > 0,
+			HasCar:        carCount > 0,
+			ClothingBonus: clothingBonus,
+			CarBonus:      carBonus,
 		}
 
 		return nil

@@ -6,22 +6,16 @@ import { useSound } from '../../hooks/useSound';
 import api from '../../services/api';
 import { WinConfetti } from '../animations';
 
-// Slot symbols
-const SYMBOLS = ['🍒', '🍋', '🍊', '🍇', '💎', '⭐', '7️⃣'];
-
-// Payout table
-const PAYOUTS = {
-  '7️⃣': { 5: 500, 4: 100, 3: 20 },
-  '⭐': { 5: 200, 4: 50, 3: 10 },
-  '💎': { 5: 150, 4: 40, 3: 8 },
-  '🍇': { 5: 100, 4: 25, 3: 5 },
-  '🍊': { 5: 80, 4: 20, 3: 4 },
-  '🍋': { 5: 60, 4: 15, 3: 3 },
-  '🍒': { 5: 40, 4: 10, 3: 2 },
-};
+// Paytable entry from API
+interface PaytableEntry {
+  symbol: string;
+  three_of_kind: number;
+  four_of_kind: number;
+  five_of_kind: number;
+}
 
 // Bet options
-const BET_OPTIONS = [10, 25, 50, 100, 250, 500];
+const BET_OPTIONS = [10, 25, 50, 100, 250, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000];
 
 // Paylines - standard 10 paylines for 5-reel slots
 // Each array represents row indices (0=top, 1=middle, 2=bottom) for each of the 5 reels
@@ -74,6 +68,7 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
   const [winAmount, setWinAmount] = useState<number>(0);
   const [winningLines, setWinningLines] = useState<WinningLine[]>([]);
   const [showPaytable, setShowPaytable] = useState(false);
+  const [paytable, setPaytable] = useState<PaytableEntry[]>([]);
   const [balance, setBalance] = useState(userBalance);
   const [message, setMessage] = useState('');
   const [showConfetti, setShowConfetti] = useState(false);
@@ -97,6 +92,22 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
     setBalance(userBalance);
   }, [userBalance]);
 
+  // Load paytable on mount
+  useEffect(() => {
+    const loadPaytable = async () => {
+      try {
+        const response = await api.get('/api/games/slots/payouts');
+        if (response.data.success && response.data.data) {
+          setPaytable(response.data.data);
+          console.log('[Slots] Paytable loaded:', response.data.data);
+        }
+      } catch (error) {
+        console.error('[Slots] Failed to load paytable:', error);
+      }
+    };
+    loadPaytable();
+  }, []);
+
   // Debug: log initial state
   useEffect(() => {
     console.log('[Slots] Component mounted. Initial userBalance:', userBalance, 'userId:', userId);
@@ -104,9 +115,12 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
 
   // Generate random symbols for animation
   const generateRandomSymbols = () => {
+    const symbols = paytable.length > 0
+      ? paytable.map(entry => entry.symbol)
+      : ['🍒', '🍋', '🍊', '🍇', '💎', '⭐', '7️⃣']; // Fallback
     return Array(3)
       .fill(0)
-      .map(() => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]);
+      .map(() => symbols[Math.floor(Math.random() * symbols.length)]);
   };
 
   // Spin animation
@@ -278,24 +292,24 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
                 {t('slots.paytable') || 'Paytable'}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.entries(PAYOUTS).map(([symbol, payouts]) => (
+                {paytable.map((entry) => (
                   <div
-                    key={symbol}
+                    key={entry.symbol}
                     className="bg-gray-700/50 rounded-lg p-4 border border-gray-600"
                   >
-                    <div className="text-4xl text-center mb-2">{symbol}</div>
+                    <div className="text-4xl text-center mb-2">{entry.symbol}</div>
                     <div className="text-white text-sm space-y-1">
                       <div className="flex justify-between">
                         <span>5x:</span>
-                        <span className="text-yellow-400 font-bold">{payouts[5]}x</span>
+                        <span className="text-yellow-400 font-bold">{entry.five_of_kind}x</span>
                       </div>
                       <div className="flex justify-between">
                         <span>4x:</span>
-                        <span className="text-yellow-400 font-bold">{payouts[4]}x</span>
+                        <span className="text-yellow-400 font-bold">{entry.four_of_kind}x</span>
                       </div>
                       <div className="flex justify-between">
                         <span>3x:</span>
-                        <span className="text-yellow-400 font-bold">{payouts[3]}x</span>
+                        <span className="text-yellow-400 font-bold">{entry.three_of_kind}x</span>
                       </div>
                     </div>
                   </div>
@@ -495,6 +509,18 @@ const Slots = ({ userBalance, userId, onBalanceChange }: SlotsProps) => {
                   ${bet}
                 </button>
               ))}
+              {/* All In Button */}
+              <button
+                onClick={() => setSelectedBet(balance)}
+                disabled={spinning || balance <= 0}
+                className={`px-6 py-3 rounded-lg font-bold transition-all ${
+                  selectedBet === balance
+                    ? 'bg-red-500 text-white scale-110'
+                    : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-500 hover:to-red-600'
+                } ${spinning || balance <= 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                🎰 ALL IN
+              </button>
             </div>
           </div>
 

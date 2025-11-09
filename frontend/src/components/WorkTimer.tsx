@@ -64,12 +64,16 @@ const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
     }
   }, [timeRemaining, playSound]);
 
-  // Play sound when stats modal opens
+  // Play sound when stats modal opens and trigger balance update
   useEffect(() => {
-    if (showStatsModal) {
+    if (showStatsModal && lastCompletedSession) {
       playSound('coin', 0.5);
+      // Immediately update balance when work is completed
+      if (onWorkComplete) {
+        onWorkComplete(lastCompletedSession.earned);
+      }
     }
-  }, [showStatsModal, playSound]);
+  }, [showStatsModal, lastCompletedSession, playSound, onWorkComplete]);
 
   // Timer tick effect
   useEffect(() => {
@@ -385,9 +389,6 @@ const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
                 onClick={() => {
                   playSound('click');
                   closeStatsModal();
-                  if (onWorkComplete) {
-                    onWorkComplete(lastCompletedSession.earned);
-                  }
                 }}
                 className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-primary/50 transition-all"
               >

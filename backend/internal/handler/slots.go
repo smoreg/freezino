@@ -98,20 +98,16 @@ func (h *SlotsHandler) Spin(c *fiber.Ctx) error {
 
 // GetPayoutTable handles GET /api/games/slots/payouts
 // @Summary Get payout table
-// @Description Get the payout table for the slot machine
+// @Description Get the payout table for the slot machine with all 10 symbols
 // @Tags games
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /api/games/slots/payouts [get]
 func (h *SlotsHandler) GetPayoutTable(c *fiber.Ctx) error {
-	payouts := h.slotsService.GetPayoutTable()
-	symbols := h.slotsService.GetSymbols()
+	paytable := h.slotsService.GetPaytableForAPI()
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
-		"data": fiber.Map{
-			"payouts": payouts,
-			"symbols": symbols,
-		},
+		"data":    paytable,
 	})
 }
