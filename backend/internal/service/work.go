@@ -355,7 +355,7 @@ func (s *WorkService) checkJobRequirements(userID uint, jobType model.JobType) e
 		var clothingCount int64
 		if err := s.db.Model(&model.UserItem{}).
 			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
 				userID, true, model.ItemTypeClothing).
 			Count(&clothingCount).Error; err != nil {
 			return fmt.Errorf("failed to check clothing: %w", err)
@@ -369,7 +369,7 @@ func (s *WorkService) checkJobRequirements(userID uint, jobType model.JobType) e
 		var hasUniform bool
 		err := s.db.Model(&model.UserItem{}).
 			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.name = ?",
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.name = ?",
 				userID, true, "Courier Uniform").
 			Select("COUNT(*) > 0").
 			Scan(&hasUniform).Error
@@ -385,7 +385,7 @@ func (s *WorkService) checkJobRequirements(userID uint, jobType model.JobType) e
 		var carCount int64
 		if err := s.db.Model(&model.UserItem{}).
 			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
 				userID, true, model.ItemTypeCar).
 			Count(&carCount).Error; err != nil {
 			return fmt.Errorf("failed to check car: %w", err)
@@ -430,7 +430,7 @@ func (s *WorkService) applyCourierJob(tx *gorm.DB, userID uint) (float64, string
 	var carCount int64
 	if err := tx.Model(&model.UserItem{}).
 		Joins("JOIN items ON items.id = user_items.item_id").
-		Where("user_items.user_id = ? AND user_items.equipped = ? AND items.type = ?",
+		Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
 			userID, true, model.ItemTypeCar).
 		Count(&carCount).Error; err != nil {
 		return 0, "", fmt.Errorf("failed to check car: %w", err)
@@ -466,9 +466,9 @@ func (s *WorkService) applyLabRatJob(tx *gorm.DB, userID uint) (float64, string,
 
 		if existingCount == 0 {
 			userItem := model.UserItem{
-				UserID:   userID,
-				ItemID:   randomMutation.ID,
-				Equipped: true,
+				UserID:     userID,
+				ItemID:     randomMutation.ID,
+				IsEquipped: true,
 			}
 			if err := tx.Create(&userItem).Error; err != nil {
 				return 0, "", fmt.Errorf("failed to give mutation: %w", err)
@@ -486,7 +486,7 @@ func (s *WorkService) applyStuntDriverJob(tx *gorm.DB, userID uint) (float64, st
 	// Unequip all cars
 	if err := tx.Model(&model.UserItem{}).
 		Where("user_id = ? AND item_id IN (SELECT id FROM items WHERE type = ?)", userID, model.ItemTypeCar).
-		Update("equipped", false).Error; err != nil {
+		Update("is_equipped", false).Error; err != nil {
 		return 0, "", fmt.Errorf("failed to break car: %w", err)
 	}
 

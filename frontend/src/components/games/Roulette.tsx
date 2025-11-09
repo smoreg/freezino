@@ -39,7 +39,7 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
   const [winningNumber, setWinningNumber] = useState<number | null>(null);
   const [rotation, setRotation] = useState(0);
 
-  const chipValues = [10, 25, 50, 100, 500];
+  const chipValues = [10, 25, 50, 100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000];
 
   // Fetch recent numbers on mount
   useEffect(() => {
@@ -285,7 +285,7 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
               </h2>
 
               {/* Chip Selector */}
-              <div className="flex gap-2 mb-4">
+              <div className="flex gap-2 mb-4 flex-wrap">
                 {chipValues.map((value) => (
                   <button
                     key={value}
@@ -299,6 +299,18 @@ const Roulette = ({ userId, balance, onBalanceUpdate }: RouletteProps) => {
                     {formatCurrency(value)}
                   </button>
                 ))}
+                {/* All In Button */}
+                <button
+                  onClick={() => setCurrentChip(balance)}
+                  disabled={balance <= 0}
+                  className={`px-4 py-2 rounded-full font-bold transition-all ${
+                    currentChip === balance
+                      ? 'bg-red-500 text-white scale-110'
+                      : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-500 hover:to-red-600'
+                  } ${balance <= 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  🎰 ALL IN
+                </button>
               </div>
 
               {/* Betting Grid */}
