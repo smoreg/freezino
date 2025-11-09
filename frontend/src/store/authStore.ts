@@ -13,7 +13,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setLoading: (isLoading: boolean) => void;
   login: (authData: AuthResponse) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   refreshToken: () => Promise<boolean>;
 }
