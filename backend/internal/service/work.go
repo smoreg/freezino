@@ -24,12 +24,13 @@ const (
 type ActiveWorkSession struct {
 	UserID    uint
 	StartedAt time.Time
+	JobType   model.JobType
 }
 
 // WorkService provides business logic for work operations
 type WorkService struct {
 	db             *gorm.DB
-	activeSessions map[uint]time.Time
+	activeSessions map[uint]ActiveWorkSession
 	mu             sync.RWMutex
 }
 
@@ -37,7 +38,7 @@ type WorkService struct {
 func NewWorkService() *WorkService {
 	return &WorkService{
 		db:             database.GetDB(),
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 }
 
@@ -97,7 +98,7 @@ type WorkHistoryResponse struct {
 }
 
 // StartWork initiates a new work session for the user
-func (s *WorkService) StartWork(userID uint) (*StartWorkResponse, error) {
+func (s *WorkService) StartWork(userID uint, jobType model.JobType) (*StartWorkResponse, error) {
 	// Verify user exists
 	var user model.User
 	if err := s.db.First(&user, userID).Error; err != nil {
@@ -105,6 +106,11 @@ func (s *WorkService) StartWork(userID uint) (*StartWorkResponse, error) {
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, fmt.Errorf("failed to find user: %w", err)
+	}
+
+	// Check specific job requirements
+	if err := s.checkJobRequirements(userID, jobType); err != nil {
+		return nil, err
 	}
 
 	// Check if user is already working
@@ -117,7 +123,11 @@ func (s *WorkService) StartWork(userID uint) (*StartWorkResponse, error) {
 
 	// Start new work session
 	now := time.Now()
-	s.activeSessions[userID] = now
+	s.activeSessions[userID] = ActiveWorkSession{
+		UserID:    userID,
+		StartedAt: now,
+		JobType:   jobType,
+	}
 
 	return &StartWorkResponse{
 		UserID:      userID,
@@ -140,7 +150,7 @@ func (s *WorkService) GetStatus(userID uint) (*WorkStatusResponse, error) {
 	}
 
 	s.mu.RLock()
-	startTime, isWorking := s.activeSessions[userID]
+	session, isWorking := s.activeSessions[userID]
 	s.mu.RUnlock()
 
 	if !isWorking {
@@ -155,7 +165,7 @@ func (s *WorkService) GetStatus(userID uint) (*WorkStatusResponse, error) {
 
 	// Calculate progress
 	now := time.Now()
-	elapsed := int(now.Sub(startTime).Seconds())
+	elapsed := int(now.Sub(session.StartedAt).Seconds())
 	remaining := WORK_DURATION - elapsed
 	if remaining < 0 {
 		remaining = 0
@@ -167,12 +177,12 @@ func (s *WorkService) GetStatus(userID uint) (*WorkStatusResponse, error) {
 	}
 
 	canComplete := elapsed >= WORK_DURATION
-	completesAt := startTime.Add(time.Duration(WORK_DURATION) * time.Second)
+	completesAt := session.StartedAt.Add(time.Duration(WORK_DURATION) * time.Second)
 
 	return &WorkStatusResponse{
 		IsWorking:    true,
 		UserID:       userID,
-		StartedAt:    &startTime,
+		StartedAt:    &session.StartedAt,
 		DurationSec:  WORK_DURATION,
 		ElapsedSec:   elapsed,
 		RemainingSec: remaining,
@@ -187,7 +197,7 @@ func (s *WorkService) GetStatus(userID uint) (*WorkStatusResponse, error) {
 func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 	// Get and validate active session
 	s.mu.Lock()
-	startTime, exists := s.activeSessions[userID]
+	session, exists := s.activeSessions[userID]
 	if !exists {
 		s.mu.Unlock()
 		return nil, fmt.Errorf("no active work session")
@@ -195,12 +205,14 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 
 	// Check if enough time has passed
 	now := time.Now()
-	elapsed := int(now.Sub(startTime).Seconds())
+	elapsed := int(now.Sub(session.StartedAt).Seconds())
 	if elapsed < WORK_DURATION {
 		s.mu.Unlock()
 		remaining := WORK_DURATION - elapsed
 		return nil, fmt.Errorf("work not completed yet, %d seconds remaining", remaining)
 	}
+
+	jobType := session.JobType
 
 	// Remove from active sessions
 	delete(s.activeSessions, userID)
@@ -218,44 +230,11 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 			return fmt.Errorf("failed to find user: %w", err)
 		}
 
-		// Check for clothing and car bonuses
-		var clothingCount int64
-		var carCount int64
-
-		// Count equipped clothing items
-		if err := tx.Model(&model.UserItem{}).
-			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
-				userID, true, model.ItemTypeClothing).
-			Count(&clothingCount).Error; err != nil {
-			return fmt.Errorf("failed to check clothing: %w", err)
+		// Apply job-specific effects and get earnings
+		earnedAmount, description, err := s.applyJobEffects(tx, userID, jobType)
+		if err != nil {
+			return err
 		}
-
-		// Count equipped car items
-		if err := tx.Model(&model.UserItem{}).
-			Joins("JOIN items ON items.id = user_items.item_id").
-			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
-				userID, true, model.ItemTypeCar).
-			Count(&carCount).Error; err != nil {
-			return fmt.Errorf("failed to check car: %w", err)
-		}
-
-		// Calculate earnings with modifiers
-		earnedAmount := WORK_REWARD
-		clothingBonus := 0.0
-		carBonus := 0.0
-
-		// No clothing penalty: -250
-		if clothingCount == 0 {
-			clothingBonus = -250.0
-		}
-
-		// Car bonus: +250
-		if carCount > 0 {
-			carBonus = 250.0
-		}
-
-		earnedAmount += clothingBonus + carBonus
 
 		// Ensure minimum earning of 0
 		if earnedAmount < 0 {
@@ -269,14 +248,6 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 		}
 
 		// Create transaction record
-		description := fmt.Sprintf("Work reward for %d seconds", WORK_DURATION)
-		if clothingBonus < 0 {
-			description += " (no clothing penalty)"
-		}
-		if carBonus > 0 {
-			description += " (car bonus)"
-		}
-
 		transaction := model.Transaction{
 			UserID:      userID,
 			Type:        model.TransactionTypeWork,
@@ -290,6 +261,7 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 		// Create work session record
 		workSession := model.WorkSession{
 			UserID:          userID,
+			JobType:         jobType,
 			DurationSeconds: WORK_DURATION,
 			Earned:          earnedAmount,
 			CompletedAt:     now,
@@ -307,10 +279,10 @@ func (s *WorkService) CompleteWork(userID uint) (*CompleteWorkResponse, error) {
 			CompletedAt:   now,
 			TransactionID: transaction.ID,
 			WorkSessionID: workSession.ID,
-			HasClothing:   clothingCount > 0,
-			HasCar:        carCount > 0,
-			ClothingBonus: clothingBonus,
-			CarBonus:      carBonus,
+			HasClothing:   false,
+			HasCar:        false,
+			ClothingBonus: 0,
+			CarBonus:      0,
 		}
 
 		return nil
@@ -373,4 +345,227 @@ func (s *WorkService) GetHistory(userID uint, limit int, offset int) (*WorkHisto
 		Limit:    limit,
 		Offset:   offset,
 	}, nil
+}
+
+// checkJobRequirements checks if user meets requirements for a specific job
+func (s *WorkService) checkJobRequirements(userID uint, jobType model.JobType) error {
+	switch jobType {
+	case model.JobTypeOffice:
+		// Office requires at least one clothing item
+		var clothingCount int64
+		if err := s.db.Model(&model.UserItem{}).
+			Joins("JOIN items ON items.id = user_items.item_id").
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
+				userID, true, model.ItemTypeClothing).
+			Count(&clothingCount).Error; err != nil {
+			return fmt.Errorf("failed to check clothing: %w", err)
+		}
+		if clothingCount == 0 {
+			return fmt.Errorf("office_no_clothes")
+		}
+
+	case model.JobTypeCourier:
+		// Courier requires uniform
+		var hasUniform bool
+		err := s.db.Model(&model.UserItem{}).
+			Joins("JOIN items ON items.id = user_items.item_id").
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.name = ?",
+				userID, true, "Courier Uniform").
+			Select("COUNT(*) > 0").
+			Scan(&hasUniform).Error
+		if err != nil {
+			return fmt.Errorf("failed to check uniform: %w", err)
+		}
+		if !hasUniform {
+			return fmt.Errorf("courier_no_uniform")
+		}
+
+	case model.JobTypeStuntDriver:
+		// Stunt driver requires a car
+		var carCount int64
+		if err := s.db.Model(&model.UserItem{}).
+			Joins("JOIN items ON items.id = user_items.item_id").
+			Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
+				userID, true, model.ItemTypeCar).
+			Count(&carCount).Error; err != nil {
+			return fmt.Errorf("failed to check car: %w", err)
+		}
+		if carCount == 0 {
+			return fmt.Errorf("stunt_driver_no_car")
+		}
+	}
+
+	return nil
+}
+
+// applyJobEffects applies job-specific effects and returns earned amount and description
+func (s *WorkService) applyJobEffects(tx *gorm.DB, userID uint, jobType model.JobType) (float64, string, error) {
+	switch jobType {
+	case model.JobTypeOffice:
+		return s.applyOfficeJob(tx, userID)
+	case model.JobTypeCourier:
+		return s.applyCourierJob(tx, userID)
+	case model.JobTypeLabRat:
+		return s.applyLabRatJob(tx, userID)
+	case model.JobTypeStuntDriver:
+		return s.applyStuntDriverJob(tx, userID)
+	case model.JobTypeDrugDealer:
+		return s.applyDrugDealerJob(tx, userID)
+	case model.JobTypeStreamer:
+		return s.applyStreamerJob(tx, userID)
+	case model.JobTypeBottleCollector:
+		return s.applyBottleCollectorJob(tx, userID)
+	default:
+		return WORK_REWARD, "Work completed", nil
+	}
+}
+
+func (s *WorkService) applyOfficeJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Office job: standard 500, no bonuses
+	return WORK_REWARD, "Office work completed", nil
+}
+
+func (s *WorkService) applyCourierJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Courier: base 500 + car bonus 250
+	var carCount int64
+	if err := tx.Model(&model.UserItem{}).
+		Joins("JOIN items ON items.id = user_items.item_id").
+		Where("user_items.user_id = ? AND user_items.is_equipped = ? AND items.type = ?",
+			userID, true, model.ItemTypeCar).
+		Count(&carCount).Error; err != nil {
+		return 0, "", fmt.Errorf("failed to check car: %w", err)
+	}
+
+	earned := WORK_REWARD
+	desc := "Courier work completed"
+	if carCount > 0 {
+		earned += 250.0
+		desc += " (own car bonus: +$250)"
+	}
+
+	return earned, desc, nil
+}
+
+func (s *WorkService) applyLabRatJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Lab rat: 500 + random mutation
+	// Get all mutations
+	var mutations []model.Item
+	if err := tx.Where("type = ?", model.ItemTypeMutation).Find(&mutations).Error; err != nil {
+		return 0, "", fmt.Errorf("failed to get mutations: %w", err)
+	}
+
+	if len(mutations) > 0 {
+		// Give random mutation
+		randomMutation := mutations[time.Now().UnixNano()%int64(len(mutations))]
+
+		// Check if user already has this mutation
+		var existingCount int64
+		tx.Model(&model.UserItem{}).
+			Where("user_id = ? AND item_id = ?", userID, randomMutation.ID).
+			Count(&existingCount)
+
+		if existingCount == 0 {
+			userItem := model.UserItem{
+				UserID:     userID,
+				ItemID:     randomMutation.ID,
+				IsEquipped: true,
+			}
+			if err := tx.Create(&userItem).Error; err != nil {
+				return 0, "", fmt.Errorf("failed to give mutation: %w", err)
+			}
+		}
+
+		return WORK_REWARD, fmt.Sprintf("Lab experiment completed. You received: %s!", randomMutation.Name), nil
+	}
+
+	return WORK_REWARD, "Lab experiment completed", nil
+}
+
+func (s *WorkService) applyStuntDriverJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Stunt driver: 1500 but car gets broken (unequipped)
+	// Unequip all cars
+	if err := tx.Model(&model.UserItem{}).
+		Where("user_id = ? AND item_id IN (SELECT id FROM items WHERE type = ?)", userID, model.ItemTypeCar).
+		Update("is_equipped", false).Error; err != nil {
+		return 0, "", fmt.Errorf("failed to break car: %w", err)
+	}
+
+	return 1500.0, "Stunt driving completed! Earned $1500 but your car is broken (unequipped)", nil
+}
+
+func (s *WorkService) applyDrugDealerJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Drug dealer: 2000 but go to jail (8 years = future timestamp)
+	// Create user status "in_jail" that expires in 8 years
+	jailTime := time.Now().Add(8 * 365 * 24 * time.Hour)
+	status := model.UserStatus{
+		UserID:    userID,
+		Status:    "in_jail",
+		ExpiresAt: jailTime,
+	}
+	if err := tx.Create(&status).Error; err != nil {
+		return 0, "", fmt.Errorf("failed to create jail status: %w", err)
+	}
+
+	return 2000.0, "You got caught! Earned $2000 but you're in jail for 8 years (you can skip time)", nil
+}
+
+func (s *WorkService) applyStreamerJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Check if already popular
+	var popularStatus int64
+	tx.Model(&model.UserStatus{}).
+		Where("user_id = ? AND status = ?", userID, "popular_streamer").
+		Count(&popularStatus)
+
+	if popularStatus > 0 {
+		// Already popular, always get 10000
+		return 10000.0, "Streaming as popular streamer! Earned $10,000", nil
+	}
+
+	// Not popular yet: 70% = 0, 29% = 1, 1% = 10000 + become popular
+	roll := time.Now().UnixNano() % 100
+
+	if roll < 70 {
+		// 70%: nothing
+		return 0.0, "Streaming session completed but no one watched...", nil
+	} else if roll < 99 {
+		// 29%: $1
+		return 1.0, "Streaming session completed. Someone donated $1!", nil
+	} else {
+		// 1%: $10000 + become popular
+		status := model.UserStatus{
+			UserID:    userID,
+			Status:    "popular_streamer",
+			ExpiresAt: time.Now().Add(100 * 365 * 24 * time.Hour), // Forever
+		}
+		if err := tx.Create(&status).Error; err != nil {
+			return 0, "", fmt.Errorf("failed to create popular status: %w", err)
+		}
+
+		return 10000.0, "YOU WENT VIRAL! Earned $10,000 and became a popular streamer! All future streams will earn $10,000!", nil
+	}
+}
+
+func (s *WorkService) applyBottleCollectorJob(tx *gorm.DB, userID uint) (float64, string, error) {
+	// Bottle collector: always 100, available to everyone
+	return 100.0, "Collected bottles and cans. Earned $100", nil
+}
+
+// SkipJailTime removes the jail status from user
+func (s *WorkService) SkipJailTime(userID uint) error {
+	// Check if user is in jail
+	var jailStatus model.UserStatus
+	err := s.db.Where("user_id = ? AND status = ?", userID, "in_jail").First(&jailStatus).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("not in jail")
+		}
+		return fmt.Errorf("failed to check jail status: %w", err)
+	}
+
+	// Delete jail status
+	if err := s.db.Delete(&jailStatus).Error; err != nil {
+		return fmt.Errorf("failed to remove jail status: %w", err)
+	}
+
+	return nil
 }

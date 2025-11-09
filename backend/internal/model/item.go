@@ -14,6 +14,7 @@ const (
 	ItemTypeCar         ItemType = "car"
 	ItemTypeHouse       ItemType = "house"
 	ItemTypeAccessories ItemType = "accessories"
+	ItemTypeMutation    ItemType = "mutation"
 )
 
 // ItemRarity represents the rarity level of an item

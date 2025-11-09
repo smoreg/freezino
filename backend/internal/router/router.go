@@ -65,6 +65,8 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	work.Get("/status", workHandler.GetStatus)
 	work.Post("/complete", workHandler.CompleteWork)
 	work.Get("/history", workHandler.GetHistory)
+	work.Get("/jobs", workHandler.GetAvailableJobs)
+	work.Post("/skip-jail", workHandler.SkipJailTime)
 
 	// Stats routes
 	statsHandler, err := handler.NewStatsHandler()
