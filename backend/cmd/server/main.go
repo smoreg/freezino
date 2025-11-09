@@ -45,6 +45,9 @@ func main() {
 	app.Use(middleware.SetupLogger())
 	app.Use(middleware.SetupCORS())
 
+	// Serve static files (images)
+	app.Static("/images", "./static/images")
+
 	// Setup routes
 	router.Setup(app, cfg)
 
