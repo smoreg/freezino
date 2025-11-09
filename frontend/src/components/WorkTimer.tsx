@@ -145,7 +145,7 @@ const WorkTimer = ({ onWorkComplete }: WorkTimerProps) => {
                 // Handle job requirement errors
                 const errorMessage = err?.response?.data?.message || 'failed to start work';
                 setError(errorMessage);
-                playSound('error');
+                playSound('lose');
               }
             }}
           />

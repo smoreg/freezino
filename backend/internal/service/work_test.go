@@ -66,11 +66,11 @@ func TestWorkServiceStartWork(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Start work
-	response, err := service.StartWork(user.ID)
+	response, err := service.StartWork(user.ID, model.JobTypeBottleCollector)
 	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, user.ID, response.UserID)
@@ -90,15 +90,15 @@ func TestWorkServiceStartWorkAlreadyWorking(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Start first work session
-	_, err := service.StartWork(user.ID)
+	_, err := service.StartWork(user.ID, model.JobTypeBottleCollector)
 	require.NoError(t, err)
 
 	// Try to start another session (should fail)
-	_, err = service.StartWork(user.ID)
+	_, err = service.StartWork(user.ID, model.JobTypeBottleCollector)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "already in progress")
 }
@@ -108,11 +108,11 @@ func TestWorkServiceStartWorkUserNotFound(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Try to start work for non-existent user
-	_, err := service.StartWork(9999)
+	_, err := service.StartWork(9999, model.JobTypeBottleCollector)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "not found")
 }
@@ -123,7 +123,7 @@ func TestWorkServiceGetStatusNotWorking(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	status, err := service.GetStatus(user.ID)
@@ -144,11 +144,11 @@ func TestWorkServiceGetStatusWorking(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Start work
-	_, err := service.StartWork(user.ID)
+	_, err := service.StartWork(user.ID, model.JobTypeOffice)
 	require.NoError(t, err)
 
 	// Small delay to have elapsed time (at least 1 second for int conversion)
@@ -176,21 +176,25 @@ func TestWorkServiceCompleteWorkSuccess(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Start work and simulate it being completed
 	startTime := time.Now().Add(-WORK_DURATION * time.Second)
-	service.activeSessions[user.ID] = startTime
+	service.activeSessions[user.ID] = ActiveWorkSession{
+		UserID:    user.ID,
+		StartedAt: startTime,
+		JobType:   model.JobTypeBottleCollector,
+	}
 
-	// Complete work (user has no clothing = -250 penalty, so earns 250 instead of 500)
-	expectedEarned := 250.0 // WORK_REWARD (500) - clothing penalty (250)
+	// Complete work (bottle collector earns 100)
+	expectedEarned := 100.0 // Bottle collector specific amount
 	response, err := service.CompleteWork(user.ID)
 	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, user.ID, response.UserID)
 	assert.Equal(t, expectedEarned, response.Earned)
-	assert.Equal(t, 350.0, response.NewBalance) // 100 + 250
+	assert.Equal(t, 200.0, response.NewBalance) // 100 + 100
 	assert.Equal(t, WORK_DURATION, response.DurationSec)
 	assert.Greater(t, response.TransactionID, uint(0))
 	assert.Greater(t, response.WorkSessionID, uint(0))
@@ -203,7 +207,7 @@ func TestWorkServiceCompleteWorkSuccess(t *testing.T) {
 	var updatedUser model.User
 	err = db.First(&updatedUser, user.ID).Error
 	require.NoError(t, err)
-	assert.Equal(t, 350.0, updatedUser.Balance)
+	assert.Equal(t, 200.0, updatedUser.Balance)
 
 	// Verify transaction created
 	var transaction model.Transaction
@@ -225,7 +229,7 @@ func TestWorkServiceCompleteWorkNoActiveSession(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Try to complete without starting
@@ -240,11 +244,11 @@ func TestWorkServiceCompleteWorkTooEarly(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Start work
-	_, err := service.StartWork(user.ID)
+	_, err := service.StartWork(user.ID, model.JobTypeOffice)
 	require.NoError(t, err)
 
 	// Try to complete immediately (should fail)
@@ -260,7 +264,7 @@ func TestWorkServiceGetHistory(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Create some work sessions
@@ -296,7 +300,7 @@ func TestWorkServiceGetHistoryWithPagination(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Create 5 work sessions
@@ -335,7 +339,7 @@ func TestWorkServiceGetHistoryUserNotFound(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	_, err := service.GetHistory(9999, 10, 0)
@@ -350,20 +354,20 @@ func TestWorkServiceConcurrency(t *testing.T) {
 
 	service := &WorkService{
 		db:             db,
-		activeSessions: make(map[uint]time.Time),
+		activeSessions: make(map[uint]ActiveWorkSession),
 	}
 
 	// Start work for both users concurrently
 	done := make(chan bool, 2)
 
 	go func() {
-		_, err := service.StartWork(user1.ID)
+		_, err := service.StartWork(user1.ID, model.JobTypeBottleCollector)
 		assert.NoError(t, err)
 		done <- true
 	}()
 
 	go func() {
-		_, err := service.StartWork(user2.ID)
+		_, err := service.StartWork(user2.ID, model.JobTypeBottleCollector)
 		assert.NoError(t, err)
 		done <- true
 	}()

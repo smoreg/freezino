@@ -9,7 +9,6 @@ import { useShopStore } from '../store/shopStore';
 
 export default function CreditPage() {
   const { t } = useTranslation();
-  const user = useAuthStore((state) => state.user);
   const { loans, summary, isLoading, fetchLoans, fetchSummary, takeLoan, repayLoan, error, clearError } = useLoanStore();
   const { myItems, fetchMyItems } = useShopStore();
 
