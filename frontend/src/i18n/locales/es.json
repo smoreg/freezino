@@ -133,10 +133,15 @@
     "button": "Trabajar",
     "title": "Trabajo",
     "description": "Gana dinero virtual trabajando durante 3 minutos",
+    "startButton": "Comenzar Trabajo",
     "modalTitle": "Proceso de Trabajo",
     "modalSubtitle": "Completa el trabajo para ganar dinero",
     "timeRemaining": "hasta completar",
     "reward": "Recompensa:",
+    "requires": "Requiere",
+    "bonus": "Bonificación",
+    "penalty": "Penalización",
+    "variable": "Recompensa Variable",
     "pause": "⏸ Pausa",
     "resume": "▶️ Reanudar",
     "cancelButton": "❌ Cancelar",
@@ -159,7 +164,57 @@
     "step2": "Espera 3 minutos mientras se cuenta el tiempo",
     "step3": "Recibe $500 después de completar la sesión de trabajo",
     "educationalTitle": "Propósito Educativo",
-    "educationalText": "Este sistema de trabajo demuestra el valor del tiempo y el dinero. En la vida real, ganar dinero requiere tiempo y esfuerzo significativos. Los juegos de casino muestran qué tan rápido puedes perder lo que trabajaste arduamente para ganar."
+    "educationalText": "Este sistema de trabajo demuestra el valor del tiempo y el dinero. En la vida real, ganar dinero requiere tiempo y esfuerzo significativos. Los juegos de casino muestran qué tan rápido puedes perder lo que trabajaste arduamente para ganar.",
+    "jobs": {
+      "office": {
+        "name": "Trabajador de Oficina",
+        "description": "Trabajo de oficina estándar. Requiere al menos una prenda de ropa."
+      },
+      "courier": {
+        "name": "Mensajero",
+        "description": "Trabajo de entrega. Requiere Uniforme de Mensajero. +$250 con coche propio."
+      },
+      "lab_rat": {
+        "name": "Sujeto de Prueba",
+        "description": "Sé un sujeto de prueba para científico loco. Recibe mutación aleatoria."
+      },
+      "stunt_driver": {
+        "name": "Especialista de Acción",
+        "description": "Acrobacias de alto riesgo. Requiere coche. Gana $1500 pero el coche se rompe."
+      },
+      "drug_dealer": {
+        "name": "Entrega Sorpresa",
+        "description": "Negocio arriesgado. Gana $2000 pero serás atrapado (sentencia de 8 años, omitible)."
+      },
+      "streamer": {
+        "name": "Streamer",
+        "description": "Transmite en línea. 70% = $0, 29% = $1, 1% = $10,000 + te harás viral."
+      },
+      "bottle_collector": {
+        "name": "Recolector de Botellas",
+        "description": "Recoge botellas y latas. Siempre $100. Disponible para todos."
+      }
+    },
+    "requirements": {
+      "clothing": "Cualquier ropa",
+      "courier_uniform": "Uniforme de Mensajero",
+      "car": "Un coche"
+    },
+    "bonuses": {
+      "own_car": "+$250 con coche"
+    },
+    "penalties": {
+      "car_broken": "Coche roto",
+      "jail_8years": "8 años de cárcel"
+    },
+    "rewards": {
+      "random_mutation": "Mutación aleatoria"
+    },
+    "errors": {
+      "office_no_clothes": "¡No puedes trabajar en la oficina desnudo! Compra al menos ropa barata.",
+      "courier_no_uniform": "¡Necesitas un Uniforme de Mensajero para trabajar como mensajero!",
+      "stunt_driver_no_car": "¡Necesitas un coche para ser especialista de acción!"
+    }
   },
   "countries": {
     "usa": "EE.UU.",
