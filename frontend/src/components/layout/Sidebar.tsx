@@ -96,7 +96,7 @@ const Sidebar = () => {
             <div className="mt-4 pt-4 border-t border-gray-700">
               <button
                 onClick={logout}
-                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-gray-700 hover:text-red-300 transition-all duration-200"
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-all duration-200"
               >
                 <span className="text-xl">🚪</span>
                 <span className="font-medium">{t('common.logout')}</span>

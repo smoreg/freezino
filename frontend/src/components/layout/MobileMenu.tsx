@@ -93,6 +93,17 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   </li>
                 ))}
               </ul>
+
+              {/* Logout Button - prominent placement */}
+              <div className="mt-4 pt-4 border-t border-gray-700">
+                <button
+                  onClick={logout}
+                  className="w-full flex items-center space-x-3 px-4 py-4 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors touch-manipulation"
+                >
+                  <span className="text-2xl">🚪</span>
+                  <span className="font-medium text-lg">{t('common.logout')}</span>
+                </button>
+              </div>
             </nav>
 
             {/* Footer Links */}
@@ -112,15 +123,6 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 >
                   {t('nav.contact')}
                 </Link>
-                <button
-                  onClick={logout}
-                  className="w-full text-left text-red-400 hover:text-red-300 py-2 px-4 text-sm transition-colors"
-                >
-                  <span className="flex items-center space-x-2">
-                    <span>🚪</span>
-                    <span>{t('common.logout')}</span>
-                  </span>
-                </button>
               </div>
             </div>
           </motion.div>

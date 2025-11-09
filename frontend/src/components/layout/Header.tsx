@@ -122,6 +122,16 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               )}
             </div>
 
+            {/* Logout Button - visible on desktop */}
+            <button
+              onClick={handleLogout}
+              className="hidden md:flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              title={t('common.logout')}
+            >
+              <span>🚪</span>
+              <span className="font-medium">{t('common.logout')}</span>
+            </button>
+
             {/* Avatar with Dropdown */}
             <div className="relative">
               {isLoading ? (
