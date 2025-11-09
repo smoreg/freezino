@@ -21,6 +21,20 @@
     "profile": "Profile",
     "stats": "Statistics"
   },
+  "sidebar": {
+    "games": "Games",
+    "gamesDesc": "Casino games",
+    "shop": "Shop",
+    "shopDesc": "Buy items",
+    "profile": "Profile",
+    "profileDesc": "My profile",
+    "work": "Work",
+    "workDesc": "Earn money",
+    "stats": "Statistics",
+    "statsDesc": "Casino statistics",
+    "playResponsibly": "Play responsibly",
+    "virtualCurrency": "Virtual currency only"
+  },
   "dashboard": {
     "welcome": "Welcome to <1>Freezino</1>",
     "subtitle": "Choose a game and test your luck! Play with virtual money safely.",
