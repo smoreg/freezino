@@ -75,7 +75,24 @@ export const useShopStore = create<ShopState>((set, get) => ({
 
   buyItem: async (itemId: string) => {
     try {
-      await api.post(`/shop/buy/${itemId}`);
+      const response = await api.post<{
+        success: boolean;
+        data: {
+          user_item: unknown;
+          new_balance: number;
+          transaction_id: number
+        }
+      }>(`/shop/buy/${itemId}`);
+
+      // Update user balance in authStore
+      const { useAuthStore } = await import('./authStore');
+      const authStore = useAuthStore.getState();
+      if (authStore.user) {
+        authStore.setUser({
+          ...authStore.user,
+          balance: response.data.data.new_balance
+        });
+      }
 
       // Refresh items and user items
       await get().fetchItems();
@@ -87,7 +104,24 @@ export const useShopStore = create<ShopState>((set, get) => ({
 
   sellItem: async (itemId: string) => {
     try {
-      await api.post(`/shop/sell/${itemId}`);
+      const response = await api.post<{
+        success: boolean;
+        data: {
+          sale_price: number;
+          new_balance: number;
+          transaction_id: number
+        }
+      }>(`/shop/sell/${itemId}`);
+
+      // Update user balance in authStore
+      const { useAuthStore } = await import('./authStore');
+      const authStore = useAuthStore.getState();
+      if (authStore.user) {
+        authStore.setUser({
+          ...authStore.user,
+          balance: response.data.data.new_balance
+        });
+      }
 
       // Refresh my items
       await get().fetchMyItems();
