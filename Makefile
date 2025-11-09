@@ -1,4 +1,4 @@
-.PHONY: init dev clean build build-backend build-frontend local-deploy restart stop status logs-backend logs-frontend deploy deploy-backend deploy-frontend
+.PHONY: init dev clean build build-backend build-frontend local-deploy restart stop status logs-backend logs-frontend deploy deploy-backend deploy-frontend download-images
 
 # Initialize project (install dependencies)
 init:
@@ -7,6 +7,13 @@ init:
 	@echo "📦 Installing frontend dependencies..."
 	cd frontend && npm install
 	@echo "✅ Project initialized successfully!"
+
+# Download item images from free sources
+download-images:
+	@echo "🖼️  Downloading item images from Unsplash..."
+	@chmod +x scripts/download-images.sh
+	@bash scripts/download-images.sh
+	@echo "✅ Images downloaded successfully!"
 
 # Run development servers
 dev:

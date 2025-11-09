@@ -33,6 +33,9 @@ yarn-error.log*
 *.sqlite
 *.sqlite3
 
+# Static images (downloaded via make download-images)
+backend/static/images/
+
 # Temporary files
 *.tmp
 *.temp
